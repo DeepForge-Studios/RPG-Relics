@@ -82,14 +82,6 @@ Cheats required. Prefer the in-game items above for normal play.
 
 ---
 
-## Addon compatibility
-
-Other packs can register rings and trinkets into the Reliquary.
-
-See [docs/ADDING_TRINKETS.md](docs/ADDING_TRINKETS.md) and [examples/trinket-addon/](examples/trinket-addon/).
-
----
-
 ## Build from source
 
 ```powershell
@@ -99,11 +91,9 @@ See [docs/ADDING_TRINKETS.md](docs/ADDING_TRINKETS.md) and [examples/trinket-add
 Creates `curio_relics.mcaddon` (behavior + resource packs).
 
 ```
-BP/          Behavior pack (scripts, items, loot, structures)
-RP/          Resource pack (textures, UI, models)
-docs/        Credits, theme notes, towers, addon API
-examples/    Sample trinket add-on
-tools/       Optional pack-author utilities
+BP/     Behavior pack (scripts, items, loot, structures)
+RP/     Resource pack (textures, UI, models)
+docs/   Credits
 ```
 
 ---
@@ -113,9 +103,6 @@ tools/       Optional pack-author utilities
 | Doc | Contents |
 |-----|----------|
 | [Credits](docs/CREDITS.md) | Third-party art attribution |
-| [Adding trinkets](docs/ADDING_TRINKETS.md) | Register items from other packs |
-| [Towers & camps](docs/TOWERS.md) | Structure / world-gen notes |
-| [UI theme](docs/UI_THEME.md) | Purple/gold Reliquary palette |
 
 ---
 

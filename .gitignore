@@ -16,6 +16,15 @@ TASKS.md
 BUGS.md
 GOALS.md
 
+# Local authoring only (not for GitHub)
+tools/
+examples/
+design/
+generate_items.ps1
+docs/ADDING_TRINKETS.md
+docs/TOWERS.md
+docs/UI_THEME.md
+
 # OS / editor
 .DS_Store
 Thumbs.db
