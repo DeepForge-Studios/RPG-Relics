@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_bulwark_plate"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:obsidian_plate"
+      },
+      {
+        "item": "relics:cinder_ward"
+      },
+      {
+        "item": "relics:silver_fragment"
+      }
+    ],
+    "result": {
+      "item": "relics:bulwark_plate",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:obsidian_plate"
+      }
+    ]
+  }
+}

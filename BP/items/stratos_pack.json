@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:stratos_pack",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_stratos_pack",
+      "minecraft:display_name": {
+        "value": "item.relics:stratos_pack"
+      },
+      "minecraft:rarity": "rare",
+      "minecraft:hover_text_color": "blue"
+    }
+  }
+}

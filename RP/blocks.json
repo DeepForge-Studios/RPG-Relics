@@ -1,0 +1,20 @@
+{
+  "format_version": [1, 1, 0],
+  "relics:dummy_chest": {
+    "sound": "wood"
+  },
+  "relics:attunement_forge": {
+    "sound": "anvil"
+  },
+  "relics:relic_forge": {
+    "sound": "wood",
+    "textures": {
+      "up": "relics_relic_forge_v4_top",
+      "down": "relics_relic_forge_v4_bottom",
+      "north": "relics_relic_forge_v4_side",
+      "south": "relics_relic_forge_v4_side",
+      "east": "relics_relic_forge_v4_side",
+      "west": "relics_relic_forge_v4_side"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:quaffers_cap",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_quaffers_cap",
+      "minecraft:display_name": {
+        "value": "item.relics:quaffers_cap"
+      },
+      "minecraft:rarity": "common"
+    }
+  }
+}

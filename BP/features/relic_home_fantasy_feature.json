@@ -1,0 +1,55 @@
+{
+  "format_version": "1.13.0",
+  "minecraft:structure_template_feature": {
+    "description": {
+      "identifier": "relics:relic_home_fantasy_feature"
+    },
+    "structure_name": "mystructure:relic_home_fantasy",
+    "adjustment_radius": 8,
+    "facing_direction": "south",
+    "constraints": {
+      "grounded": {},
+      "block_intersection": {
+        "block_allowlist": [
+          "minecraft:air",
+          "minecraft:grass",
+          "minecraft:tall_grass",
+          "minecraft:short_grass",
+          "minecraft:fern",
+          "minecraft:large_fern",
+          "minecraft:snow_layer",
+          "minecraft:snow",
+          "minecraft:leaves",
+          "minecraft:leaves2",
+          "minecraft:azalea_leaves",
+          "minecraft:vine",
+          "minecraft:deadbush",
+          "minecraft:sweet_berry_bush",
+          "minecraft:pink_petals",
+          "minecraft:grass_block",
+          "minecraft:dirt",
+          "minecraft:coarse_dirt",
+          "minecraft:podzol",
+          "minecraft:mycelium",
+          "minecraft:dirt_with_roots",
+          "minecraft:grass_path",
+          "minecraft:farmland",
+          "minecraft:gravel",
+          "minecraft:sand",
+          "minecraft:red_sand",
+          "minecraft:clay",
+          "minecraft:mud",
+          "minecraft:moss_block",
+          "minecraft:stone",
+          "minecraft:andesite",
+          "minecraft:diorite",
+          "minecraft:granite",
+          "minecraft:deepslate",
+          "minecraft:tuff",
+          "minecraft:calcite",
+          "minecraft:dripstone_block"
+        ]
+      }
+    }
+  }
+}

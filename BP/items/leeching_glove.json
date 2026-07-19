@@ -1,0 +1,21 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:leeching_glove",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_leeching_glove",
+      "minecraft:display_name": {
+        "value": "item.relics:leeching_glove"
+      },
+      "minecraft:hand_equipped": true,
+      "minecraft:rarity": "uncommon",
+      "minecraft:hover_text_color": "green"
+    }
+  }
+}

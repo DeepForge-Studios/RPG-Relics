@@ -1,0 +1,21 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:crusher_gauntlet",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_crusher_gauntlet",
+      "minecraft:display_name": {
+        "value": "item.relics:crusher_gauntlet"
+      },
+      "minecraft:hand_equipped": true,
+      "minecraft:rarity": "uncommon",
+      "minecraft:hover_text_color": "green"
+    }
+  }
+}

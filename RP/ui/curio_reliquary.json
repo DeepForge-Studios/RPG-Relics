@@ -1,0 +1,2162 @@
+{
+  "namespace": "curio_reliquary",
+  "doll_exit_size_push": {
+    "anim_type": "size",
+    "easing": "out_cubic",
+    "duration": 0.1,
+    "from": [
+      22,
+      40
+    ],
+    "to": [
+      0,
+      0
+    ],
+    "play_event": "screen.exit_push",
+    "end_event": "screen.exit_end",
+    "reset_event": "screen_animation_reset"
+  },
+  "doll_exit_size_pop": {
+    "anim_type": "size",
+    "easing": "out_cubic",
+    "duration": 0.1,
+    "from": [
+      22,
+      40
+    ],
+    "to": [
+      0,
+      0
+    ],
+    "play_event": "screen.exit_pop",
+    "end_event": "screen.exit_end",
+    "reset_event": "screen_animation_reset"
+  },
+  "doll_entrance_size_push": {
+    "anim_type": "size",
+    "easing": "out_cubic",
+    "duration": 0.12,
+    "from": [
+      0,
+      0
+    ],
+    "to": [
+      22,
+      40
+    ],
+    "play_event": "screen.entrance_push",
+    "end_event": "screen.entrance_end",
+    "resettable": true
+  },
+  "doll_entrance_size_pop": {
+    "anim_type": "size",
+    "easing": "out_cubic",
+    "duration": 0.12,
+    "from": [
+      0,
+      0
+    ],
+    "to": [
+      22,
+      40
+    ],
+    "play_event": "screen.entrance_pop",
+    "end_event": "screen.entrance_end",
+    "resettable": true
+  },
+  "bg_trinket0": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_trinket1": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_trinket2": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_trinket3": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_trinket4": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_trinket5": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_trinket6": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_trinket7": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_trinket8": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_charm2": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_charm0": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_charm1": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_face": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_head": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_necklace": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_ring": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_back": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_body": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_hands_left": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_belt": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_hands_right": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_feet_left": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_feet_right": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_tome": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_tab_hit": {
+    "type": "panel",
+    "size": [
+      56,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_tab_hit",
+          "size": [
+            56,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "paper_doll": {
+    "type": "custom",
+    "renderer": "live_player_renderer",
+    "size": [
+      22,
+      40
+    ],
+    "anchor_from": "center",
+    "anchor_to": "center",
+    "offset": [
+      0,
+      2
+    ],
+    "layer": 5,
+    "property_bag": {
+      "#look_at_cursor": true
+    },
+    "animation_reset_name": "screen_animation_reset",
+    "anims": [
+      "@curio_reliquary.doll_exit_size_push",
+      "@curio_reliquary.doll_exit_size_pop",
+      "@curio_reliquary.doll_entrance_size_push",
+      "@curio_reliquary.doll_entrance_size_pop"
+    ]
+  },
+  "doll_frame": {
+    "type": "panel",
+    "size": [
+      56,
+      92
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      0,
+      10
+    ],
+    "layer": 3,
+    "clips_children": true,
+    "controls": [
+      {
+        "frame": {
+          "type": "image",
+          "texture": "textures/ui/curio_doll_frame",
+          "size": [
+            56,
+            92
+          ],
+          "layer": 1
+        }
+      },
+      {
+        "doll_clip": {
+          "type": "panel",
+          "size": [
+            36,
+            64
+          ],
+          "anchor_from": "center",
+          "anchor_to": "center",
+          "offset": [
+            0,
+            0
+          ],
+          "clips_children": true,
+          "layer": 5,
+          "controls": [
+            {
+              "doll@curio_reliquary.paper_doll": {}
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "title_label": {
+    "type": "image",
+    "texture": "textures/ui/curio_reliquary_title",
+    "size": [
+      140,
+      16
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      0,
+      3
+    ],
+    "layer": 12
+  },
+  "title_gem_l": {
+    "type": "image",
+    "texture": "textures/ui/curio_gem",
+    "size": [
+      8,
+      8
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      -78,
+      7
+    ],
+    "layer": 12
+  },
+  "title_gem_r": {
+    "type": "image",
+    "texture": "textures/ui/curio_gem",
+    "size": [
+      8,
+      8
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      78,
+      7
+    ],
+    "layer": 12
+  },
+  "accessories": {
+    "type": "collection_panel",
+    "size": [
+      288,
+      116
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      0,
+      22
+    ],
+    "layer": 4,
+    "collection_name": "container_items",
+    "$item_collection_name": "container_items",
+    "controls": [
+      {
+        "frame@curio_reliquary.doll_frame": {}
+      },
+      {
+        "item0@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 0,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            192,
+            12
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_trinket0",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip0": {
+          "type": "label",
+          "text": "Extra",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            191,
+            29
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item1@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 1,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            216,
+            12
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_trinket1",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip1": {
+          "type": "label",
+          "text": "Extra",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            215,
+            29
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item2@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 2,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            240,
+            12
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_trinket2",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip2": {
+          "type": "label",
+          "text": "Extra",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            239,
+            29
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item3@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 3,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            192,
+            34
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_trinket3",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip3": {
+          "type": "label",
+          "text": "Extra",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            191,
+            51
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item4@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 4,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            216,
+            34
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_trinket4",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip4": {
+          "type": "label",
+          "text": "Extra",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            215,
+            51
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item5@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 5,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            240,
+            34
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_trinket5",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip5": {
+          "type": "label",
+          "text": "Extra",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            239,
+            51
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item6@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 6,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            192,
+            56
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_trinket6",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip6": {
+          "type": "label",
+          "text": "Extra",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            191,
+            73
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item7@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 7,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            216,
+            56
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_trinket7",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip7": {
+          "type": "label",
+          "text": "Extra",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            215,
+            73
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item8@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 8,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            240,
+            56
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_trinket8",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip8": {
+          "type": "label",
+          "text": "Extra",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            239,
+            73
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item9@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 9,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            192,
+            84
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_charm2",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip9": {
+          "type": "label",
+          "text": "Charm",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            191,
+            101
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item10@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 10,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            216,
+            84
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_charm0",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip10": {
+          "type": "label",
+          "text": "Charm",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            215,
+            101
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item11@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 11,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            240,
+            84
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_charm1",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip11": {
+          "type": "label",
+          "text": "Charm",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            239,
+            101
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item12@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 12,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            30,
+            12
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_face",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip12": {
+          "type": "label",
+          "text": "Face",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            29,
+            29
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item13@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 13,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            54,
+            12
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_head",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip13": {
+          "type": "label",
+          "text": "Head",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            53,
+            29
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item14@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 14,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            78,
+            12
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_necklace",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip14": {
+          "type": "label",
+          "text": "Neck",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            77,
+            29
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item15@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 15,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            30,
+            34
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_ring",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip15": {
+          "type": "label",
+          "text": "Ring",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            29,
+            51
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item16@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 16,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            54,
+            34
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_back",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip16": {
+          "type": "label",
+          "text": "Back",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            53,
+            51
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item17@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 17,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            78,
+            34
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_body",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip17": {
+          "type": "label",
+          "text": "Body",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            77,
+            51
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item18@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 18,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            30,
+            56
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_hands_left",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip18": {
+          "type": "label",
+          "text": "Hand",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            29,
+            73
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item19@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 19,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            54,
+            56
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_belt",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip19": {
+          "type": "label",
+          "text": "Belt",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            53,
+            73
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item20@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 20,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            78,
+            56
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_hands_right",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip20": {
+          "type": "label",
+          "text": "Hand",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            77,
+            73
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item21@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 21,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            30,
+            78
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_feet_left",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip21": {
+          "type": "label",
+          "text": "Foot",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            29,
+            95
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item22@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 22,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            54,
+            78
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_feet_right",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip22": {
+          "type": "label",
+          "text": "Foot",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            53,
+            95
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "item23@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 23,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            78,
+            78
+          ],
+          "layer": 5,
+          "$background_images": "curio_reliquary.bg_tome",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "tip23": {
+          "type": "label",
+          "text": "Tome",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.45,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            77,
+            95
+          ],
+          "size": [
+            20,
+            8
+          ],
+          "layer": 8,
+          "shadow": false
+        }
+      },
+      {
+        "extra_slots_header": {
+          "type": "label",
+          "text": "Extra Slots",
+          "color": [
+            0.95,
+            0.78,
+            0.35
+          ],
+          "font_scale_factor": 0.55,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            189,
+            1
+          ],
+          "size": [
+            64,
+            10
+          ],
+          "layer": 9,
+          "shadow": false
+        }
+      },
+      {
+        "charms_header": {
+          "type": "label",
+          "text": "Charms",
+          "color": [
+            0.95,
+            0.78,
+            0.35
+          ],
+          "font_scale_factor": 0.55,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            189,
+            78
+          ],
+          "size": [
+            48,
+            10
+          ],
+          "layer": 9,
+          "shadow": false
+        }
+      },
+      {
+        "ghost0@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 0,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            196,
+            16
+          ]
+        }
+      },
+      {
+        "ghost1@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 1,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            220,
+            16
+          ]
+        }
+      },
+      {
+        "ghost2@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 2,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            244,
+            16
+          ]
+        }
+      },
+      {
+        "ghost3@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 3,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            196,
+            38
+          ]
+        }
+      },
+      {
+        "ghost4@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 4,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            220,
+            38
+          ]
+        }
+      },
+      {
+        "ghost5@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 5,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            244,
+            38
+          ]
+        }
+      },
+      {
+        "ghost6@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 6,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            196,
+            60
+          ]
+        }
+      },
+      {
+        "ghost7@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 7,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            220,
+            60
+          ]
+        }
+      },
+      {
+        "ghost8@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 8,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            244,
+            60
+          ]
+        }
+      },
+      {
+        "ghost9@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 9,
+          "$ghost_tex": "textures/ui/slot_charm",
+          "$ghost_offset": [
+            196,
+            88
+          ]
+        }
+      },
+      {
+        "ghost10@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 10,
+          "$ghost_tex": "textures/ui/slot_charm",
+          "$ghost_offset": [
+            220,
+            88
+          ]
+        }
+      },
+      {
+        "ghost11@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 11,
+          "$ghost_tex": "textures/ui/slot_charm",
+          "$ghost_offset": [
+            244,
+            88
+          ]
+        }
+      },
+      {
+        "ghost12@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 12,
+          "$ghost_tex": "textures/ui/slot_face",
+          "$ghost_offset": [
+            34,
+            16
+          ]
+        }
+      },
+      {
+        "ghost13@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 13,
+          "$ghost_tex": "textures/ui/slot_head",
+          "$ghost_offset": [
+            58,
+            16
+          ]
+        }
+      },
+      {
+        "ghost14@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 14,
+          "$ghost_tex": "textures/ui/slot_necklace",
+          "$ghost_offset": [
+            82,
+            16
+          ]
+        }
+      },
+      {
+        "ghost15@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 15,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            34,
+            38
+          ]
+        }
+      },
+      {
+        "ghost16@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 16,
+          "$ghost_tex": "textures/ui/slot_back",
+          "$ghost_offset": [
+            58,
+            38
+          ]
+        }
+      },
+      {
+        "ghost17@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 17,
+          "$ghost_tex": "textures/ui/slot_body",
+          "$ghost_offset": [
+            82,
+            38
+          ]
+        }
+      },
+      {
+        "ghost18@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 18,
+          "$ghost_tex": "textures/ui/slot_hands_left",
+          "$ghost_offset": [
+            34,
+            60
+          ]
+        }
+      },
+      {
+        "ghost19@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 19,
+          "$ghost_tex": "textures/ui/slot_belt",
+          "$ghost_offset": [
+            58,
+            60
+          ]
+        }
+      },
+      {
+        "ghost20@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 20,
+          "$ghost_tex": "textures/ui/slot_hands_right",
+          "$ghost_offset": [
+            82,
+            60
+          ]
+        }
+      },
+      {
+        "ghost21@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 21,
+          "$ghost_tex": "textures/ui/slot_feet_left",
+          "$ghost_offset": [
+            34,
+            82
+          ]
+        }
+      },
+      {
+        "ghost22@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 22,
+          "$ghost_tex": "textures/ui/slot_feet_right",
+          "$ghost_offset": [
+            58,
+            82
+          ]
+        }
+      },
+      {
+        "ghost23@curio_reliquary.slot_ghost": {
+          "$ghost_idx": 23,
+          "$ghost_tex": "textures/ui/slot_tome",
+          "$ghost_offset": [
+            82,
+            82
+          ]
+        }
+      }
+    ]
+  },
+  "top_half": {
+    "type": "panel",
+    "size": [
+      "100%",
+      130
+    ],
+    "offset": [
+      0,
+      4
+    ],
+    "anchor_to": "top_left",
+    "anchor_from": "top_left",
+    "controls": [
+      {
+        "bg": {
+          "type": "image",
+          "texture": "textures/ui/curio_ledger_bg",
+          "size": [
+            288,
+            130
+          ],
+          "anchor_from": "top_middle",
+          "anchor_to": "top_middle",
+          "layer": 0
+        }
+      },
+      {
+        "title@curio_reliquary.title_label": {}
+      },
+      {
+        "acc@curio_reliquary.accessories": {}
+      }
+    ]
+  },
+  "root": {
+    "type": "panel",
+    "controls": [
+      {
+        "container_gamepad_helpers@common.container_gamepad_helpers": {}
+      },
+      {
+        "flying_item_renderer@common.flying_item_renderer": {
+          "layer": 14
+        }
+      },
+      {
+        "selected_item_details_factory@common.selected_item_details_factory": {}
+      },
+      {
+        "item_lock_notification_factory@common.item_lock_notification_factory": {}
+      },
+      {
+        "root_panel": {
+          "type": "panel",
+          "layer": 1,
+          "size": [
+            288,
+            230
+          ],
+          "controls": [
+            {
+              "window_bg": {
+                "type": "image",
+                "texture": "textures/ui/curio_window_bg",
+                "size": [
+                  288,
+                  230
+                ],
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "layer": 0
+              }
+            },
+            {
+              "chest_panel": {
+                "type": "panel",
+                "layer": 5,
+                "offset": [
+                  0,
+                  0
+                ],
+                "controls": [
+                  {
+                    "top@curio_reliquary.top_half": {}
+                  },
+                  {
+                    "inv_label": {
+                      "type": "label",
+                      "text": "Inventory",
+                      "color": [
+                        0.95,
+                        0.78,
+                        0.35
+                      ],
+                      "font_scale_factor": 1.0,
+                      "anchor_from": "top_left",
+                      "anchor_to": "top_left",
+                      "offset": [
+                        10,
+                        138
+                      ],
+                      "size": [
+                        80,
+                        12
+                      ],
+                      "layer": 13,
+                      "shadow": false
+                    }
+                  },
+                  {
+                    "inventory_panel_bottom_half@common.inventory_panel_bottom_half": {}
+                  },
+                  {
+                    "hotbar_grid@common.hotbar_grid_template": {}
+                  },
+                  {
+                    "inventory_take_progress_icon_button@common.inventory_take_progress_icon_button": {}
+                  }
+                ]
+              }
+            },
+            {
+              "inventory_selected_icon_button@common.inventory_selected_icon_button": {}
+            },
+            {
+              "gamepad_cursor@common.gamepad_cursor_button": {}
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "slot_ghost": {
+    "type": "image",
+    "texture": "$ghost_tex",
+    "size": [
+      10,
+      10
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": "$ghost_offset",
+    "layer": 3,
+    "collection_index": "$ghost_idx",
+    "bindings": [
+      {
+        "binding_name": "#item_id_aux",
+        "binding_type": "collection",
+        "binding_collection_name": "container_items",
+        "binding_condition": "always"
+      },
+      {
+        "binding_type": "view",
+        "source_property_name": "(#item_id_aux = 0)",
+        "target_property_name": "#visible"
+      }
+    ]
+  }
+}

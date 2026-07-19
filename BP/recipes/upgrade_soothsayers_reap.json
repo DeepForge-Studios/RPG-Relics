@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_soothsayers_reap"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:fortune_tellers_cap"
+      },
+      {
+        "item": "relics:reapers_hook"
+      },
+      {
+        "item": "relics:crimson_crystal"
+      }
+    ],
+    "result": {
+      "item": "relics:soothsayers_reap",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:fortune_tellers_cap"
+      }
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_tempest_choker"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:storm_locket"
+      },
+      {
+        "item": "relics:marrow_choker"
+      },
+      {
+        "item": "relics:crimson_crystal"
+      }
+    ],
+    "result": {
+      "item": "relics:tempest_choker",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:storm_locket"
+      }
+    ]
+  }
+}

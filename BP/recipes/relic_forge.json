@@ -1,0 +1,39 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "relics:relic_forge"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "ABA",
+      "CDC",
+      "CCC"
+    ],
+    "key": {
+      "A": {
+        "item": "minecraft:amethyst_shard"
+      },
+      "B": {
+        "item": "minecraft:book"
+      },
+      "C": {
+        "item": "minecraft:deepslate_bricks"
+      },
+      "D": {
+        "item": "minecraft:crafting_table"
+      }
+    },
+    "result": {
+      "item": "relics:relic_forge",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "minecraft:amethyst_shard"
+      }
+    ]
+  }
+}

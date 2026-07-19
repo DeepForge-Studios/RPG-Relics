@@ -1,0 +1,124 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:crafting_items_catalog": {
+    "categories": [
+      {
+        "category_name": "equipment",
+        "groups": [
+          {
+            "group_identifier": {
+              "icon": "relics:heartstone",
+              "name": "relics:itemGroup.name.relics"
+            },
+            "items": [
+              "relics:reliquary",
+              "relics:relic_guidebook",
+              "relics:relic_forge",
+              "relics:attunement_forge",
+              "relics:endless_ration",
+              "relics:storm_parasol",
+              "relics:lumen_visor",
+              "relics:quaffers_cap",
+              "relics:gillmask",
+              "relics:fortune_tellers_cap",
+              "relics:merchants_fedora",
+              "relics:scryglass",
+              "relics:filter_mask",
+              "relics:anchor_charm",
+              "relics:ward_pendant",
+              "relics:ember_locket",
+              "relics:adrenaline_charm",
+              "relics:prospectors_scarf",
+              "relics:phantom_veil",
+              "relics:storm_locket",
+              "relics:bramble_charm",
+              "relics:haste_band",
+              "relics:vital_band",
+              "relics:bloom_band",
+              "relics:draught_band",
+              "relics:lucky_talisman",
+              "relics:shrink_charm",
+              "relics:cloud_cape",
+              "relics:stratos_pack",
+              "relics:crystal_harness",
+              "relics:obsidian_plate",
+              "relics:purifying_flask",
+              "relics:zephyr_flask",
+              "relics:heartstone",
+              "relics:skybound_charm",
+              "relics:cinder_ward",
+              "relics:magnetic_sash",
+              "relics:blight_vessel",
+              "relics:cloud_vial",
+              "relics:excavator_gauntlets",
+              "relics:fleetstrike_gloves",
+              "relics:cinderfist",
+              "relics:reapers_hook",
+              "relics:impact_knuckles",
+              "relics:crusher_gauntlet",
+              "relics:leeching_glove",
+              "relics:gilt_hook",
+              "relics:tidewalkers",
+              "relics:springheel_boots",
+              "relics:finfoot_boots",
+              "relics:featherpad_boots",
+              "relics:marathoners_treads",
+              "relics:rootgrip_boots",
+              "relics:jesters_cushion",
+              "relics:marrow_choker",
+              "relics:venom_ward",
+              "relics:nimbus_mantle",
+              "relics:inferno_brand",
+              "relics:veinheart_gauntlets",
+              "relics:vital_bloom",
+              "relics:alchemists_focus",
+              "relics:tempest_choker",
+              "relics:gale_aegis",
+              "relics:bulwark_plate",
+              "relics:treasure_lure",
+              "relics:soothsayers_reap",
+              "relics:executioners_phantom",
+              "relics:leviathan_striders",
+              "relics:sanguine_heartguard",
+              "relics:warhammer_fist",
+              "relics:crimson_wargrip",
+              "relics:nightseers_gaze",
+              "relics:thornroot_ward",
+              "relics:windsprint_greaves",
+              "relics:abyssal_gillchain"
+            ]
+          },
+          {
+            "group_identifier": {
+              "icon": "relics:relic_shard",
+              "name": "relics:itemGroup.name.materials"
+            },
+            "items": [
+              "relics:relic_shard",
+              "relics:monster_heart",
+              "relics:beast_fang",
+              "relics:arcane_dust",
+              "relics:mystic_herb",
+              "relics:silver_fragment",
+              "relics:crimson_crystal"
+            ]
+          },
+          {
+            "group_identifier": {
+              "icon": "relics:spawn_mimic_forest",
+              "name": "relics:itemGroup.name.mimics"
+            },
+            "items": [
+              "relics:spawn_mimic_forest",
+              "relics:spawn_mimic_desert",
+              "relics:spawn_mimic_swamp",
+              "relics:spawn_mimic_snow",
+              "relics:spawn_mimic_jungle",
+              "relics:spawn_mimic_badlands"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

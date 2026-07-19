@@ -1,0 +1,26 @@
+{
+  "format_version": "1.21.10",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:reliquary",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_reliquary",
+      "minecraft:display_name": {
+        "value": "item.relics:reliquary"
+      },
+      "minecraft:hand_equipped": true,
+      "minecraft:custom_components": [
+        "relics:on_use"
+      ],
+      "minecraft:use_modifiers": {
+        "use_duration": 0.05,
+        "movement_modifier": 1
+      }
+    }
+  }
+}

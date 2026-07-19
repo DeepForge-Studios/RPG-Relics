@@ -1,0 +1,47 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "loot_table",
+          "name": "loot_tables/relics/items/uncommon.json",
+          "weight": 2
+        },
+        {
+          "type": "loot_table",
+          "name": "loot_tables/relics/items/common.json",
+          "weight": 4
+        },
+        {
+          "type": "loot_table",
+          "name": "loot_tables/relics/items/rare.json",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "rolls": { "min": 1, "max": 3 },
+      "entries": [
+        {
+          "type": "item",
+          "name": "relics:relic_shard",
+          "weight": 5,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:gold_nugget",
+          "weight": 3,
+          "functions": [{ "function": "set_count", "count": { "min": 2, "max": 6 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:emerald",
+          "weight": 1,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }]
+        }
+      ]
+    }
+  ]
+}

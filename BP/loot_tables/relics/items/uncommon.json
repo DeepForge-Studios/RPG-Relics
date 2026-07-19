@@ -1,0 +1,30 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "item", "name": "relics:scryglass", "weight": 1 },
+        { "type": "item", "name": "relics:filter_mask", "weight": 1 },
+        { "type": "item", "name": "relics:fortune_tellers_cap", "weight": 1 },
+        { "type": "item", "name": "relics:anchor_charm", "weight": 1 },
+        { "type": "item", "name": "relics:ember_locket", "weight": 1 },
+        { "type": "item", "name": "relics:phantom_veil", "weight": 1 },
+        { "type": "item", "name": "relics:storm_locket", "weight": 1 },
+        { "type": "item", "name": "relics:haste_band", "weight": 1 },
+        { "type": "item", "name": "relics:purifying_flask", "weight": 1 },
+        { "type": "item", "name": "relics:heartstone", "weight": 1 },
+        { "type": "item", "name": "relics:cinder_ward", "weight": 1 },
+        { "type": "item", "name": "relics:magnetic_sash", "weight": 1 },
+        { "type": "item", "name": "relics:crusher_gauntlet", "weight": 1 },
+        { "type": "item", "name": "relics:leeching_glove", "weight": 1 },
+        { "type": "item", "name": "relics:tidewalkers", "weight": 1 },
+        { "type": "item", "name": "relics:finfoot_boots", "weight": 1 },
+        { "type": "item", "name": "relics:cinderfist", "weight": 1 },
+        { "type": "item", "name": "relics:blight_vessel", "weight": 1 },
+        { "type": "item", "name": "relics:gilt_hook", "weight": 1 },
+        { "type": "item", "name": "relics:draught_band", "weight": 1 },
+        { "type": "item", "name": "relics:relic_shard", "weight": 2 }
+      ]
+    }
+  ]
+}

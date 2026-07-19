@@ -1,0 +1,23 @@
+{
+  "resource_pack_name": "rpg_relics",
+  "texture_name": "atlas.terrain",
+  "padding": 8,
+  "num_mip_levels": 4,
+  "texture_data": {
+    "relics_dummy_chest": {
+      "textures": "textures/blocks/dummy_chest"
+    },
+    "relics_relic_forge_v4_top": {
+      "textures": "textures/blocks/relic_forge_v4_top"
+    },
+    "relics_relic_forge_v4_side": {
+      "textures": "textures/blocks/relic_forge_v4_side"
+    },
+    "relics_relic_forge_v4_bottom": {
+      "textures": "textures/blocks/relic_forge_v4_bottom"
+    },
+    "relics_attunement_forge": {
+      "textures": "textures/blocks/attunement_forge"
+    }
+  }
+}

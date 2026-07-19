@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:thornroot_ward",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_thornroot_ward",
+      "minecraft:display_name": {
+        "value": "item.relics:thornroot_ward"
+      },
+      "minecraft:rarity": "rare",
+      "minecraft:hover_text_color": "blue"
+    }
+  }
+}

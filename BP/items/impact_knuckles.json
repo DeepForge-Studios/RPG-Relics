@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:impact_knuckles",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_impact_knuckles",
+      "minecraft:display_name": {
+        "value": "item.relics:impact_knuckles"
+      },
+      "minecraft:hand_equipped": true,
+      "minecraft:rarity": "common"
+    }
+  }
+}

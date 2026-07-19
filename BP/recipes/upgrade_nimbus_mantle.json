@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_nimbus_mantle"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:cloud_cape"
+      },
+      {
+        "item": "relics:cloud_vial"
+      },
+      {
+        "item": "relics:arcane_dust"
+      }
+    ],
+    "result": {
+      "item": "relics:nimbus_mantle",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:cloud_cape"
+      }
+    ]
+  }
+}

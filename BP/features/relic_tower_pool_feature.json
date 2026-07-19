@@ -1,0 +1,12 @@
+{
+  "format_version": "1.13.0",
+  "minecraft:weighted_random_feature": {
+    "description": {
+      "identifier": "relics:relic_tower_pool_feature"
+    },
+    "features": [
+      ["relics:relic_tower_spruce_feature", 1],
+      ["relics:relic_home_fantasy_feature", 1]
+    ]
+  }
+}

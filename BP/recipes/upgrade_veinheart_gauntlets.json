@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_veinheart_gauntlets"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:haste_band"
+      },
+      {
+        "item": "relics:excavator_gauntlets"
+      },
+      {
+        "item": "relics:silver_fragment"
+      }
+    ],
+    "result": {
+      "item": "relics:veinheart_gauntlets",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:haste_band"
+      }
+    ]
+  }
+}

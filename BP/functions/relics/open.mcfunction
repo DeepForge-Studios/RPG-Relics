@@ -1,0 +1,1 @@
+scriptevent relics:open_menu

@@ -1,0 +1,12 @@
+{
+  "resource_pack_name": "example_trinkets",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "example_trinkets_ruby_ring": {
+      "textures": "textures/items/ruby_ring"
+    },
+    "example_trinkets_lucky_coin": {
+      "textures": "textures/items/lucky_coin"
+    }
+  }
+}

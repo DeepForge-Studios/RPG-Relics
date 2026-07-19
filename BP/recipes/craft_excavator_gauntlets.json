@@ -1,0 +1,40 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:craft_excavator_gauntlets"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:silver_fragment"
+      },
+      {
+        "item": "relics:silver_fragment"
+      },
+      {
+        "item": "relics:silver_fragment"
+      },
+      {
+        "item": "relics:relic_shard"
+      },
+      {
+        "item": "relics:relic_shard"
+      },
+      {
+        "item": "minecraft:diamond"
+      }
+    ],
+    "result": {
+      "item": "relics:excavator_gauntlets",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:silver_fragment"
+      }
+    ]
+  }
+}

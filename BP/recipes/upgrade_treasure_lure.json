@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_treasure_lure"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:gilt_hook"
+      },
+      {
+        "item": "relics:magnetic_sash"
+      },
+      {
+        "item": "relics:relic_shard"
+      }
+    ],
+    "result": {
+      "item": "relics:treasure_lure",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:gilt_hook"
+      }
+    ]
+  }
+}

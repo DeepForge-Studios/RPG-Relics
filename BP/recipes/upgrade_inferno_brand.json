@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_inferno_brand"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:ember_locket"
+      },
+      {
+        "item": "relics:cinderfist"
+      },
+      {
+        "item": "relics:crimson_crystal"
+      }
+    ],
+    "result": {
+      "item": "relics:inferno_brand",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:ember_locket"
+      }
+    ]
+  }
+}

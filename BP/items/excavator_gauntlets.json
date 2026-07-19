@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:excavator_gauntlets",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_excavator_gauntlets",
+      "minecraft:display_name": {
+        "value": "item.relics:excavator_gauntlets"
+      },
+      "minecraft:hand_equipped": true,
+      "minecraft:rarity": "common"
+    }
+  }
+}

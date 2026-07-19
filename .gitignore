@@ -1,0 +1,29 @@
+# Build artifacts / local only
+_mcaddon_build/
+_zip_test/
+*.mcaddon
+examples/trinket-addon/*.mcaddon
+LAST_TEST_BUILD.txt
+test_build_counter.txt
+
+# Local Obsidian vault (private)
+Vault/
+
+# Cursor / agent workspace (private)
+.cursor/
+.cursorrules
+TASKS.md
+BUGS.md
+GOALS.md
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.tmp
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+.venv/

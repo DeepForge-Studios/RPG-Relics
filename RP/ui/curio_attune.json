@@ -1,0 +1,847 @@
+{
+  "namespace": "curio_attune",
+  "bg_examine": {
+    "type": "panel",
+    "size": [
+      22,
+      22
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            22,
+            22
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "bg_btn": {
+    "type": "panel",
+    "size": [
+      18,
+      18
+    ],
+    "controls": [
+      {
+        "cell": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            18,
+            18
+          ],
+          "layer": 1
+        }
+      }
+    ]
+  },
+  "slot_ghost": {
+    "type": "image",
+    "texture": "$ghost_tex",
+    "size": [
+      10,
+      10
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": "$ghost_offset",
+    "layer": 3,
+    "collection_index": "$ghost_idx",
+    "bindings": [
+      {
+        "binding_name": "#item_id_aux",
+        "binding_type": "collection",
+        "binding_collection_name": "container_items",
+        "binding_condition": "always"
+      },
+      {
+        "binding_type": "view",
+        "source_property_name": "(#item_id_aux = 0)",
+        "target_property_name": "#visible"
+      }
+    ]
+  },
+  "flow_glyph": {
+    "type": "label",
+    "text": "$glyph",
+    "color": [
+      0.95,
+      0.78,
+      0.35
+    ],
+    "font_scale_factor": 1.0,
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": "$glyph_offset",
+    "size": [
+      12,
+      12
+    ],
+    "layer": 11,
+    "shadow": false,
+    "text_alignment": "center"
+  },
+  "unlock_tag": {
+    "type": "label",
+    "text": "$tag_text",
+    "color": "$tag_color",
+    "font_scale_factor": 0.6,
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "offset": "$tag_offset",
+    "size": [
+      56,
+      12
+    ],
+    "layer": 12,
+    "shadow": false,
+    "text_alignment": "left",
+    "collection_index": 24,
+    "bindings": [
+      {
+        "binding_type": "collection",
+        "binding_collection_name": "container_items",
+        "binding_name": "#item_name",
+        "binding_name_override": "#item_name",
+        "binding_condition": "always"
+      },
+      {
+        "binding_type": "view",
+        "source_property_name": "$tag_visible_expr",
+        "target_property_name": "#visible"
+      }
+    ]
+  },
+  "title_label": {
+    "type": "image",
+    "texture": "textures/ui/curio_attune_title",
+    "size": [
+      200,
+      16
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      -8,
+      2
+    ],
+    "layer": 12
+  },
+  "top_chrome": {
+    "type": "panel",
+    "size": [
+      "100%",
+      130
+    ],
+    "offset": [
+      0,
+      4
+    ],
+    "anchor_to": "top_left",
+    "anchor_from": "top_left",
+    "controls": [
+      {
+        "bg": {
+          "type": "image",
+          "texture": "textures/ui/curio_ledger_bg",
+          "size": [
+            288,
+            130
+          ],
+          "anchor_from": "top_middle",
+          "anchor_to": "top_middle",
+          "layer": 0
+        }
+      },
+      {
+        "title@curio_attune.title_label": {}
+      },
+      {
+        "flow_hint": {
+          "type": "label",
+          "text": "Relic + two focuses  \u00bb  attuned relic  \u00b7  shards from your bag",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.6,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            0,
+            22
+          ],
+          "size": [
+            288,
+            10
+          ],
+          "layer": 11,
+          "shadow": false,
+          "text_alignment": "center"
+        }
+      }
+    ]
+  },
+  "examine_panel": {
+    "type": "collection_panel",
+    "collection_name": "container_items",
+    "$item_collection_name": "container_items",
+    "size": [
+      288,
+      130
+    ],
+    "offset": [
+      0,
+      4
+    ],
+    "anchor_from": "top_left",
+    "anchor_to": "top_left",
+    "layer": 8,
+    "controls": [
+      {
+        "item24@chest.chest_grid_item": {
+          "size": [
+            22,
+            22
+          ],
+          "collection_index": 24,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            76,
+            34
+          ],
+          "layer": 5,
+          "$background_images": "curio_attune.bg_examine",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "item25@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 25,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            114,
+            36
+          ],
+          "layer": 5,
+          "$background_images": "curio_attune.bg_btn",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "item26@chest.chest_grid_item": {
+          "size": [
+            18,
+            18
+          ],
+          "collection_index": 26,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            148,
+            36
+          ],
+          "layer": 5,
+          "$background_images": "curio_attune.bg_btn",
+          "$background_image_control_name": "bg"
+        }
+      },
+      {
+        "result_frame": {
+          "type": "image",
+          "texture": "textures/ui/curio_slot_bg",
+          "size": [
+            22,
+            22
+          ],
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            190,
+            34
+          ],
+          "layer": 5
+        }
+      },
+      {
+        "result_label": {
+          "type": "label",
+          "text": "result",
+          "color": [
+            0.82,
+            0.72,
+            0.92
+          ],
+          "font_scale_factor": 0.5,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            188,
+            58
+          ],
+          "size": [
+            28,
+            8
+          ],
+          "layer": 11,
+          "shadow": false,
+          "text_alignment": "center"
+        }
+      },
+      {
+        "result_hint": {
+          "type": "label",
+          "text": "same",
+          "color": [
+            0.55,
+            0.9,
+            0.55
+          ],
+          "font_scale_factor": 0.5,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            192,
+            40
+          ],
+          "size": [
+            20,
+            10
+          ],
+          "layer": 12,
+          "shadow": false,
+          "text_alignment": "center",
+          "collection_index": 24,
+          "bindings": [
+            {
+              "binding_type": "collection",
+              "binding_collection_name": "container_items",
+              "binding_name": "#item_id_aux",
+              "binding_name_override": "#item_id_aux",
+              "binding_condition": "always"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(not (#item_id_aux = 0))",
+              "target_property_name": "#visible"
+            }
+          ]
+        }
+      },
+      {
+        "plus1@curio_attune.flow_glyph": {
+          "$glyph": "+",
+          "$glyph_offset": [
+            99,
+            39
+          ]
+        }
+      },
+      {
+        "plus2@curio_attune.flow_glyph": {
+          "$glyph": "+",
+          "$glyph_offset": [
+            133,
+            39
+          ]
+        }
+      },
+      {
+        "arrow@curio_attune.flow_glyph": {
+          "$glyph": "\u00bb",
+          "$glyph_offset": [
+            169,
+            39
+          ]
+        }
+      },
+      {
+        "ghost24@curio_attune.slot_ghost": {
+          "$ghost_idx": 24,
+          "$ghost_tex": "textures/ui/slot_ring",
+          "$ghost_offset": [
+            82,
+            40
+          ]
+        }
+      },
+      {
+        "ghost25@curio_attune.slot_ghost": {
+          "$ghost_idx": 25,
+          "$ghost_tex": "textures/ui/curio_gem",
+          "$ghost_offset": [
+            118,
+            40
+          ]
+        }
+      },
+      {
+        "ghost26@curio_attune.slot_ghost": {
+          "$ghost_idx": 26,
+          "$ghost_tex": "textures/ui/curio_gem",
+          "$ghost_offset": [
+            152,
+            40
+          ]
+        }
+      },
+      {
+        "bay_name": {
+          "type": "label",
+          "text": "#item_name",
+          "color": [
+            0.98,
+            0.86,
+            0.45
+          ],
+          "font_scale_factor": 0.8,
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            0,
+            64
+          ],
+          "size": [
+            288,
+            12
+          ],
+          "layer": 12,
+          "shadow": false,
+          "text_alignment": "center",
+          "collection_index": 24,
+          "bindings": [
+            {
+              "binding_type": "collection",
+              "binding_collection_name": "container_items",
+              "binding_name": "#item_name",
+              "binding_name_override": "#item_name",
+              "binding_condition": "always"
+            },
+            {
+              "binding_type": "collection",
+              "binding_collection_name": "container_items",
+              "binding_name": "#item_id_aux",
+              "binding_name_override": "#item_id_aux",
+              "binding_condition": "always"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(not (#item_id_aux = 0))",
+              "target_property_name": "#visible"
+            }
+          ]
+        }
+      },
+      {
+        "empty_group": {
+          "type": "panel",
+          "collection_index": 24,
+          "size": [
+            288,
+            130
+          ],
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "layer": 10,
+          "bindings": [
+            {
+              "binding_type": "collection",
+              "binding_collection_name": "container_items",
+              "binding_name": "#item_id_aux",
+              "binding_name_override": "#item_id_aux",
+              "binding_condition": "always"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(#item_id_aux = 0)",
+              "target_property_name": "#visible"
+            }
+          ],
+          "controls": [
+            {
+              "empty_name": {
+                "type": "label",
+                "text": "Place a relic in the first box",
+                "color": [
+                  0.98,
+                  0.86,
+                  0.45
+                ],
+                "font_scale_factor": 0.8,
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  0,
+                  64
+                ],
+                "size": [
+                  288,
+                  12
+                ],
+                "layer": 10,
+                "shadow": false,
+                "text_alignment": "center"
+              }
+            },
+            {
+              "empty_hint": {
+                "type": "label",
+                "text": "The focus pair chooses the group \u00b7 amounts choose rarity",
+                "color": [
+                  0.82,
+                  0.72,
+                  0.92
+                ],
+                "font_scale_factor": 0.6,
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  0,
+                  80
+                ],
+                "size": [
+                  288,
+                  10
+                ],
+                "layer": 10,
+                "shadow": false,
+                "text_alignment": "center"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "filled_group": {
+          "type": "panel",
+          "collection_index": 24,
+          "size": [
+            288,
+            130
+          ],
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "layer": 10,
+          "bindings": [
+            {
+              "binding_type": "collection",
+              "binding_collection_name": "container_items",
+              "binding_name": "#item_id_aux",
+              "binding_name_override": "#item_id_aux",
+              "binding_condition": "always"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(not (#item_id_aux = 0))",
+              "target_property_name": "#visible"
+            }
+          ],
+          "controls": [
+            {
+              "xp_track": {
+                "type": "image",
+                "texture": "textures/ui/curio_xp_empty",
+                "size": [
+                  160,
+                  8
+                ],
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  64,
+                  80
+                ],
+                "layer": 6
+              }
+            },
+            {
+              "row0_l": {
+                "type": "label",
+                "text": "Core Gift",
+                "color": [
+                  0.95,
+                  0.9,
+                  0.7
+                ],
+                "font_scale_factor": 0.6,
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  64,
+                  94
+                ],
+                "size": [
+                  90,
+                  12
+                ],
+                "layer": 10,
+                "shadow": false,
+                "text_alignment": "left"
+              }
+            },
+            {
+              "row1_l": {
+                "type": "label",
+                "text": "Awakened Rite",
+                "color": [
+                  0.85,
+                  0.78,
+                  0.95
+                ],
+                "font_scale_factor": 0.6,
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [
+                  64,
+                  108
+                ],
+                "size": [
+                  90,
+                  12
+                ],
+                "layer": 10,
+                "shadow": false,
+                "text_alignment": "left"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "xp_fill_live": {
+          "type": "image",
+          "texture": "textures/ui/curio_xp_fill",
+          "size": [
+            160,
+            8
+          ],
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "offset": [
+            64,
+            80
+          ],
+          "layer": 12,
+          "clip_direction": "left",
+          "clip_pixelperfect": true,
+          "$clip_max": 99.0,
+          "collection_index": 24,
+          "bindings": [
+            {
+              "binding_type": "collection",
+              "binding_collection_name": "container_items",
+              "binding_name": "#item_name",
+              "binding_name_override": "#item_name",
+              "binding_condition": "always"
+            },
+            {
+              "binding_type": "collection",
+              "binding_collection_name": "container_items",
+              "binding_name": "#item_id_aux",
+              "binding_name_override": "#item_id_aux",
+              "binding_condition": "always"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(not (#item_id_aux = 0))",
+              "target_property_name": "#visible"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "((%.3s * #item_name) - (%.2s * #item_name))",
+              "target_property_name": "#pct_tens"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "((%.6s * #item_name) - (%.5s * #item_name))",
+              "target_property_name": "#pct_ones"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(((#pct_tens * 10.0) + (#pct_ones * 1.0)) * 1.0)",
+              "target_property_name": "#ratio_n"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(($clip_max - #ratio_n) / $clip_max)",
+              "target_property_name": "#clip_ratio"
+            }
+          ]
+        }
+      },
+      {
+        "row0_locked@curio_attune.unlock_tag": {
+          "$tag_text": "ritual",
+          "$tag_color": [
+            0.55,
+            0.5,
+            0.62
+          ],
+          "$tag_offset": [
+            168,
+            94
+          ],
+          "$tag_visible_expr": "(((%.9s * #item_name) - (%.8s * #item_name)) = '0')"
+        }
+      },
+      {
+        "row0_unlocked@curio_attune.unlock_tag": {
+          "$tag_text": "attuned",
+          "$tag_color": [
+            0.55,
+            0.9,
+            0.55
+          ],
+          "$tag_offset": [
+            168,
+            94
+          ],
+          "$tag_visible_expr": "(((%.9s * #item_name) - (%.8s * #item_name)) = '1')"
+        }
+      },
+      {
+        "row1_locked@curio_attune.unlock_tag": {
+          "$tag_text": "opens at Lv 5",
+          "$tag_color": [
+            0.7,
+            0.65,
+            0.8
+          ],
+          "$tag_offset": [
+            168,
+            108
+          ],
+          "$tag_visible_expr": "(((%.12s * #item_name) - (%.11s * #item_name)) = '0')"
+        }
+      },
+      {
+        "row1_unlocked@curio_attune.unlock_tag": {
+          "$tag_text": "open",
+          "$tag_color": [
+            0.55,
+            0.9,
+            0.55
+          ],
+          "$tag_offset": [
+            168,
+            108
+          ],
+          "$tag_visible_expr": "(((%.12s * #item_name) - (%.11s * #item_name)) = '1')"
+        }
+      }
+    ]
+  },
+  "root": {
+    "type": "panel",
+    "controls": [
+      {
+        "container_gamepad_helpers@common.container_gamepad_helpers": {}
+      },
+      {
+        "flying_item_renderer@common.flying_item_renderer": {
+          "layer": 14
+        }
+      },
+      {
+        "selected_item_details_factory@common.selected_item_details_factory": {}
+      },
+      {
+        "item_lock_notification_factory@common.item_lock_notification_factory": {}
+      },
+      {
+        "root_panel": {
+          "type": "panel",
+          "layer": 1,
+          "size": [
+            288,
+            230
+          ],
+          "controls": [
+            {
+              "window_bg": {
+                "type": "image",
+                "texture": "textures/ui/curio_window_bg",
+                "size": [
+                  288,
+                  230
+                ],
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "layer": 0
+              }
+            },
+            {
+              "chest_panel": {
+                "type": "panel",
+                "layer": 5,
+                "offset": [
+                  0,
+                  0
+                ],
+                "controls": [
+                  {
+                    "top@curio_attune.top_chrome": {}
+                  },
+                  {
+                    "examine@curio_attune.examine_panel": {}
+                  },
+                  {
+                    "inv_label": {
+                      "type": "label",
+                      "text": "Inventory",
+                      "color": [
+                        0.95,
+                        0.78,
+                        0.35
+                      ],
+                      "font_scale_factor": 1.0,
+                      "anchor_from": "top_left",
+                      "anchor_to": "top_left",
+                      "offset": [
+                        10,
+                        138
+                      ],
+                      "size": [
+                        80,
+                        12
+                      ],
+                      "layer": 13,
+                      "shadow": false
+                    }
+                  },
+                  {
+                    "inventory_panel_bottom_half@common.inventory_panel_bottom_half": {}
+                  },
+                  {
+                    "hotbar_grid@common.hotbar_grid_template": {}
+                  },
+                  {
+                    "inventory_take_progress_icon_button@common.inventory_take_progress_icon_button": {}
+                  }
+                ]
+              }
+            },
+            {
+              "inventory_selected_icon_button@common.inventory_selected_icon_button": {}
+            },
+            {
+              "gamepad_cursor@common.gamepad_cursor_button": {}
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

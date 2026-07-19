@@ -1,0 +1,76 @@
+{
+  "entity_sounds": {
+    "entities": {
+      "relics:mimic": {
+        "events": {
+          "death": "random.chestopen",
+          "attack": "random.chestopen",
+          "hurt": "random.chestclosed",
+          "ambient": "random.door_open"
+        },
+        "pitch": [0.8, 1.2],
+        "volume": 1
+      },
+      "relics:mimic_forest": {
+        "events": {
+          "death": "random.chestopen",
+          "attack": "random.chestopen",
+          "hurt": "random.chestclosed",
+          "ambient": "random.door_open"
+        },
+        "pitch": [0.75, 1.05],
+        "volume": 1
+      },
+      "relics:mimic_desert": {
+        "events": {
+          "death": "random.chestopen",
+          "attack": "random.chestopen",
+          "hurt": "random.chestclosed",
+          "ambient": "random.door_open"
+        },
+        "pitch": [0.85, 1.15],
+        "volume": 1
+      },
+      "relics:mimic_badlands": {
+        "events": {
+          "death": "random.chestopen",
+          "attack": "random.chestopen",
+          "hurt": "random.chestclosed",
+          "ambient": "random.door_open"
+        },
+        "pitch": [0.65, 0.95],
+        "volume": 1
+      },
+      "relics:mimic_snow": {
+        "events": {
+          "death": "random.chestopen",
+          "attack": "random.chestopen",
+          "hurt": "random.chestclosed",
+          "ambient": "random.door_open"
+        },
+        "pitch": [1, 1.3],
+        "volume": 1
+      },
+      "relics:mimic_swamp": {
+        "events": {
+          "death": "random.chestopen",
+          "attack": "random.chestopen",
+          "hurt": "random.chestclosed",
+          "ambient": "random.door_open"
+        },
+        "pitch": [0.55, 0.85],
+        "volume": 1
+      },
+      "relics:mimic_jungle": {
+        "events": {
+          "death": "random.chestopen",
+          "attack": "random.chestopen",
+          "hurt": "random.chestclosed",
+          "ambient": "random.door_open"
+        },
+        "pitch": [0.9, 1.2],
+        "volume": 1
+      }
+    }
+  }
+}

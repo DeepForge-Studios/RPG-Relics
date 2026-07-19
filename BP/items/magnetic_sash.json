@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:magnetic_sash",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_magnetic_sash",
+      "minecraft:display_name": {
+        "value": "item.relics:magnetic_sash"
+      },
+      "minecraft:rarity": "uncommon",
+      "minecraft:hover_text_color": "green"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_gale_aegis"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:stratos_pack"
+      },
+      {
+        "item": "relics:skybound_charm"
+      },
+      {
+        "item": "relics:arcane_dust"
+      }
+    ],
+    "result": {
+      "item": "relics:gale_aegis",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:stratos_pack"
+      }
+    ]
+  }
+}

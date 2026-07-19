@@ -1,0 +1,66 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "relics:reliquary",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "relics:despawn": {
+        "minecraft:instant_despawn": {}
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": ["inanimate", "curio", "reliquary"]
+      },
+      "minecraft:collision_box": {
+        "width": 0.9,
+        "height": 0.7
+      },
+      "minecraft:health": {
+        "value": 20,
+        "max": 20
+      },
+      "minecraft:damage_sensor": {
+        "triggers": {
+          "cause": "all",
+          "deals_damage": false
+        }
+      },
+      "minecraft:knockback_resistance": {
+        "value": 1
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:physics": {
+        "has_collision": true,
+        "has_gravity": false
+      },
+      "minecraft:scale": {
+        "value": 0.65
+      },
+      "minecraft:nameable": {
+        "allow_name_tag_renaming": false,
+        "always_show": true
+      },
+      "minecraft:inventory": {
+        "inventory_size": 27,
+        "container_type": "minecart_chest",
+        "can_be_siphoned_from": false,
+        "private": false
+      }
+    },
+    "events": {
+      "relics:despawn_event": {
+        "add": {
+          "component_groups": ["relics:despawn"]
+        }
+      }
+    }
+  }
+}

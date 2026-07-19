@@ -1,0 +1,759 @@
+{
+  "namespace": "curio_ledger",
+  "btn_0@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 0
+  },
+  "btn_1@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 1
+  },
+  "btn_2@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 2
+  },
+  "btn_3@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 3
+  },
+  "btn_4@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 4
+  },
+  "btn_5@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 5
+  },
+  "btn_6@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 6
+  },
+  "btn_7@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 7
+  },
+  "btn_8@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 8
+  },
+  "btn_9@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 9
+  },
+  "btn_10@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 10
+  },
+  "btn_11@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 11
+  },
+  "btn_12@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 12
+  },
+  "btn_13@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 13
+  },
+  "btn_14@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 14
+  },
+  "btn_15@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 15
+  },
+  "btn_16@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 16
+  },
+  "btn_17@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 17
+  },
+  "btn_18@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 18
+  },
+  "btn_19@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 19
+  },
+  "btn_20@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 20
+  },
+  "btn_21@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 21
+  },
+  "btn_22@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 22
+  },
+  "btn_23@chest_ui.inventory_item_panel": {
+    "size": [
+      18,
+      18
+    ],
+    "collection_index": 23
+  },
+  "paper_doll": {
+    "type": "custom",
+    "renderer": "paper_doll_renderer",
+    "size": [
+      40,
+      72
+    ],
+    "anchor_from": "center",
+    "anchor_to": "center",
+    "offset": [
+      0,
+      -2
+    ],
+    "layer": 5,
+    "property_bag": {
+      "use_player_paperdoll": true,
+      "use_selected_skin": true,
+      "rotation": "auto"
+    }
+  },
+  "doll_frame": {
+    "type": "panel",
+    "size": [
+      56,
+      92
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      0,
+      18
+    ],
+    "layer": 3,
+    "controls": [
+      {
+        "frame": {
+          "type": "image",
+          "texture": "textures/ui/curio_doll_frame",
+          "size": [
+            56,
+            92
+          ],
+          "layer": 1
+        }
+      },
+      {
+        "doll@curio_ledger.paper_doll": {}
+      }
+    ]
+  },
+  "title_label": {
+    "type": "label",
+    "text": "RPG Relics",
+    "color": [
+      0.15,
+      0.1,
+      0.05
+    ],
+    "font_scale_factor": 1.0,
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      0,
+      4
+    ],
+    "layer": 8,
+    "shadow": false
+  },
+  "left_col": {
+    "type": "stack_panel",
+    "orientation": "vertical",
+    "size": [
+      58,
+      84
+    ],
+    "collection_name": "form_buttons",
+    "controls": [
+      {
+        "r0": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            58,
+            18
+          ],
+          "collection_name": "form_buttons",
+          "controls": [
+            {
+              "s0@curio_ledger.btn_0": {}
+            },
+            {
+              "g1": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s1@curio_ledger.btn_1": {}
+            },
+            {
+              "g2": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s2@curio_ledger.btn_2": {}
+            }
+          ]
+        }
+      },
+      {
+        "vg1": {
+          "type": "panel",
+          "size": [
+            58,
+            4
+          ]
+        }
+      },
+      {
+        "r1": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            58,
+            18
+          ],
+          "collection_name": "form_buttons",
+          "controls": [
+            {
+              "s3@curio_ledger.btn_3": {}
+            },
+            {
+              "g1": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s4@curio_ledger.btn_4": {}
+            },
+            {
+              "g2": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s5@curio_ledger.btn_5": {}
+            }
+          ]
+        }
+      },
+      {
+        "vg2": {
+          "type": "panel",
+          "size": [
+            58,
+            4
+          ]
+        }
+      },
+      {
+        "r2": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            58,
+            18
+          ],
+          "collection_name": "form_buttons",
+          "controls": [
+            {
+              "s6@curio_ledger.btn_6": {}
+            },
+            {
+              "g1": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s7@curio_ledger.btn_7": {}
+            },
+            {
+              "g2": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s8@curio_ledger.btn_8": {}
+            }
+          ]
+        }
+      },
+      {
+        "vg3": {
+          "type": "panel",
+          "size": [
+            58,
+            4
+          ]
+        }
+      },
+      {
+        "r3": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            58,
+            18
+          ],
+          "collection_name": "form_buttons",
+          "controls": [
+            {
+              "s9@curio_ledger.btn_9": {}
+            },
+            {
+              "g1": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s10@curio_ledger.btn_10": {}
+            },
+            {
+              "g2": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s11@curio_ledger.btn_11": {}
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "right_col": {
+    "type": "stack_panel",
+    "orientation": "vertical",
+    "size": [
+      58,
+      84
+    ],
+    "collection_name": "form_buttons",
+    "controls": [
+      {
+        "r0": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            58,
+            18
+          ],
+          "collection_name": "form_buttons",
+          "controls": [
+            {
+              "s12@curio_ledger.btn_12": {}
+            },
+            {
+              "g1": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s13@curio_ledger.btn_13": {}
+            },
+            {
+              "g2": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s14@curio_ledger.btn_14": {}
+            }
+          ]
+        }
+      },
+      {
+        "vg1": {
+          "type": "panel",
+          "size": [
+            58,
+            4
+          ]
+        }
+      },
+      {
+        "r1": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            58,
+            18
+          ],
+          "collection_name": "form_buttons",
+          "controls": [
+            {
+              "s15@curio_ledger.btn_15": {}
+            },
+            {
+              "g1": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s16@curio_ledger.btn_16": {}
+            },
+            {
+              "g2": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s17@curio_ledger.btn_17": {}
+            }
+          ]
+        }
+      },
+      {
+        "vg2": {
+          "type": "panel",
+          "size": [
+            58,
+            4
+          ]
+        }
+      },
+      {
+        "r2": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            58,
+            18
+          ],
+          "collection_name": "form_buttons",
+          "controls": [
+            {
+              "s18@curio_ledger.btn_18": {}
+            },
+            {
+              "g1": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s19@curio_ledger.btn_19": {}
+            },
+            {
+              "g2": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s20@curio_ledger.btn_20": {}
+            }
+          ]
+        }
+      },
+      {
+        "vg3": {
+          "type": "panel",
+          "size": [
+            58,
+            4
+          ]
+        }
+      },
+      {
+        "r3": {
+          "type": "stack_panel",
+          "orientation": "horizontal",
+          "size": [
+            58,
+            18
+          ],
+          "collection_name": "form_buttons",
+          "controls": [
+            {
+              "s21@curio_ledger.btn_21": {}
+            },
+            {
+              "g1": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s22@curio_ledger.btn_22": {}
+            },
+            {
+              "g2": {
+                "type": "panel",
+                "size": [
+                  2,
+                  18
+                ]
+              }
+            },
+            {
+              "s23@curio_ledger.btn_23": {}
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "accessories": {
+    "type": "panel",
+    "size": [
+      176,
+      112
+    ],
+    "anchor_from": "top_middle",
+    "anchor_to": "top_middle",
+    "offset": [
+      0,
+      14
+    ],
+    "layer": 4,
+    "controls": [
+      {
+        "frame@curio_ledger.doll_frame": {}
+      },
+      {
+        "left@curio_ledger.left_col": {
+          "anchor_from": "top_middle",
+          "anchor_to": "top_middle",
+          "offset": [
+            -68,
+            20
+          ]
+        }
+      },
+      {
+        "right@curio_ledger.right_col": {
+          "anchor_from": "top_middle",
+          "anchor_to": "top_middle",
+          "offset": [
+            68,
+            20
+          ]
+        }
+      }
+    ]
+  },
+  "ledger_body": {
+    "type": "panel",
+    "size": [
+      176,
+      222
+    ],
+    "anchor_from": "center",
+    "anchor_to": "center",
+    "controls": [
+      {
+        "bg": {
+          "type": "image",
+          "texture": "textures/ui/curio_ledger_bg",
+          "size": [
+            176,
+            222
+          ],
+          "layer": 0
+        }
+      },
+      {
+        "close@common.close_button": {
+          "anchor_from": "top_right",
+          "anchor_to": "top_right",
+          "offset": [
+            2,
+            -2
+          ],
+          "layer": 12
+        }
+      },
+      {
+        "title@curio_ledger.title_label": {}
+      },
+      {
+        "acc@curio_ledger.accessories": {}
+      },
+      {
+        "bag@curio_bag.storage": {
+          "offset": [
+            7,
+            128
+          ],
+          "anchor_from": "top_left",
+          "anchor_to": "top_left",
+          "layer": 4
+        }
+      },
+      {
+        "hot@curio_bag.hotbar": {
+          "offset": [
+            7,
+            0
+          ],
+          "anchor_from": "bottom_left",
+          "anchor_to": "bottom_left",
+          "layer": 4
+        }
+      }
+    ]
+  },
+  "ledger_panel": {
+    "type": "panel",
+    "size": [
+      "100%",
+      "100%"
+    ],
+    "controls": [
+      {
+        "root@curio_ledger.ledger_body": {
+          "bindings": [
+            {
+              "binding_name": "#title_text",
+              "binding_type": "global"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "(not ((#title_text - '§c§u§r§i§o') = #title_text))",
+              "target_property_name": "#visible"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

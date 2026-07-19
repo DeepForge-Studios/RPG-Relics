@@ -1,0 +1,122 @@
+{
+  "namespace": "curio_bag",
+
+  "cell_24@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 24 },
+  "cell_25@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 25 },
+  "cell_26@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 26 },
+  "cell_27@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 27 },
+  "cell_28@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 28 },
+  "cell_29@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 29 },
+  "cell_30@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 30 },
+  "cell_31@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 31 },
+  "cell_32@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 32 },
+  "cell_33@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 33 },
+  "cell_34@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 34 },
+  "cell_35@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 35 },
+  "cell_36@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 36 },
+  "cell_37@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 37 },
+  "cell_38@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 38 },
+  "cell_39@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 39 },
+  "cell_40@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 40 },
+  "cell_41@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 41 },
+  "cell_42@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 42 },
+  "cell_43@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 43 },
+  "cell_44@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 44 },
+  "cell_45@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 45 },
+  "cell_46@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 46 },
+  "cell_47@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 47 },
+  "cell_48@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 48 },
+  "cell_49@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 49 },
+  "cell_50@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 50 },
+  "cell_51@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 51 },
+  "cell_52@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 52 },
+  "cell_53@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 53 },
+  "cell_54@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 54 },
+  "cell_55@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 55 },
+  "cell_56@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 56 },
+  "cell_57@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 57 },
+  "cell_58@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 58 },
+  "cell_59@chest_ui.inventory_item_panel": { "size": [ 18, 18 ], "collection_index": 59 },
+
+  "row0": {
+    "type": "stack_panel",
+    "orientation": "horizontal",
+    "size": [ 162, 18 ],
+    "collection_name": "form_buttons",
+    "controls": [
+      { "0@curio_bag.cell_24": {} },
+      { "1@curio_bag.cell_25": {} },
+      { "2@curio_bag.cell_26": {} },
+      { "3@curio_bag.cell_27": {} },
+      { "4@curio_bag.cell_28": {} },
+      { "5@curio_bag.cell_29": {} },
+      { "6@curio_bag.cell_30": {} },
+      { "7@curio_bag.cell_31": {} },
+      { "8@curio_bag.cell_32": {} }
+    ]
+  },
+  "row1": {
+    "type": "stack_panel",
+    "orientation": "horizontal",
+    "size": [ 162, 18 ],
+    "collection_name": "form_buttons",
+    "controls": [
+      { "0@curio_bag.cell_33": {} },
+      { "1@curio_bag.cell_34": {} },
+      { "2@curio_bag.cell_35": {} },
+      { "3@curio_bag.cell_36": {} },
+      { "4@curio_bag.cell_37": {} },
+      { "5@curio_bag.cell_38": {} },
+      { "6@curio_bag.cell_39": {} },
+      { "7@curio_bag.cell_40": {} },
+      { "8@curio_bag.cell_41": {} }
+    ]
+  },
+  "row2": {
+    "type": "stack_panel",
+    "orientation": "horizontal",
+    "size": [ 162, 18 ],
+    "collection_name": "form_buttons",
+    "controls": [
+      { "0@curio_bag.cell_42": {} },
+      { "1@curio_bag.cell_43": {} },
+      { "2@curio_bag.cell_44": {} },
+      { "3@curio_bag.cell_45": {} },
+      { "4@curio_bag.cell_46": {} },
+      { "5@curio_bag.cell_47": {} },
+      { "6@curio_bag.cell_48": {} },
+      { "7@curio_bag.cell_49": {} },
+      { "8@curio_bag.cell_50": {} }
+    ]
+  },
+
+  "storage": {
+    "type": "stack_panel",
+    "orientation": "vertical",
+    "size": [ 162, 54 ],
+    "collection_name": "form_buttons",
+    "controls": [
+      { "r0@curio_bag.row0": {} },
+      { "r1@curio_bag.row1": {} },
+      { "r2@curio_bag.row2": {} }
+    ]
+  },
+
+  "hotbar": {
+    "type": "stack_panel",
+    "orientation": "horizontal",
+    "size": [ 162, 18 ],
+    "collection_name": "form_buttons",
+    "controls": [
+      { "0@curio_bag.cell_51": {} },
+      { "1@curio_bag.cell_52": {} },
+      { "2@curio_bag.cell_53": {} },
+      { "3@curio_bag.cell_54": {} },
+      { "4@curio_bag.cell_55": {} },
+      { "5@curio_bag.cell_56": {} },
+      { "6@curio_bag.cell_57": {} },
+      { "7@curio_bag.cell_58": {} },
+      { "8@curio_bag.cell_59": {} }
+    ]
+  }
+}

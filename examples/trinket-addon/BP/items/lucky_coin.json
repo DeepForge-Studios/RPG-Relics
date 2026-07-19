@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "example_trinkets:lucky_coin",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "example_trinkets_lucky_coin",
+      "minecraft:display_name": {
+        "value": "Lucky Coin"
+      },
+      "minecraft:rarity": "uncommon",
+      "minecraft:hover_text_color": "yellow"
+    }
+  }
+}

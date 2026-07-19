@@ -1,0 +1,18 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "item", "name": "relics:vital_band", "weight": 1 },
+        { "type": "item", "name": "relics:lucky_talisman", "weight": 1 },
+        { "type": "item", "name": "relics:shrink_charm", "weight": 1 },
+        { "type": "item", "name": "relics:cloud_cape", "weight": 1 },
+        { "type": "item", "name": "relics:stratos_pack", "weight": 1 },
+        { "type": "item", "name": "relics:crystal_harness", "weight": 1 },
+        { "type": "item", "name": "relics:obsidian_plate", "weight": 1 },
+        { "type": "item", "name": "relics:marrow_choker", "weight": 1 },
+        { "type": "item", "name": "relics:relic_shard", "weight": 1 }
+      ]
+    }
+  ]
+}

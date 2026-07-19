@@ -1,0 +1,42 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "RPG Relics (Behavior)",
+    "description": "Equipable relics, Reliquary wardrobe, and Attunement — DeepForge Studios",
+    "uuid": "f23f85fe-28fa-46cb-b470-b0f0e6f0e01f",
+    "version": [0, 2, 3],
+    "min_engine_version": [1, 21, 70]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "52936ac7-0c21-41e9-bc88-6f1f81cc8ef2",
+      "version": [0, 2, 3]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "6d1b1b8e-9c2a-4b1a-9a2e-1a2b3c4d5e6f",
+      "entry": "scripts/main.js",
+      "version": [0, 2, 3]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "34c21ce9-51c4-4a47-9320-1249e1b94677",
+      "version": [0, 2, 3]
+    },
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.0.0"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.0.0"
+    }
+  ],
+  "metadata": {
+    "product_type": "addon",
+    "authors": ["RPG Relics"]
+  }
+}

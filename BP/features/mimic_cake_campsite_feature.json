@@ -1,0 +1,27 @@
+{
+  "format_version": "1.13.0",
+  "minecraft:structure_template_feature": {
+    "description": {
+      "identifier": "relics:mimic_cake_campsite_feature"
+    },
+    "structure_name": "mystructure:mimic_cake_campsite",
+    "adjustment_radius": 16,
+    "facing_direction": "random",
+    "constraints": {
+      "grounded": {},
+      "block_intersection": {
+        "block_allowlist": [
+          "minecraft:air",
+          "minecraft:cave_vines",
+          "minecraft:cave_vines_body_with_berries",
+          "minecraft:cave_vines_head_with_berries",
+          "minecraft:glow_lichen",
+          "minecraft:torch",
+          "minecraft:rail",
+          "minecraft:water",
+          "minecraft:flowing_water"
+        ]
+      }
+    }
+  }
+}

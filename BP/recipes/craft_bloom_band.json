@@ -1,0 +1,37 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:craft_bloom_band"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:relic_shard"
+      },
+      {
+        "item": "relics:relic_shard"
+      },
+      {
+        "item": "relics:mystic_herb"
+      },
+      {
+        "item": "relics:mystic_herb"
+      },
+      {
+        "item": "minecraft:gold_nugget"
+      }
+    ],
+    "result": {
+      "item": "relics:bloom_band",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:relic_shard"
+      }
+    ]
+  }
+}

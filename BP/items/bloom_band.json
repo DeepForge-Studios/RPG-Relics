@@ -1,0 +1,19 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:bloom_band",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_bloom_band",
+      "minecraft:display_name": {
+        "value": "item.relics:bloom_band"
+      },
+      "minecraft:rarity": "common"
+    }
+  }
+}

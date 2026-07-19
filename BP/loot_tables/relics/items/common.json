@@ -1,0 +1,28 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "item", "name": "relics:lumen_visor", "weight": 1 },
+        { "type": "item", "name": "relics:quaffers_cap", "weight": 1 },
+        { "type": "item", "name": "relics:gillmask", "weight": 1 },
+        { "type": "item", "name": "relics:merchants_fedora", "weight": 1 },
+        { "type": "item", "name": "relics:prospectors_scarf", "weight": 1 },
+        { "type": "item", "name": "relics:marathoners_treads", "weight": 1 },
+        { "type": "item", "name": "relics:featherpad_boots", "weight": 1 },
+        { "type": "item", "name": "relics:springheel_boots", "weight": 1 },
+        { "type": "item", "name": "relics:excavator_gauntlets", "weight": 1 },
+        { "type": "item", "name": "relics:fleetstrike_gloves", "weight": 1 },
+        { "type": "item", "name": "relics:impact_knuckles", "weight": 1 },
+        { "type": "item", "name": "relics:ward_pendant", "weight": 1 },
+        { "type": "item", "name": "relics:bramble_charm", "weight": 1 },
+        { "type": "item", "name": "relics:zephyr_flask", "weight": 1 },
+        { "type": "item", "name": "relics:skybound_charm", "weight": 1 },
+        { "type": "item", "name": "relics:adrenaline_charm", "weight": 1 },
+        { "type": "item", "name": "relics:bloom_band", "weight": 1 },
+        { "type": "item", "name": "relics:cloud_vial", "weight": 1 },
+        { "type": "item", "name": "relics:relic_shard", "weight": 3 }
+      ]
+    }
+  ]
+}

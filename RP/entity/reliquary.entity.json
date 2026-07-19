@@ -1,0 +1,22 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "relics:reliquary",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/reliquary"
+      },
+      "geometry": {
+        "default": "geometry.reliquary"
+      },
+      "render_controllers": ["controller.render.default"],
+      "spawn_egg": {
+        "base_color": "#c4a574",
+        "overlay_color": "#5c4030"
+      }
+    }
+  }
+}

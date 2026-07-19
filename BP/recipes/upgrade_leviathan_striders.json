@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_leviathan_striders"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:tidewalkers"
+      },
+      {
+        "item": "relics:finfoot_boots"
+      },
+      {
+        "item": "relics:beast_fang"
+      }
+    ],
+    "result": {
+      "item": "relics:leviathan_striders",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:tidewalkers"
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "relics:lucky_talisman",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": "relics_lucky_talisman",
+      "minecraft:display_name": {
+        "value": "item.relics:lucky_talisman"
+      },
+      "minecraft:rarity": "rare",
+      "minecraft:hover_text_color": "blue"
+    }
+  }
+}

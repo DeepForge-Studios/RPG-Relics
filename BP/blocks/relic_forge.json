@@ -1,0 +1,48 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:block": {
+    "description": {
+      "identifier": "relics:relic_forge",
+      "menu_category": {
+        "category": "equipment",
+        "group": "relics:itemGroup.name.relics"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.relics:relic_forge.name",
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 2.5
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 6
+      },
+      "minecraft:friction": 0.6,
+      "minecraft:loot": "loot_tables/relics/blocks/relic_forge.json",
+      "minecraft:crafting_table": {
+        "table_name": "tile.relics:relic_forge.name",
+        "crafting_tags": ["relics:relic_forge"]
+      },
+      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "relics_relic_forge_v4_side",
+          "render_method": "opaque",
+          "ambient_occlusion": true,
+          "face_dimming": true
+        },
+        "up": {
+          "texture": "relics_relic_forge_v4_top",
+          "render_method": "opaque",
+          "ambient_occlusion": true,
+          "face_dimming": true
+        },
+        "down": {
+          "texture": "relics_relic_forge_v4_bottom",
+          "render_method": "opaque",
+          "ambient_occlusion": true,
+          "face_dimming": true
+        }
+      }
+    }
+  }
+}

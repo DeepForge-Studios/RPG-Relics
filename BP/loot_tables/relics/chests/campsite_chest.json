@@ -1,0 +1,66 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "loot_table",
+          "name": "loot_tables/relics/items/uncommon.json",
+          "weight": 3
+        },
+        {
+          "type": "loot_table",
+          "name": "loot_tables/relics/items/common.json",
+          "weight": 5
+        },
+        {
+          "type": "loot_table",
+          "name": "loot_tables/relics/items/rare.json",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "rolls": { "min": 1, "max": 3 },
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:iron_ingot",
+          "weight": 4,
+          "functions": [{ "function": "set_count", "count": { "min": 2, "max": 6 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:gold_ingot",
+          "weight": 2,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 4 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:emerald",
+          "weight": 1,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:book",
+          "weight": 3,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:torch",
+          "weight": 4,
+          "functions": [{ "function": "set_count", "count": { "min": 4, "max": 12 } }]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "item", "name": "minecraft:golden_apple", "weight": 3 },
+        { "type": "item", "name": "minecraft:bread", "weight": 5 }
+      ]
+    }
+  ]
+}

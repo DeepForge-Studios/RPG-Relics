@@ -1,0 +1,279 @@
+{
+  "resource_pack_name": "curio_relics",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "relics_phantom_veil": {
+      "textures": "textures/items/tiered/phantom_veil"
+    },
+    "relics_featherpad_boots": {
+      "textures": "textures/items/tiered/featherpad_boots"
+    },
+    "relics_excavator_gauntlets": {
+      "textures": "textures/items/tiered/excavator_gauntlets"
+    },
+    "relics_marathoners_treads": {
+      "textures": "textures/items/tiered/marathoners_treads"
+    },
+    "relics_tidewalkers": {
+      "textures": "textures/items/tiered/tidewalkers"
+    },
+    "relics_lumen_visor": {
+      "textures": "textures/items/tiered/lumen_visor"
+    },
+    "relics_bramble_charm": {
+      "textures": "textures/items/tiered/bramble_charm"
+    },
+    "relics_fortune_tellers_cap": {
+      "textures": "textures/items/tiered/fortune_tellers_cap"
+    },
+    "relics_impact_knuckles": {
+      "textures": "textures/items/tiered/impact_knuckles"
+    },
+    "relics_crusher_gauntlet": {
+      "textures": "textures/items/tiered/crusher_gauntlet"
+    },
+    "relics_skybound_charm": {
+      "textures": "textures/items/tiered/skybound_charm"
+    },
+    "relics_zephyr_flask": {
+      "textures": "textures/items/tiered/zephyr_flask"
+    },
+    "relics_heartstone": {
+      "textures": "textures/items/tiered/heartstone"
+    },
+    "relics_endless_ration": {
+      "textures": "textures/items/tiered/endless_ration"
+    },
+    "relics_reapers_hook": {
+      "textures": "textures/items/tiered/reapers_hook"
+    },
+    "relics_fleetstrike_gloves": {
+      "textures": "textures/items/tiered/fleetstrike_gloves"
+    },
+    "relics_storm_locket": {
+      "textures": "textures/items/tiered/storm_locket"
+    },
+    "relics_merchants_fedora": {
+      "textures": "textures/items/tiered/merchants_fedora"
+    },
+    "relics_springheel_boots": {
+      "textures": "textures/items/tiered/springheel_boots"
+    },
+    "relics_quaffers_cap": {
+      "textures": "textures/items/tiered/quaffers_cap"
+    },
+    "relics_cinder_ward": {
+      "textures": "textures/items/tiered/cinder_ward"
+    },
+    "relics_adrenaline_charm": {
+      "textures": "textures/items/tiered/adrenaline_charm"
+    },
+    "relics_cinderfist": {
+      "textures": "textures/items/tiered/cinderfist"
+    },
+    "relics_rootgrip_boots": {
+      "textures": "textures/items/tiered/rootgrip_boots"
+    },
+    "relics_purifying_flask": {
+      "textures": "textures/items/tiered/purifying_flask"
+    },
+    "relics_magnetic_sash": {
+      "textures": "textures/items/tiered/magnetic_sash"
+    },
+    "relics_ward_pendant": {
+      "textures": "textures/items/tiered/ward_pendant"
+    },
+    "relics_storm_parasol": {
+      "textures": "textures/items/tiered/storm_parasol"
+    },
+    "relics_finfoot_boots": {
+      "textures": "textures/items/tiered/finfoot_boots"
+    },
+    "relics_ember_locket": {
+      "textures": "textures/items/tiered/ember_locket"
+    },
+    "relics_menu": {
+      "textures": "textures/items/relics_menu"
+    },
+    "relics_reliquary": {
+      "textures": "textures/items/reliquary"
+    },
+    "relics_attunement_tome": {
+      "textures": "textures/items/attunement_tome"
+    },
+    "relics_ui_plus": {
+      "textures": "textures/items/ui_plus"
+    },
+    "relics_ui_minus": {
+      "textures": "textures/items/ui_minus"
+    },
+    "relics_relic_guidebook": {
+      "textures": "textures/items/relic_guidebook"
+    },
+    "relics_leeching_glove": {
+      "textures": "textures/items/tiered/leeching_glove"
+    },
+    "relics_gillmask": {
+      "textures": "textures/items/tiered/gillmask"
+    },
+    "relics_jesters_cushion": {
+      "textures": "textures/items/tiered/jesters_cushion"
+    },
+    "relics_prospectors_scarf": {
+      "textures": "textures/items/tiered/prospectors_scarf"
+    },
+    "relics_anchor_charm": {
+      "textures": "textures/items/tiered/anchor_charm"
+    },
+    "relics_scryglass": {
+      "textures": "textures/items/tiered/scryglass"
+    },
+    "relics_filter_mask": {
+      "textures": "textures/items/tiered/filter_mask"
+    },
+    "relics_haste_band": {
+      "textures": "textures/items/tiered/haste_band"
+    },
+    "relics_vital_band": {
+      "textures": "textures/items/tiered/vital_band"
+    },
+    "relics_lucky_talisman": {
+      "textures": "textures/items/tiered/lucky_talisman"
+    },
+    "relics_shrink_charm": {
+      "textures": "textures/items/tiered/shrink_charm"
+    },
+    "relics_cloud_cape": {
+      "textures": "textures/items/tiered/cloud_cape"
+    },
+    "relics_stratos_pack": {
+      "textures": "textures/items/tiered/stratos_pack"
+    },
+    "relics_crystal_harness": {
+      "textures": "textures/items/tiered/crystal_harness"
+    },
+    "relics_obsidian_plate": {
+      "textures": "textures/items/tiered/obsidian_plate"
+    },
+    "relics_blight_vessel": {
+      "textures": "textures/items/tiered/blight_vessel"
+    },
+    "relics_cloud_vial": {
+      "textures": "textures/items/tiered/cloud_vial"
+    },
+    "relics_bloom_band": {
+      "textures": "textures/items/tiered/bloom_band"
+    },
+    "relics_draught_band": {
+      "textures": "textures/items/tiered/draught_band"
+    },
+    "relics_marrow_choker": {
+      "textures": "textures/items/tiered/marrow_choker"
+    },
+    "relics_gilt_hook": {
+      "textures": "textures/items/tiered/gilt_hook"
+    },
+    "relics_relic_shard": {
+      "textures": "textures/items/relic_shard"
+    },
+    "relics_venom_ward": {
+      "textures": "textures/items/tiered/venom_ward"
+    },
+    "relics_nimbus_mantle": {
+      "textures": "textures/items/tiered/nimbus_mantle"
+    },
+    "relics_inferno_brand": {
+      "textures": "textures/items/tiered/inferno_brand"
+    },
+    "relics_veinheart_gauntlets": {
+      "textures": "textures/items/tiered/veinheart_gauntlets"
+    },
+    "relics_vital_bloom": {
+      "textures": "textures/items/tiered/vital_bloom"
+    },
+    "relics_alchemists_focus": {
+      "textures": "textures/items/tiered/alchemists_focus"
+    },
+    "relics_tempest_choker": {
+      "textures": "textures/items/tiered/tempest_choker"
+    },
+    "relics_gale_aegis": {
+      "textures": "textures/items/tiered/gale_aegis"
+    },
+    "relics_bulwark_plate": {
+      "textures": "textures/items/tiered/bulwark_plate"
+    },
+    "relics_treasure_lure": {
+      "textures": "textures/items/tiered/treasure_lure"
+    },
+    "relics_monster_heart": {
+      "textures": "textures/items/monster_heart"
+    },
+    "relics_beast_fang": {
+      "textures": "textures/items/beast_fang"
+    },
+    "relics_arcane_dust": {
+      "textures": "textures/items/arcane_dust"
+    },
+    "relics_mystic_herb": {
+      "textures": "textures/items/mystic_herb"
+    },
+    "relics_silver_fragment": {
+      "textures": "textures/items/silver_fragment"
+    },
+    "relics_crimson_crystal": {
+      "textures": "textures/items/crimson_crystal"
+    },
+    "relics_relic_forge": {
+      "textures": "textures/items/relic_forge_v4"
+    },
+    "relics_spawn_mimic_forest": {
+      "textures": "textures/items/spawn_mimic_forest"
+    },
+    "relics_spawn_mimic_desert": {
+      "textures": "textures/items/spawn_mimic_desert"
+    },
+    "relics_spawn_mimic_swamp": {
+      "textures": "textures/items/spawn_mimic_swamp"
+    },
+    "relics_spawn_mimic_snow": {
+      "textures": "textures/items/spawn_mimic_snow"
+    },
+    "relics_spawn_mimic_jungle": {
+      "textures": "textures/items/spawn_mimic_jungle"
+    },
+    "relics_spawn_mimic_badlands": {
+      "textures": "textures/items/spawn_mimic_badlands"
+    },
+    "relics_soothsayers_reap": {
+      "textures": "textures/items/tiered/soothsayers_reap"
+    },
+    "relics_executioners_phantom": {
+      "textures": "textures/items/tiered/executioners_phantom"
+    },
+    "relics_leviathan_striders": {
+      "textures": "textures/items/tiered/leviathan_striders"
+    },
+    "relics_sanguine_heartguard": {
+      "textures": "textures/items/tiered/sanguine_heartguard"
+    },
+    "relics_warhammer_fist": {
+      "textures": "textures/items/tiered/warhammer_fist"
+    },
+    "relics_crimson_wargrip": {
+      "textures": "textures/items/tiered/crimson_wargrip"
+    },
+    "relics_nightseers_gaze": {
+      "textures": "textures/items/tiered/nightseers_gaze"
+    },
+    "relics_thornroot_ward": {
+      "textures": "textures/items/tiered/thornroot_ward"
+    },
+    "relics_windsprint_greaves": {
+      "textures": "textures/items/tiered/windsprint_greaves"
+    },
+    "relics_abyssal_gillchain": {
+      "textures": "textures/items/tiered/abyssal_gillchain"
+    }
+  }
+}

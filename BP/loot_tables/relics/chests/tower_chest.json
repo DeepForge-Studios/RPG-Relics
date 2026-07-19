@@ -1,0 +1,117 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "loot_table",
+          "name": "loot_tables/relics/items/rare.json",
+          "weight": 1
+        },
+        {
+          "type": "loot_table",
+          "name": "loot_tables/relics/items/uncommon.json",
+          "weight": 3
+        },
+        {
+          "type": "loot_table",
+          "name": "loot_tables/relics/items/common.json",
+          "weight": 5
+        }
+      ]
+    },
+    {
+      "rolls": { "min": 2, "max": 4 },
+      "entries": [
+        {
+          "type": "item",
+          "name": "relics:relic_shard",
+          "weight": 4,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:arrow",
+          "weight": 4,
+          "functions": [{ "function": "set_count", "count": { "min": 2, "max": 8 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:crossbow",
+          "weight": 2
+        },
+        {
+          "type": "item",
+          "name": "minecraft:iron_ingot",
+          "weight": 3,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:emerald",
+          "weight": 2,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:bread",
+          "weight": 3,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 4 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:carrot",
+          "weight": 3,
+          "functions": [{ "function": "set_count", "count": { "min": 2, "max": 5 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:potato",
+          "weight": 3,
+          "functions": [{ "function": "set_count", "count": { "min": 2, "max": 5 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:wheat",
+          "weight": 3,
+          "functions": [{ "function": "set_count", "count": { "min": 3, "max": 6 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:string",
+          "weight": 2,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 6 } }]
+        },
+        {
+          "type": "item",
+          "name": "minecraft:book",
+          "weight": 2,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }]
+        },
+        {
+          "type": "item",
+          "name": "relics:mystic_herb",
+          "weight": 2,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 3 } }]
+        },
+        {
+          "type": "item",
+          "name": "relics:silver_fragment",
+          "weight": 1,
+          "functions": [{ "function": "set_count", "count": { "min": 1, "max": 2 } }]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:spruce_log",
+          "weight": 1,
+          "functions": [{ "function": "set_count", "count": { "min": 2, "max": 4 } }]
+        }
+      ]
+    }
+  ]
+}

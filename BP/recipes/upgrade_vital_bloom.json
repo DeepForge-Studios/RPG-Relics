@@ -1,0 +1,31 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "relics:upgrade_vital_bloom"
+    },
+    "tags": [
+      "relics:relic_forge"
+    ],
+    "ingredients": [
+      {
+        "item": "relics:bloom_band"
+      },
+      {
+        "item": "relics:vital_band"
+      },
+      {
+        "item": "relics:mystic_herb"
+      }
+    ],
+    "result": {
+      "item": "relics:vital_bloom",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "relics:bloom_band"
+      }
+    ]
+  }
+}

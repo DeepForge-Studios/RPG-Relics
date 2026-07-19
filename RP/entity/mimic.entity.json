@@ -1,0 +1,30 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "relics:mimic",
+      "materials": {
+        "default": "entity"
+      },
+      "textures": {
+        "default": "textures/entity/mimic_forest"
+      },
+      "geometry": {
+        "default": "geometry.mimic"
+      },
+      "scripts": {
+        "animate": [
+          "mimic_root_controller"
+        ]
+      },
+      "animations": {
+        "stay": "animation.iddle.mimic",
+        "attack": "animation.attack.mimic",
+        "mimic_root_controller": "controller.animation.mimic.root"
+      },
+      "render_controllers": [
+        "controller.render.mimic"
+      ]
+    }
+  }
+}
