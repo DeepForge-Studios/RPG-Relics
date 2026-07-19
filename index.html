@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RPG Relics — DeepForge Studios</title>
+  <meta name="description" content="Equip relics in a Reliquary wardrobe. Boosts, Attunement, and world finds for Minecraft Bedrock." />
+  <link rel="icon" href="RP/textures/ui/curio_gem.png" />
+  <link rel="stylesheet" href="site/styles.css" />
+</head>
+<body>
+  <div class="bg"></div>
+
+  <header class="top">
+    <div class="brand">
+      <img src="RP/textures/ui/curio_gem.png" alt="" width="28" height="28" />
+      <div>
+        <p class="studio">DeepForge Studios</p>
+        <h1>RPG Relics</h1>
+      </div>
+    </div>
+    <p class="tagline">Find relics. Equip them. Attune what you keep.</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Wiki sections">
+    <button type="button" class="tab active" data-tab="start">Start</button>
+    <button type="button" class="tab" data-tab="relics">Relics</button>
+    <button type="button" class="tab" data-tab="ascended">Ascended</button>
+    <button type="button" class="tab" data-tab="boosts">Boosts</button>
+    <button type="button" class="tab" data-tab="attune">Attune</button>
+    <button type="button" class="tab" data-tab="world">World</button>
+  </nav>
+
+  <main>
+    <section id="panel-start" class="panel active">
+      <h2>Getting started</h2>
+      <ol class="steps">
+        <li>
+          <img src="RP/textures/items/relic_guidebook.png" alt="" />
+          <div>
+            <strong>Relic Tome</strong>
+            <span>Guide, Boost Codex, and settings</span>
+          </div>
+        </li>
+        <li>
+          <img src="RP/textures/items/reliquary.png" alt="" />
+          <div>
+            <strong>Relic Crate</strong>
+            <span>Opens your Reliquary wardrobe to equip</span>
+          </div>
+        </li>
+        <li>
+          <img src="RP/textures/items/attunement_tome.png" alt="" />
+          <div>
+            <strong>Attunement Tome</strong>
+            <span>Inspect, rank, and attune relics</span>
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout">
+        <p>First join also gives starter relics, shards, and craft materials.</p>
+        <div class="starter-icons">
+          <figure>
+            <img src="RP/textures/items/tiered/lumen_visor.png" alt="Nightwatch Goggles" />
+            <figcaption>Nightwatch Goggles</figcaption>
+          </figure>
+          <figure>
+            <img src="RP/textures/items/tiered/vital_band.png" alt="Heartward Ring" />
+            <figcaption>Heartward Ring</figcaption>
+          </figure>
+          <figure>
+            <img src="RP/textures/items/relic_shard.png" alt="Relic Shard" />
+            <figcaption>Relic Shard</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <h3>Install</h3>
+      <ol class="plain">
+        <li>Import the <code>.mcaddon</code> and enable Behavior + Resource packs.</li>
+        <li>Leave Experiments / Beta APIs off (and Cheats off) for achievements.</li>
+      </ol>
+    </section>
+
+    <section id="panel-relics" class="panel">
+      <h2>Relics</h2>
+      <p class="lead">Browse by slot or rarity. Equip in the Reliquary.</p>
+
+      <div class="filters">
+        <div class="filter-row" id="slot-filters"></div>
+        <div class="filter-row" id="tier-filters"></div>
+      </div>
+      <p class="count" id="relic-count"></p>
+      <div class="grid" id="relic-grid"></div>
+    </section>
+
+    <section id="panel-ascended" class="panel">
+      <h2>Ascended</h2>
+      <p class="lead">Fuse two relics + a catalyst at the Relic Forge.</p>
+      <div class="grid" id="ascended-grid"></div>
+    </section>
+
+    <section id="panel-boosts" class="panel">
+      <h2>Boost Codex</h2>
+      <p class="lead">Equipped relics add Boost power by rarity (Common 1 · Uncommon 2 · Rare/Ascended 3). Your strongest style becomes active.</p>
+      <div class="boost-grid" id="boost-grid"></div>
+    </section>
+
+    <section id="panel-attune" class="panel">
+      <h2>Attunement</h2>
+      <p class="lead">Bind skills to relics at the Attunement Forge. Wear them to grow ranks.</p>
+      <div class="feature-cards">
+        <article>
+          <img src="RP/textures/blocks/attunement_forge.png" alt="" />
+          <h3>Attunement Forge</h3>
+          <p>Place the forge or use the Attunement Tome. Offer Relic Shards and focus materials to roll a skill.</p>
+        </article>
+        <article>
+          <img src="RP/textures/ui/curio_gem.png" alt="" />
+          <h3>Ranks</h3>
+          <p>Common → Uncommon → Rare → Epic. Higher rarities add new behavior, not just bigger numbers.</p>
+        </article>
+        <article>
+          <img src="RP/textures/items/relic_shard.png" alt="" />
+          <h3>Materials</h3>
+          <p>Focus pairs pick an affinity group. Shards and material amounts set the rarity cap.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="panel-world" class="panel">
+      <h2>World finds</h2>
+      <div class="feature-cards">
+        <article>
+          <img src="RP/textures/entity/mimic_forest.png" alt="" />
+          <h3>Mimics</h3>
+          <p>Fake chests that bite. Biome skins and different bite effects. Defeat them for relic loot.</p>
+        </article>
+        <article>
+          <img src="RP/textures/items/relic_forge_v4.png" alt="" />
+          <h3>Relic Forge</h3>
+          <p>Craft materials into relics and ascend fusions. Recipe: crafting table, book, 2 amethyst, deepslate bricks.</p>
+        </article>
+        <article>
+          <img src="RP/textures/items/monster_heart.png" alt="" />
+          <h3>Structures & drops</h3>
+          <p>Towers, witch homes, underground camps, archaeology, and rare mob drops feed your Reliquary.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Made by <strong>DeepForge Studios</strong> · <a href="https://github.com/DeepForge-Studios/RPG-Relics">GitHub</a></p>
+  </footer>
+
+  <script src="site/catalog.js"></script>
+  <script src="site/app.js"></script>
+</body>
+</html>

@@ -4,6 +4,8 @@
 
 Equip magical relics in a portable **Reliquary** wardrobe, lean into Boost playstyles, and deepen power at the **Attunement Forge**.
 
+**Wiki:** [deepforge-studios.github.io/RPG-Relics](https://deepforge-studios.github.io/RPG-Relics/)
+
 [![Minecraft](https://img.shields.io/badge/Minecraft-Bedrock-green)](https://www.minecraft.net/)
 [![Studio](https://img.shields.io/badge/Studio-DeepForge%20Studios-9b59b6)](https://github.com/DeepForge-Studios)
 
