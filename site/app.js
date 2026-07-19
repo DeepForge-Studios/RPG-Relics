@@ -14,25 +14,24 @@ const SLOT_LABELS = {
 };
 
 const SLOT_ORDER = [
-  "face",
-  "head",
-  "necklace",
-  "ring",
-  "charm",
-  "back",
-  "body",
-  "belt",
-  "hands",
-  "feet",
-  "any",
-  "held",
+  "face", "head", "necklace", "ring", "charm", "back", "body",
+  "belt", "hands", "feet", "any", "held",
 ];
 
 const TIER_ORDER = ["common", "uncommon", "rare", "ascended"];
 
+const CHAPTERS = {
+  "ch-1": "Chapter 1 · Start",
+  "ch-2": "Chapter 2 · Find",
+  "ch-3": "Chapter 3 · Equip",
+  "ch-4": "Chapter 4 · Boosts",
+  "ch-5": "Chapter 5 · Attune",
+  "ch-6": "Chapter 6 · Relics",
+  "ch-7": "Chapter 7 · Ascended",
+};
+
 const BOOSTS = [
   {
-    id: "might",
     name: "Might",
     color: "var(--might)",
     summary: "Stack hits to deal crushing echo damage.",
@@ -43,14 +42,12 @@ const BOOSTS = [
     ],
   },
   {
-    id: "ward",
     name: "Ward",
     color: "var(--ward)",
     summary: "Chance to deflect incoming attacks.",
     tiers: ["I — 8% deflect", "II — 14% deflect", "III — 20% deflect"],
   },
   {
-    id: "gale",
     name: "Gale",
     color: "var(--gale)",
     summary: "Sprinting grants short Tailwind speed bursts.",
@@ -61,14 +58,12 @@ const BOOSTS = [
     ],
   },
   {
-    id: "fortune",
     name: "Fortune",
     color: "var(--fortune)",
     summary: "Chance for extra ore when mining.",
     tiers: ["I — 6% bonus ore", "II — 12% bonus ore", "III — 20% bonus ore"],
   },
   {
-    id: "vitality",
     name: "Vitality",
     color: "var(--vitality)",
     summary: "Kills restore health.",
@@ -79,7 +74,6 @@ const BOOSTS = [
     ],
   },
   {
-    id: "alchemy",
     name: "Alchemy",
     color: "var(--alchemy)",
     summary: "Drunk potions last longer.",
@@ -87,59 +81,53 @@ const BOOSTS = [
   },
 ];
 
-const TABS = ["start", "relics", "ascended", "boosts", "attune", "world"];
-
 const state = {
-  tab: "start",
+  tab: "ch-1",
   slot: "all",
   tier: "all",
   query: "",
   ascendedQuery: "",
+  filterOpen: false,
 };
 
 function escapeHtml(s) {
-  return String(s)
+  return String(s ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
 
-/** Prefer clean base icons on the wiki (tiered outlines read muddy on dark UI). */
 function iconUrl(relic) {
   const id = (relic.id || "").replace("relics:", "");
   if (!id) return "RP/textures/ui/curio_gem.png";
-  if (relic.ascended) {
-    return `RP/textures/items/tiered/${id}.png`;
-  }
+  if (relic.ascended) return `RP/textures/items/tiered/${id}.png`;
   return `RP/textures/items/${id}.png`;
 }
 
 function allRelics() {
   return window.RELIC_CATALOG?.relics || [];
 }
-
 function baseRelics() {
   return allRelics().filter((r) => !r.ascended);
 }
-
 function ascendedRelics() {
   return allRelics().filter((r) => r.ascended);
 }
 
 function cardHtml(relic) {
-  const tip = `${relic.name} · ${SLOT_LABELS[relic.slot] || relic.slot} · ${relic.tier}\n${relic.blurb}`;
+  const src = iconUrl(relic);
   return `
     <article class="card" tabindex="0"
       data-tip-title="${escapeHtml(relic.name)}"
       data-tip-body="${escapeHtml(relic.blurb)}"
       data-tip-meta="${escapeHtml((SLOT_LABELS[relic.slot] || relic.slot) + " · " + relic.tier)}"
-      title="${escapeHtml(tip)}">
+      data-tip-icon="${escapeHtml(src)}">
       <div class="icon-well sm">
-        <img src="${iconUrl(relic)}" alt="" loading="lazy"
+        <img src="${src}" alt="" loading="lazy"
           onerror="this.onerror=null;this.src='RP/textures/ui/curio_gem.png'" />
       </div>
-      <div class="body">
+      <div>
         <h3>${escapeHtml(relic.name)}</h3>
         <div class="meta">
           <span class="badge">${escapeHtml(SLOT_LABELS[relic.slot] || relic.slot)}</span>
@@ -147,8 +135,35 @@ function cardHtml(relic) {
         </div>
         <p>${escapeHtml(relic.blurb)}</p>
       </div>
-    </article>
-  `;
+    </article>`;
+}
+
+function activeFilterCount() {
+  let n = 0;
+  if (state.slot !== "all") n += 1;
+  if (state.tier !== "all") n += 1;
+  return n;
+}
+
+function updateFilterBadge() {
+  const badge = document.getElementById("filter-badge");
+  const n = activeFilterCount();
+  if (!badge) return;
+  if (n === 0) {
+    badge.hidden = true;
+    badge.textContent = "";
+  } else {
+    badge.hidden = false;
+    badge.textContent = String(n);
+  }
+}
+
+function setFilterOpen(open) {
+  state.filterOpen = open;
+  const panel = document.getElementById("filter-panel");
+  const toggle = document.getElementById("filter-toggle");
+  if (panel) panel.hidden = !open;
+  if (toggle) toggle.setAttribute("aria-expanded", open ? "true" : "false");
 }
 
 function renderFilters() {
@@ -159,20 +174,24 @@ function renderFilters() {
   const slots = SLOT_ORDER.filter((s) => baseRelics().some((r) => r.slot === s));
 
   slotRow.innerHTML =
-    chip("all", "All slots", state.slot === "all", "slot") +
+    `<button type="button" class="chip ${state.slot === "all" ? "active" : ""}" data-slot="all">All</button>` +
     slots
-      .map((s) => chip(s, SLOT_LABELS[s], state.slot === s, "slot"))
+      .map(
+        (s) =>
+          `<button type="button" class="chip ${state.slot === s ? "active" : ""}" data-slot="${s}">${SLOT_LABELS[s]}</button>`
+      )
       .join("");
 
   tierRow.innerHTML =
-    chip("all", "All tiers", state.tier === "all", "tier") +
-    TIER_ORDER.filter((t) => t !== "ascended")
-      .map((t) => chip(t, t, state.tier === t, "tier", `tier-${t}`))
+    `<button type="button" class="chip ${state.tier === "all" ? "active" : ""}" data-tier="all">All</button>` +
+    ["common", "uncommon", "rare"]
+      .map(
+        (t) =>
+          `<button type="button" class="chip tier-${t} ${state.tier === t ? "active" : ""}" data-tier="${t}">${t}</button>`
+      )
       .join("");
-}
 
-function chip(value, label, active, kind, extraClass = "") {
-  return `<button type="button" class="chip ${extraClass} ${active ? "active" : ""}" data-${kind}="${value}">${escapeHtml(label)}</button>`;
+  updateFilterBadge();
 }
 
 function renderRelicGrid() {
@@ -189,10 +208,10 @@ function renderRelicGrid() {
       (r) =>
         r.name.toLowerCase().includes(q) ||
         r.blurb.toLowerCase().includes(q) ||
-        (SLOT_LABELS[r.slot] || "").toLowerCase().includes(q)
+        (SLOT_LABELS[r.slot] || "").toLowerCase().includes(q) ||
+        r.tier.toLowerCase().includes(q)
     );
   }
-
   list = [...list].sort(
     (a, b) =>
       SLOT_ORDER.indexOf(a.slot) - SLOT_ORDER.indexOf(b.slot) ||
@@ -203,14 +222,13 @@ function renderRelicGrid() {
   if (countEl) countEl.textContent = `${list.length} shown`;
   grid.innerHTML = list.length
     ? list.map(cardHtml).join("")
-    : `<p class="empty">No relics match. Clear search or filters.</p>`;
+    : `<p class="empty">No relics match. Clear filters or search.</p>`;
 }
 
 function renderAscended() {
   const grid = document.getElementById("ascended-grid");
   const countEl = document.getElementById("ascended-count");
   if (!grid) return;
-
   let list = ascendedRelics();
   const q = state.ascendedQuery.trim().toLowerCase();
   if (q) {
@@ -219,7 +237,6 @@ function renderAscended() {
     );
   }
   list = [...list].sort((a, b) => a.name.localeCompare(b.name));
-
   if (countEl) countEl.textContent = `${list.length} shown`;
   grid.innerHTML = list.length
     ? list.map(cardHtml).join("")
@@ -239,44 +256,115 @@ function renderBoosts() {
   ).join("");
 }
 
-function showTab(id) {
-  if (!TABS.includes(id)) id = "start";
-  state.tab = id;
+function closeMobileNav() {
+  document.querySelector(".sidebar")?.classList.remove("open");
+  const backdrop = document.getElementById("sidebar-backdrop");
+  if (backdrop) backdrop.hidden = true;
+}
 
-  document.querySelectorAll(".tab").forEach((tab) => {
-    const on = tab.dataset.tab === id;
-    tab.classList.toggle("active", on);
-    tab.setAttribute("aria-selected", on ? "true" : "false");
+function showTab(id) {
+  if (!CHAPTERS[id]) id = "ch-1";
+  state.tab = id;
+  setFilterOpen(false);
+  hideTooltip();
+
+  document.querySelectorAll(".chapter").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.tab === id);
   });
 
   document.querySelectorAll(".panel").forEach((panel) => {
-    const on = panel.id === `panel-${id}`;
-    panel.hidden = !on;
+    panel.hidden = panel.id !== `panel-${id}`;
   });
 
-  const nextHash = `#${id}`;
-  if (location.hash !== nextHash) {
-    history.replaceState(null, "", nextHash);
-  }
+  const crumb = document.getElementById("crumb");
+  if (crumb) crumb.textContent = CHAPTERS[id];
 
-  hideTooltip();
+  const hash = `#${id}`;
+  if (location.hash !== hash) history.replaceState(null, "", hash);
+
+  closeMobileNav();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function setupTabs() {
-  document.querySelector(".tabs")?.addEventListener("click", (e) => {
-    const tab = e.target.closest(".tab");
-    if (!tab) return;
+function tipEl() {
+  return document.getElementById("tooltip");
+}
+
+function hideTooltip() {
+  const el = tipEl();
+  if (!el) return;
+  el.hidden = true;
+  el.innerHTML = "";
+}
+
+function showTooltip(card, x, y) {
+  const el = tipEl();
+  if (!el) return;
+  const icon = card.dataset.tipIcon || "RP/textures/ui/curio_gem.png";
+  el.innerHTML = `
+    <div class="tooltip-row">
+      <div class="tip-icon"><img src="${escapeHtml(icon)}" alt="" onerror="this.src='RP/textures/ui/curio_gem.png'" /></div>
+      <div>
+        <strong>${escapeHtml(card.dataset.tipTitle)}</strong>
+        <div class="tip-meta">${escapeHtml(card.dataset.tipMeta || "")}</div>
+        <div class="tip-body">${escapeHtml(card.dataset.tipBody || "")}</div>
+      </div>
+    </div>`;
+  el.hidden = false;
+  const left = Math.min(window.innerWidth - 150, Math.max(150, x));
+  const top = Math.max(56, y - 8);
+  el.style.left = `${left}px`;
+  el.style.top = `${top}px`;
+}
+
+function setupNav() {
+  document.querySelector(".chapters")?.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-tab]");
+    if (!btn) return;
     e.preventDefault();
-    showTab(tab.dataset.tab);
+    showTab(btn.dataset.tab);
+  });
+
+  document.querySelectorAll(".path-link, .next-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = e.currentTarget.dataset.tab;
+      if (id) showTab(id);
+    });
+  });
+
+  document.querySelector(".brand")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    showTab("ch-1");
   });
 
   window.addEventListener("hashchange", () => {
-    const id = location.hash.replace(/^#/, "") || "start";
-    showTab(id);
+    showTab(location.hash.replace(/^#/, "") || "ch-1");
   });
+
+  document.getElementById("menu-btn")?.addEventListener("click", () => {
+    const side = document.querySelector(".sidebar");
+    const backdrop = document.getElementById("sidebar-backdrop");
+    const open = !side?.classList.contains("open");
+    side?.classList.toggle("open", open);
+    if (backdrop) backdrop.hidden = !open;
+  });
+
+  document.getElementById("sidebar-backdrop")?.addEventListener("click", closeMobileNav);
 }
 
 function setupFilters() {
+  document.getElementById("filter-toggle")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setFilterOpen(!state.filterOpen);
+  });
+
+  document.getElementById("filter-clear")?.addEventListener("click", () => {
+    state.slot = "all";
+    state.tier = "all";
+    renderFilters();
+    renderRelicGrid();
+  });
+
   document.getElementById("slot-filters")?.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-slot]");
     if (!btn) return;
@@ -302,27 +390,12 @@ function setupFilters() {
     state.ascendedQuery = e.target.value;
     renderAscended();
   });
-}
 
-const tipEl = () => document.getElementById("tooltip");
-
-function hideTooltip() {
-  const el = tipEl();
-  if (!el) return;
-  el.hidden = true;
-  el.innerHTML = "";
-}
-
-function showTooltip(card, clientX, clientY) {
-  const el = tipEl();
-  if (!el) return;
-  el.innerHTML = `<strong>${card.dataset.tipTitle}</strong>${escapeHtml(card.dataset.tipMeta || "")}<br>${card.dataset.tipBody}`;
-  el.hidden = false;
-  const pad = 12;
-  const x = Math.min(window.innerWidth - 140, Math.max(140, clientX));
-  const y = Math.max(48, clientY - pad);
-  el.style.left = `${x}px`;
-  el.style.top = `${y}px`;
+  document.addEventListener("click", (e) => {
+    if (!state.filterOpen) return;
+    const wrap = document.querySelector(".filter-wrap");
+    if (wrap && !wrap.contains(e.target)) setFilterOpen(false);
+  });
 }
 
 function setupTooltips() {
@@ -331,49 +404,35 @@ function setupTooltips() {
     if (!card) return;
     showTooltip(card, e.clientX, e.clientY);
   });
-
   document.addEventListener("pointermove", (e) => {
     const card = e.target.closest(".card");
     if (!card || tipEl()?.hidden) return;
     showTooltip(card, e.clientX, e.clientY);
   });
-
   document.addEventListener("pointerout", (e) => {
     const card = e.target.closest(".card");
     if (!card) return;
-    const to = e.relatedTarget;
-    if (to && card.contains(to)) return;
+    if (e.relatedTarget && card.contains(e.relatedTarget)) return;
     hideTooltip();
   });
-
   document.addEventListener("focusin", (e) => {
     const card = e.target.closest(".card");
     if (!card) return;
-    const rect = card.getBoundingClientRect();
-    showTooltip(card, rect.left + rect.width / 2, rect.top);
+    const r = card.getBoundingClientRect();
+    showTooltip(card, r.left + r.width / 2, r.top);
   });
-
-  document.addEventListener("focusout", (e) => {
-    if (!e.target.closest?.(".card")) return;
-    hideTooltip();
-  });
+  document.addEventListener("focusout", () => hideTooltip());
 }
 
 function init() {
-  if (!window.RELIC_CATALOG?.relics?.length) {
-    console.warn("[wiki] catalog missing — check site/catalog.js");
-  }
-
-  setupTabs();
+  setupNav();
   setupFilters();
   setupTooltips();
   renderFilters();
   renderRelicGrid();
   renderAscended();
   renderBoosts();
-
-  const initial = location.hash.replace(/^#/, "") || "start";
-  showTab(initial);
+  showTab(location.hash.replace(/^#/, "") || "ch-1");
 }
 
 if (document.readyState === "loading") {
