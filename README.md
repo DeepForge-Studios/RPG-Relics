@@ -33,12 +33,13 @@ Equip magical relics in a portable **Reliquary** wardrobe, lean into Boost plays
 
 ## Getting started
 
-On first join you receive a **Relic Tome**, **Relic Crate**, **Attunement Tome**, starter relics (**Nightwatch Goggles**, **Heartward Ring**), shards, and craft materials.
+On first join you receive a **Relic Tome**, **Relic Crate**, **Attunement Codex**, starter relics (**Nightwatch Goggles**, **Heartward Ring**), shards, and craft materials.
 
 | Action | How |
 |--------|-----|
 | Open Reliquary | Use the **Relic Crate** |
-| Attune / inspect | Use the **Attunement Tome**, or place an **Attunement Forge** |
+| Study attunements | Use the **Attunement Codex** |
+| Perform rituals | Place an **Attunement Forge** and tap it |
 | Guide & settings | Use the **Relic Tome** |
 
 ### Boosts
@@ -61,7 +62,7 @@ Chests, towers, underground camps, mimics, archaeology, and rare mob drops.
 ### Craft
 
 - **Relic Forge** — crafting table + book + 2 amethyst shards + deepslate bricks
-- Materials drop from hostiles: Monster Heart, Beast Fang, Arcane Dust, Mystic Herb, Silver Fragment, Crimson Crystal
+- Materials drop from hostiles: Monster Heart, Beast Fang, Arcane Gem, Mystic Herb, Silver Fragment, Crimson Crystal
 - Ascended fusions combine two relics + a catalyst at the Relic Forge
 
 ---

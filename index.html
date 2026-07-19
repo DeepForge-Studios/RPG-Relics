@@ -23,13 +23,18 @@
       </a>
       <p class="side-label">Progression</p>
       <nav class="chapters" aria-label="Chapters">
-        <button type="button" class="chapter" data-tab="ch-1"><span>1</span> Start</button>
-        <button type="button" class="chapter" data-tab="ch-2"><span>2</span> Find</button>
-        <button type="button" class="chapter" data-tab="ch-3"><span>3</span> Equip</button>
-        <button type="button" class="chapter" data-tab="ch-4"><span>4</span> Boosts</button>
-        <button type="button" class="chapter" data-tab="ch-5"><span>5</span> Attune</button>
-        <button type="button" class="chapter" data-tab="ch-6"><span>6</span> Relics</button>
-        <button type="button" class="chapter" data-tab="ch-7"><span>7</span> Ascended</button>
+        <button type="button" class="chapter" data-route="ch-1"><span>1</span> Start</button>
+        <button type="button" class="chapter" data-route="ch-2"><span>2</span> Find</button>
+        <button type="button" class="chapter" data-route="ch-3"><span>3</span> Equip</button>
+        <button type="button" class="chapter" data-route="ch-4"><span>4</span> Boosts</button>
+        <button type="button" class="chapter" data-route="ch-5"><span>5</span> Attune</button>
+        <button type="button" class="chapter" data-route="ch-6"><span>6</span> Relics</button>
+        <button type="button" class="chapter" data-route="ch-7"><span>7</span> Ascended</button>
+      </nav>
+      <p class="side-label">Codex</p>
+      <nav class="chapters side-sub" aria-label="Codex">
+        <button type="button" class="chapter slim" data-route="materials">Materials</button>
+        <button type="button" class="chapter slim" data-route="mimics">Mimics</button>
       </nav>
       <a class="side-link" href="https://github.com/DeepForge-Studios/RPG-Relics">GitHub</a>
     </aside>
@@ -48,10 +53,10 @@
           <p class="lead">Install the pack, open your tools, then follow the path: find → equip → boost → attune.</p>
 
           <ol class="path">
-            <li><button type="button" class="path-link" data-tab="ch-2">Find relics in the world</button></li>
-            <li><button type="button" class="path-link" data-tab="ch-3">Equip them in the Reliquary</button></li>
-            <li><button type="button" class="path-link" data-tab="ch-4">Build a Boost playstyle</button></li>
-            <li><button type="button" class="path-link" data-tab="ch-5">Attune skills at the Forge</button></li>
+            <li><button type="button" class="path-link" data-route="ch-2">Find relics in the world</button></li>
+            <li><button type="button" class="path-link" data-route="ch-3">Equip them in the Reliquary</button></li>
+            <li><button type="button" class="path-link" data-route="ch-4">Build a Boost playstyle</button></li>
+            <li><button type="button" class="path-link" data-route="ch-5">Browse the Codex, then ritual at the Forge</button></li>
           </ol>
 
           <div class="steps">
@@ -73,13 +78,13 @@
               <div class="icon-well"><img src="RP/textures/items/attunement_tome.png" alt="" /></div>
               <div>
                 <h2>Attunement Codex</h2>
-                <p>Browse skills and ranks. Rituals run on the Forge block.</p>
+                <p>Browse affinities, skills, and ranks. Rituals run on the Forge block.</p>
               </div>
             </article>
           </div>
 
           <aside class="note">
-            <p>First join includes starter relics and materials.</p>
+            <p>First join includes starter relics plus Relic Shards and an Arcane Gem for early crafts.</p>
             <div class="starter-row">
               <figure>
                 <div class="icon-well sm"><img src="RP/textures/items/lumen_visor.png" alt="" /></div>
@@ -90,8 +95,12 @@
                 <figcaption>Heartward Ring</figcaption>
               </figure>
               <figure>
+                <div class="icon-well sm"><img src="RP/textures/items/relic_shard.png" alt="" /></div>
+                <figcaption>Relic Shard</figcaption>
+              </figure>
+              <figure>
                 <div class="icon-well sm"><img src="RP/textures/items/arcane_dust.png" alt="" /></div>
-                <figcaption>Craft materials</figcaption>
+                <figcaption>Arcane Gem</figcaption>
               </figure>
             </div>
           </aside>
@@ -114,7 +123,7 @@
           </div>
 
           <div class="next-row">
-            <button type="button" class="next-btn" data-tab="ch-2">Next: Find relics →</button>
+            <button type="button" class="next-btn" data-route="ch-2">Next: Find relics →</button>
           </div>
         </section>
 
@@ -124,16 +133,16 @@
           <h1>Find relics</h1>
           <p class="lead">Relics drop from exploration — towers, camps, archaeology, mimics, and rare kills.</p>
           <div class="feature-grid">
-            <article class="feature">
+            <a class="feature link-card" href="#mimics">
               <div class="icon-well"><img src="RP/textures/entity/mimic_forest.png" alt="" /></div>
               <h2>Mimics</h2>
               <p>Fake chests that bite. Defeat them for relic loot.</p>
-            </article>
-            <article class="feature">
+            </a>
+            <a class="feature link-card" href="#materials">
               <div class="icon-well"><img src="RP/textures/items/monster_heart.png" alt="" /></div>
               <h2>Materials</h2>
-              <p>Hearts, fangs, dust, herbs, and shards fuel crafts and attune rituals.</p>
-            </article>
+              <p>Hearts, fangs, Relic Shards, Arcane Gems, and herbs fuel crafts and attune rituals.</p>
+            </a>
           </div>
           <div class="shots">
             <figure class="shot wide">
@@ -148,10 +157,15 @@
               <img src="site/media/chest-glint.png" alt="Glint" loading="lazy" />
               <figcaption>Something glints…</figcaption>
             </figure>
+            <figure class="shot">
+              <img src="site/media/materials.png" alt="Materials" loading="lazy" />
+              <figcaption>Craft materials</figcaption>
+            </figure>
           </div>
           <div class="next-row">
-            <button type="button" class="next-btn ghost" data-tab="ch-1">← Start</button>
-            <button type="button" class="next-btn" data-tab="ch-3">Next: Equip →</button>
+            <button type="button" class="next-btn ghost" data-route="ch-1">← Start</button>
+            <button type="button" class="next-btn" data-route="materials">Browse materials →</button>
+            <button type="button" class="next-btn" data-route="ch-3">Next: Equip →</button>
           </div>
         </section>
 
@@ -167,8 +181,8 @@
             </figure>
           </div>
           <div class="next-row">
-            <button type="button" class="next-btn ghost" data-tab="ch-2">← Find</button>
-            <button type="button" class="next-btn" data-tab="ch-4">Next: Boosts →</button>
+            <button type="button" class="next-btn ghost" data-route="ch-2">← Find</button>
+            <button type="button" class="next-btn" data-route="ch-4">Next: Boosts →</button>
           </div>
         </section>
 
@@ -176,11 +190,11 @@
         <section id="panel-ch-4" class="panel" hidden>
           <p class="chapter-tag">Chapter 4</p>
           <h1>Boost Codex</h1>
-          <p class="lead">Equipped relics add power by rarity (Common 1 · Uncommon 2 · Rare/Ascended 3). Your strongest style becomes active.</p>
+          <p class="lead">Equipped relics add power by rarity (Common 1 · Uncommon 2 · Rare/Ascended 3). Your strongest style becomes active. Tap I / II / III to preview each tier.</p>
           <div class="boost-grid" id="boost-grid"></div>
           <div class="next-row">
-            <button type="button" class="next-btn ghost" data-tab="ch-3">← Equip</button>
-            <button type="button" class="next-btn" data-tab="ch-5">Next: Attune →</button>
+            <button type="button" class="next-btn ghost" data-route="ch-3">← Equip</button>
+            <button type="button" class="next-btn" data-route="ch-5">Next: Attune →</button>
           </div>
         </section>
 
@@ -188,19 +202,23 @@
         <section id="panel-ch-5" class="panel" hidden>
           <p class="chapter-tag">Chapter 5</p>
           <h1>Attunement</h1>
-          <p class="lead">Learn skills in the Codex. Run rituals on the Forge block — shards + focus materials roll an affinity skill.</p>
+          <p class="lead">Learn skills in the <strong>Attunement Codex</strong>. Run rituals on the <strong>Forge</strong> block — Relic Shards + focus materials roll an affinity skill.</p>
           <div class="feature-grid">
             <article class="feature">
               <div class="icon-well"><img src="RP/textures/items/attunement_tome.png" alt="" /></div>
-              <h2>Codex</h2>
-              <p>Skills, affinities, ranks, triggers.</p>
+              <h2>Attunement Codex</h2>
+              <p>Skills, affinities, ranks, and triggers — reference only.</p>
             </article>
             <article class="feature">
               <div class="icon-well"><img src="RP/textures/blocks/attunement_forge.png" alt="" /></div>
               <h2>Forge</h2>
-              <p>Placeable block for the actual ritual.</p>
+              <p>Placeable block where the ritual actually runs.</p>
             </article>
           </div>
+
+          <h2 class="section-label">Skill groups</h2>
+          <div id="attune-skills" class="skill-groups"></div>
+
           <div class="shots triple">
             <figure class="shot">
               <img src="site/media/forge-block.png" alt="Forge" loading="lazy" />
@@ -220,8 +238,8 @@
             </figure>
           </div>
           <div class="next-row">
-            <button type="button" class="next-btn ghost" data-tab="ch-4">← Boosts</button>
-            <button type="button" class="next-btn" data-tab="ch-6">Next: Relic catalog →</button>
+            <button type="button" class="next-btn ghost" data-route="ch-4">← Boosts</button>
+            <button type="button" class="next-btn" data-route="ch-6">Next: Relic catalog →</button>
           </div>
         </section>
 
@@ -229,7 +247,7 @@
         <section id="panel-ch-6" class="panel" hidden>
           <p class="chapter-tag">Chapter 6</p>
           <h1>Relic catalog</h1>
-          <p class="lead">Hover a card for icon + details. Use Filter to narrow by slot or rarity.</p>
+          <p class="lead">Click a card for the full entry. Hover for a quick tip. Use Filter to narrow by slot or rarity.</p>
 
           <div class="toolbar">
             <input type="search" id="relic-search" placeholder="Search relics…" autocomplete="off" />
@@ -252,8 +270,8 @@
           <div class="grid" id="relic-grid"></div>
 
           <div class="next-row">
-            <button type="button" class="next-btn ghost" data-tab="ch-5">← Attune</button>
-            <button type="button" class="next-btn" data-tab="ch-7">Next: Ascended →</button>
+            <button type="button" class="next-btn ghost" data-route="ch-5">← Attune</button>
+            <button type="button" class="next-btn" data-route="ch-7">Next: Ascended →</button>
           </div>
         </section>
 
@@ -268,9 +286,46 @@
           </div>
           <div class="grid" id="ascended-grid"></div>
           <div class="next-row">
-            <button type="button" class="next-btn ghost" data-tab="ch-6">← Relics</button>
-            <button type="button" class="next-btn" data-tab="ch-1">Back to Start</button>
+            <button type="button" class="next-btn ghost" data-route="ch-6">← Relics</button>
+            <button type="button" class="next-btn" data-route="ch-1">Back to Start</button>
           </div>
+        </section>
+
+        <!-- Materials list -->
+        <section id="panel-materials" class="panel" hidden>
+          <p class="chapter-tag">Codex</p>
+          <h1>Materials</h1>
+          <p class="lead">Focus materials, Relic Shards for ritual cost, and Arcane Gems for crafts. Catalog entries light up as the wiki data expands.</p>
+          <div class="toolbar">
+            <input type="search" id="material-search" placeholder="Search materials…" autocomplete="off" />
+            <p class="count" id="material-count"></p>
+          </div>
+          <div class="grid" id="material-grid"></div>
+          <div class="next-row">
+            <button type="button" class="next-btn ghost" data-route="ch-2">← Find</button>
+            <button type="button" class="next-btn" data-route="mimics">Mimics →</button>
+          </div>
+        </section>
+
+        <!-- Mimics list -->
+        <section id="panel-mimics" class="panel" hidden>
+          <p class="chapter-tag">Codex</p>
+          <h1>Mimics</h1>
+          <p class="lead">Biome-tinted chest mimics. Defeat them for relics and Relic Shards.</p>
+          <div class="toolbar">
+            <input type="search" id="mimic-search" placeholder="Search mimics…" autocomplete="off" />
+            <p class="count" id="mimic-count"></p>
+          </div>
+          <div class="grid" id="mimic-grid"></div>
+          <div class="next-row">
+            <button type="button" class="next-btn ghost" data-route="materials">← Materials</button>
+            <button type="button" class="next-btn" data-route="ch-2">Back to Find</button>
+          </div>
+        </section>
+
+        <!-- Detail (relic / material / mimic / skill) -->
+        <section id="panel-detail" class="panel" hidden>
+          <div id="detail-root"></div>
         </section>
       </main>
 

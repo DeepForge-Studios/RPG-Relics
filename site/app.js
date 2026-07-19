@@ -19,6 +19,7 @@ const SLOT_ORDER = [
 ];
 
 const TIER_ORDER = ["common", "uncommon", "rare", "ascended"];
+const TIER_ROMAN = ["I", "II", "III"];
 
 const CHAPTERS = {
   "ch-1": "Chapter 1 · Start",
@@ -28,67 +29,208 @@ const CHAPTERS = {
   "ch-5": "Chapter 5 · Attune",
   "ch-6": "Chapter 6 · Relics",
   "ch-7": "Chapter 7 · Ascended",
+  materials: "Codex · Materials",
+  mimics: "Codex · Mimics",
 };
 
-const BOOSTS = [
+const GROUP_COLORS = {
+  might: "var(--might)",
+  ward: "var(--ward)",
+  gale: "var(--gale)",
+  fortune: "var(--fortune)",
+  vitality: "var(--vitality)",
+  alchemy: "var(--alchemy)",
+  necromancy: "var(--necromancy)",
+  radiance: "var(--radiance)",
+};
+
+/** Fallback boosts when catalog.boosts is absent. */
+const FALLBACK_BOOSTS = [
   {
+    id: "might",
     name: "Might",
     color: "var(--might)",
     summary: "Stack hits to deal crushing echo damage.",
     tiers: [
-      "I — Every 5 hits, +2 bonus damage",
-      "II — Every 4 hits, +3 bonus damage",
-      "III — Every 3 hits, +4 bonus damage",
+      "Every 5 hits, +2 bonus damage",
+      "Every 4 hits, +3 bonus damage",
+      "Every 3 hits, +4 bonus damage",
     ],
   },
   {
+    id: "ward",
     name: "Ward",
     color: "var(--ward)",
     summary: "Chance to deflect incoming attacks.",
-    tiers: ["I — 8% deflect", "II — 14% deflect", "III — 20% deflect"],
+    tiers: ["8% deflect", "14% deflect", "20% deflect"],
   },
   {
+    id: "gale",
     name: "Gale",
     color: "var(--gale)",
     summary: "Sprinting grants short Tailwind speed bursts.",
     tiers: [
-      "I — Speed burst while sprinting",
-      "II — Stronger Tailwind",
-      "III — Tailwind + Jump Boost",
+      "Speed burst while sprinting",
+      "Stronger Tailwind",
+      "Tailwind + Jump Boost",
     ],
   },
   {
+    id: "fortune",
     name: "Fortune",
     color: "var(--fortune)",
     summary: "Chance for extra ore when mining.",
-    tiers: ["I — 6% bonus ore", "II — 12% bonus ore", "III — 20% bonus ore"],
+    tiers: ["6% bonus ore", "12% bonus ore", "20% bonus ore"],
   },
   {
+    id: "vitality",
     name: "Vitality",
     color: "var(--vitality)",
     summary: "Kills restore health.",
     tiers: [
-      "I — 1 heart on kill",
-      "II — 2 hearts on kill",
-      "III — 3 hearts + brief Regeneration",
+      "1 heart on kill",
+      "2 hearts on kill",
+      "3 hearts + brief Regeneration",
     ],
   },
   {
+    id: "alchemy",
     name: "Alchemy",
     color: "var(--alchemy)",
     summary: "Drunk potions last longer.",
-    tiers: ["I — +15% duration", "II — +30% duration", "III — +50% duration"],
+    tiers: ["+15% duration", "+30% duration", "+50% duration"],
+  },
+];
+
+/** Thin placeholders until catalog.js ships materials / mimics / skills. */
+const FALLBACK_MATERIALS = [
+  {
+    id: "relics:relic_shard",
+    name: "Relic Shard",
+    blurb: "Spent for Forge rituals and ascended fusions.",
+    sources: "Mimics, relic chests, archaeology, hostile kills",
+    icon: "textures/items/relic_shard.png",
+  },
+  {
+    id: "relics:arcane_dust",
+    name: "Arcane Gem",
+    blurb: "Focus material for Gale / Alchemy-style crafts.",
+    sources: "Witches, endermen, evokers, shulkers",
+    icon: "textures/items/arcane_dust.png",
+  },
+  {
+    id: "relics:monster_heart",
+    name: "Monster Heart",
+    blurb: "Focus material for Might, Ward, Vitality, Necromancy.",
+    sources: "Zombies, husks, drowned, brutes, ravagers, wardens",
+    icon: "textures/items/monster_heart.png",
+  },
+  {
+    id: "relics:beast_fang",
+    name: "Beast Fang",
+    blurb: "Focus material for Might, Gale, Fortune.",
+    sources: "Spiders, hoglins, ravagers, wardens",
+    icon: "textures/items/beast_fang.png",
+  },
+  {
+    id: "relics:mystic_herb",
+    name: "Mystic Herb",
+    blurb: "Focus material for Vitality and Alchemy.",
+    sources: "Grass, ferns, flowers, tower chests",
+    icon: "textures/items/mystic_herb.png",
+  },
+  {
+    id: "relics:silver_fragment",
+    name: "Silver Fragment",
+    blurb: "Focus material for Ward, Fortune, Radiance.",
+    sources: "Skeletons, strays, illagers, relic chests",
+    icon: "textures/items/silver_fragment.png",
+  },
+  {
+    id: "relics:crimson_crystal",
+    name: "Crimson Crystal",
+    blurb: "Focus material for Necromancy.",
+    sources: "Creepers, blazes, magma cubes, wither skeletons",
+    icon: "textures/items/crimson_crystal.png",
+  },
+];
+
+const FALLBACK_MIMICS = [
+  { id: "mimic_forest", name: "Forest Mimic", blurb: "Woodland chest mimic.", biome: "Forest", icon: "textures/entity/mimic_forest.png" },
+  { id: "mimic_desert", name: "Desert Mimic", blurb: "Sandy chest mimic.", biome: "Desert", icon: "textures/entity/mimic_desert.png" },
+  { id: "mimic_jungle", name: "Jungle Mimic", blurb: "Canopy chest mimic.", biome: "Jungle", icon: "textures/entity/mimic_jungle.png" },
+  { id: "mimic_swamp", name: "Swamp Mimic", blurb: "Murky chest mimic.", biome: "Swamp", icon: "textures/entity/mimic_swamp.png" },
+  { id: "mimic_snow", name: "Snow Mimic", blurb: "Frosted chest mimic.", biome: "Snow", icon: "textures/entity/mimic_snow.png" },
+  { id: "mimic_badlands", name: "Badlands Mimic", blurb: "Clay mesa chest mimic.", biome: "Badlands", icon: "textures/entity/mimic_badlands.png" },
+];
+
+const FALLBACK_SKILL_GROUPS = [
+  {
+    id: "might",
+    name: "Might",
+    tagline: "combos & finishers",
+    skills: [
+      { key: "scarbrand", name: "Scarbrand", summary: "Brand a hostile, then break it for bonus damage." },
+      { key: "rivet_streak", name: "Rivet Streak", summary: "Build Rivets with fast hits, then shockwave." },
+    ],
+  },
+  {
+    id: "ward",
+    name: "Ward",
+    tagline: "counters & protection",
+    skills: [
+      { key: "placeholder", name: "Ward skills", summary: "Full skill list arrives with the next catalog build." },
+    ],
+  },
+  {
+    id: "gale",
+    name: "Gale",
+    tagline: "movement & marks",
+    skills: [
+      { key: "placeholder", name: "Gale skills", summary: "Full skill list arrives with the next catalog build." },
+    ],
+  },
+  {
+    id: "fortune",
+    name: "Fortune",
+    tagline: "wagers & loot",
+    skills: [
+      { key: "placeholder", name: "Fortune skills", summary: "Full skill list arrives with the next catalog build." },
+    ],
+  },
+  {
+    id: "vitality",
+    name: "Vitality",
+    tagline: "healing & life trades",
+    skills: [
+      { key: "placeholder", name: "Vitality skills", summary: "Full skill list arrives with the next catalog build." },
+    ],
+  },
+  {
+    id: "alchemy",
+    name: "Alchemy",
+    tagline: "reactions & familiars",
+    skills: [
+      { key: "placeholder", name: "Alchemy skills", summary: "Full skill list arrives with the next catalog build." },
+    ],
   },
 ];
 
 const state = {
-  tab: "ch-1",
+  route: { type: "chapter", id: "ch-1" },
   slot: "all",
   tier: "all",
   query: "",
   ascendedQuery: "",
+  materialQuery: "",
+  mimicQuery: "",
   filterOpen: false,
+  boostTier: {},
 };
+
+function catalog() {
+  return window.RELIC_CATALOG || {};
+}
 
 function escapeHtml(s) {
   return String(s ?? "")
@@ -98,15 +240,30 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;");
 }
 
-function iconUrl(relic) {
-  const id = (relic.id || "").replace("relics:", "");
-  if (!id) return "RP/textures/ui/curio_gem.png";
-  if (relic.ascended) return `RP/textures/items/tiered/${id}.png`;
-  return `RP/textures/items/${id}.png`;
+function bareId(id) {
+  return String(id || "").replace(/^relics:/, "");
+}
+
+function mediaOrRp(path) {
+  if (!path) return "RP/textures/ui/curio_gem.png";
+  const p = String(path).replace(/^\//, "");
+  if (p.startsWith("site/") || p.startsWith("RP/")) return p;
+  if (p.startsWith("textures/")) return `RP/${p}`;
+  return p;
+}
+
+function resolveIcon(entry, fallbackPath) {
+  if (entry?.media) return mediaOrRp(entry.media);
+  if (entry?.icon) return mediaOrRp(entry.icon);
+  if (entry?.texture) return mediaOrRp(entry.texture);
+  if (fallbackPath) return mediaOrRp(fallbackPath);
+  const id = bareId(entry?.id);
+  if (id) return `RP/textures/items/${id}.png`;
+  return "RP/textures/ui/curio_gem.png";
 }
 
 function allRelics() {
-  return window.RELIC_CATALOG?.relics || [];
+  return catalog().relics || [];
 }
 function baseRelics() {
   return allRelics().filter((r) => !r.ascended);
@@ -115,28 +272,133 @@ function ascendedRelics() {
   return allRelics().filter((r) => r.ascended);
 }
 
+function findRelic(id) {
+  const bare = bareId(id);
+  return allRelics().find((r) => bareId(r.id) === bare || r.id === id) || null;
+}
+
+function materialsList() {
+  const list = catalog().materials;
+  return Array.isArray(list) && list.length ? list : FALLBACK_MATERIALS;
+}
+
+function mimicsList() {
+  const list = catalog().mimics;
+  return Array.isArray(list) && list.length ? list : FALLBACK_MIMICS;
+}
+
+function findMaterial(id) {
+  const bare = bareId(id);
+  return materialsList().find((m) => bareId(m.id) === bare || m.id === id) || null;
+}
+
+function findMimic(id) {
+  const bare = bareId(id);
+  return mimicsList().find((m) => bareId(m.id) === bare || m.id === id) || null;
+}
+
+function skillGroups() {
+  const cat = catalog();
+  if (Array.isArray(cat.skillGroups) && cat.skillGroups.length) return cat.skillGroups;
+  if (Array.isArray(cat.skills) && cat.skills.length) {
+    const map = new Map();
+    for (const s of cat.skills) {
+      const gid = s.group || s.groupId || "other";
+      if (!map.has(gid)) {
+        map.set(gid, {
+          id: gid,
+          name: s.groupName || s.groupLabel || titleCase(gid),
+          tagline: s.groupTagline || "",
+          skills: [],
+        });
+      }
+      map.get(gid).skills.push(s);
+    }
+    return [...map.values()];
+  }
+  return FALLBACK_SKILL_GROUPS;
+}
+
+function findSkill(group, key) {
+  const g = skillGroups().find((x) => x.id === group || x.name?.toLowerCase() === group?.toLowerCase());
+  if (!g) return null;
+  const skill = (g.skills || []).find((s) => (s.key || s.id) === key);
+  if (!skill) return null;
+  return { group: g, skill };
+}
+
+function boostsList() {
+  const list = catalog().boosts;
+  return Array.isArray(list) && list.length ? list : FALLBACK_BOOSTS;
+}
+
+function titleCase(s) {
+  return String(s || "")
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function normalizeTierText(tiers) {
+  if (!Array.isArray(tiers) || !tiers.length) return ["Details coming soon.", "Details coming soon.", "Details coming soon."];
+  return [0, 1, 2].map((i) => {
+    const t = tiers[i] ?? tiers[tiers.length - 1];
+    if (t == null) return "—";
+    if (typeof t === "string") return t.replace(/^(I|II|III)\s*[—\-–]\s*/i, "");
+    return t.text || t.desc || t.summary || String(t);
+  });
+}
+
+/* ---------- cards ---------- */
+
 function cardHtml(relic) {
-  const src = iconUrl(relic);
+  const src = resolveIcon(relic, relic.ascended
+    ? `textures/items/tiered/${bareId(relic.id)}.png`
+    : `textures/items/${bareId(relic.id)}.png`);
+  const href = `#relic/${encodeURIComponent(bareId(relic.id))}`;
   return `
-    <article class="card" tabindex="0"
+    <a class="card" href="${href}"
       data-tip-title="${escapeHtml(relic.name)}"
-      data-tip-body="${escapeHtml(relic.blurb)}"
-      data-tip-meta="${escapeHtml((SLOT_LABELS[relic.slot] || relic.slot) + " · " + relic.tier)}"
+      data-tip-body="${escapeHtml(relic.blurb || relic.summary || "")}"
+      data-tip-meta="${escapeHtml((SLOT_LABELS[relic.slot] || relic.slot || "") + (relic.tier ? " · " + relic.tier : ""))}"
       data-tip-icon="${escapeHtml(src)}">
       <div class="icon-well sm">
         <img src="${src}" alt="" loading="lazy"
           onerror="this.onerror=null;this.src='RP/textures/ui/curio_gem.png'" />
       </div>
       <div>
-        <h3>${escapeHtml(relic.name)}</h3>
+        <h3>${escapeHtml(relic.name || bareId(relic.id))}</h3>
         <div class="meta">
-          <span class="badge">${escapeHtml(SLOT_LABELS[relic.slot] || relic.slot)}</span>
-          <span class="badge ${escapeHtml(relic.tier)}">${escapeHtml(relic.tier)}</span>
+          ${relic.slot ? `<span class="badge">${escapeHtml(SLOT_LABELS[relic.slot] || relic.slot)}</span>` : ""}
+          ${relic.tier ? `<span class="badge ${escapeHtml(relic.tier)}">${escapeHtml(relic.tier)}</span>` : ""}
         </div>
-        <p>${escapeHtml(relic.blurb)}</p>
+        <p>${escapeHtml(relic.blurb || relic.summary || "—")}</p>
       </div>
-    </article>`;
+    </a>`;
 }
+
+function simpleCardHtml(entry, href, meta) {
+  const src = resolveIcon(entry);
+  const title = entry.name || bareId(entry.id) || "Unknown";
+  const body = entry.blurb || entry.summary || entry.sources || "";
+  return `
+    <a class="card" href="${href}"
+      data-tip-title="${escapeHtml(title)}"
+      data-tip-body="${escapeHtml(body)}"
+      data-tip-meta="${escapeHtml(meta || "")}"
+      data-tip-icon="${escapeHtml(src)}">
+      <div class="icon-well sm">
+        <img src="${src}" alt="" loading="lazy"
+          onerror="this.onerror=null;this.src='RP/textures/ui/curio_gem.png'" />
+      </div>
+      <div>
+        <h3>${escapeHtml(title)}</h3>
+        ${meta ? `<div class="meta"><span class="badge">${escapeHtml(meta)}</span></div>` : ""}
+        <p>${escapeHtml(body || "—")}</p>
+      </div>
+    </a>`;
+}
+
+/* ---------- filters / grids ---------- */
 
 function activeFilterCount() {
   let n = 0;
@@ -206,17 +468,17 @@ function renderRelicGrid() {
   if (q) {
     list = list.filter(
       (r) =>
-        r.name.toLowerCase().includes(q) ||
-        r.blurb.toLowerCase().includes(q) ||
+        (r.name || "").toLowerCase().includes(q) ||
+        (r.blurb || "").toLowerCase().includes(q) ||
         (SLOT_LABELS[r.slot] || "").toLowerCase().includes(q) ||
-        r.tier.toLowerCase().includes(q)
+        (r.tier || "").toLowerCase().includes(q)
     );
   }
   list = [...list].sort(
     (a, b) =>
       SLOT_ORDER.indexOf(a.slot) - SLOT_ORDER.indexOf(b.slot) ||
       TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier) ||
-      a.name.localeCompare(b.name)
+      (a.name || "").localeCompare(b.name || "")
   );
 
   if (countEl) countEl.textContent = `${list.length} shown`;
@@ -233,27 +495,322 @@ function renderAscended() {
   const q = state.ascendedQuery.trim().toLowerCase();
   if (q) {
     list = list.filter(
-      (r) => r.name.toLowerCase().includes(q) || r.blurb.toLowerCase().includes(q)
+      (r) =>
+        (r.name || "").toLowerCase().includes(q) ||
+        (r.blurb || "").toLowerCase().includes(q)
     );
   }
-  list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+  list = [...list].sort((a, b) => (a.name || "").localeCompare(b.name || ""));
   if (countEl) countEl.textContent = `${list.length} shown`;
   grid.innerHTML = list.length
     ? list.map(cardHtml).join("")
     : `<p class="empty">No ascended relics match.</p>`;
 }
 
+function renderMaterials() {
+  const grid = document.getElementById("material-grid");
+  const countEl = document.getElementById("material-count");
+  if (!grid) return;
+  let list = materialsList();
+  const q = state.materialQuery.trim().toLowerCase();
+  if (q) {
+    list = list.filter(
+      (m) =>
+        (m.name || "").toLowerCase().includes(q) ||
+        (m.blurb || "").toLowerCase().includes(q) ||
+        (m.sources || "").toLowerCase().includes(q)
+    );
+  }
+  if (countEl) countEl.textContent = `${list.length} shown`;
+  grid.innerHTML = list.length
+    ? list
+        .map((m) =>
+          simpleCardHtml(
+            m,
+            `#material/${encodeURIComponent(bareId(m.id))}`,
+            m.sources ? "Material" : "Material"
+          )
+        )
+        .join("")
+    : `<p class="empty">Materials catalog not loaded yet.</p>`;
+}
+
+function renderMimics() {
+  const grid = document.getElementById("mimic-grid");
+  const countEl = document.getElementById("mimic-count");
+  if (!grid) return;
+  let list = mimicsList();
+  const q = state.mimicQuery.trim().toLowerCase();
+  if (q) {
+    list = list.filter(
+      (m) =>
+        (m.name || "").toLowerCase().includes(q) ||
+        (m.blurb || "").toLowerCase().includes(q) ||
+        (m.biome || "").toLowerCase().includes(q)
+    );
+  }
+  if (countEl) countEl.textContent = `${list.length} shown`;
+  grid.innerHTML = list.length
+    ? list
+        .map((m) =>
+          simpleCardHtml(
+            m,
+            `#mimic/${encodeURIComponent(bareId(m.id))}`,
+            m.biome || "Mimic"
+          )
+        )
+        .join("")
+    : `<p class="empty">Mimics catalog not loaded yet.</p>`;
+}
+
 function renderBoosts() {
   const el = document.getElementById("boost-grid");
   if (!el) return;
-  el.innerHTML = BOOSTS.map(
-    (b) => `
-    <article class="boost" style="--boost:${b.color}">
-      <h2>${escapeHtml(b.name)}</h2>
-      <p>${escapeHtml(b.summary)}</p>
-      <ul>${b.tiers.map((t) => `<li>${escapeHtml(t)}</li>`).join("")}</ul>
-    </article>`
-  ).join("");
+  el.innerHTML = boostsList()
+    .map((b) => {
+      const id = b.id || b.name?.toLowerCase() || "boost";
+      const tiers = normalizeTierText(b.tiers);
+      const selected = state.boostTier[id] ?? 0;
+      const color = b.color || GROUP_COLORS[id] || "var(--gold)";
+      return `
+      <article class="boost" style="--boost:${color}" data-boost-id="${escapeHtml(id)}">
+        <h2>${escapeHtml(b.name || titleCase(id))}</h2>
+        <p class="boost-summary">${escapeHtml(b.summary || b.blurb || "")}</p>
+        <div class="boost-tiers" role="group" aria-label="${escapeHtml(b.name || id)} tiers">
+          ${TIER_ROMAN.map(
+            (label, i) =>
+              `<button type="button" class="tier-btn ${selected === i ? "active" : ""}" data-tier-idx="${i}" aria-pressed="${selected === i}">${label}</button>`
+          ).join("")}
+        </div>
+        <p class="boost-value" data-boost-value>${escapeHtml(tiers[selected])}</p>
+      </article>`;
+    })
+    .join("");
+}
+
+function renderAttuneSkills() {
+  const el = document.getElementById("attune-skills");
+  if (!el) return;
+  const groups = skillGroups();
+  if (!groups.length) {
+    el.innerHTML = `<p class="empty">Skill groups will appear when catalog.js includes them.</p>`;
+    return;
+  }
+  el.innerHTML = groups
+    .map((g) => {
+      const color = GROUP_COLORS[g.id] || "var(--gem)";
+      const skills = g.skills || [];
+      return `
+      <article class="skill-group" style="--group:${color}">
+        <h2>${escapeHtml(g.name || titleCase(g.id))}</h2>
+        <p class="group-blurb">${escapeHtml(g.tagline || g.blurb || g.summary || "")}</p>
+        <div class="skill-list">
+          ${
+            skills.length
+              ? skills
+                  .map((s) => {
+                    const key = s.key || s.id || "skill";
+                    return `<a class="skill-pill" href="#skill/${encodeURIComponent(g.id)}/${encodeURIComponent(key)}">${escapeHtml(s.name || titleCase(key))}</a>`;
+                  })
+                  .join("")
+              : `<span class="badge">No skills listed yet</span>`
+          }
+        </div>
+      </article>`;
+    })
+    .join("");
+}
+
+/* ---------- detail views ---------- */
+
+function detailShell({ backHash, backLabel, icon, title, metaHtml, bodyHtml }) {
+  return `
+    <button type="button" class="back-link" data-back="${escapeHtml(backHash)}">← ${escapeHtml(backLabel)}</button>
+    <article class="detail-card">
+      <div class="detail-head">
+        <div class="icon-well lg">
+          <img src="${escapeHtml(icon)}" alt="" onerror="this.onerror=null;this.src='RP/textures/ui/curio_gem.png'" />
+        </div>
+        <div>
+          <h1>${escapeHtml(title)}</h1>
+          <div class="detail-meta meta">${metaHtml || ""}</div>
+        </div>
+      </div>
+      <div class="detail-body">${bodyHtml}</div>
+    </article>`;
+}
+
+function renderDetail() {
+  const root = document.getElementById("detail-root");
+  if (!root) return;
+  const { type, id, group, key } = state.route;
+
+  if (type === "relic") {
+    const r = findRelic(id);
+    if (!r) {
+      root.innerHTML = detailShell({
+        backHash: "#ch-6",
+        backLabel: "Relic catalog",
+        icon: "RP/textures/ui/curio_gem.png",
+        title: titleCase(bareId(id)) || "Unknown relic",
+        metaHtml: `<span class="badge">Missing</span>`,
+        bodyHtml: `<p>This relic is not in the catalog yet (<code>${escapeHtml(id)}</code>). It will light up when catalog.js includes it.</p>`,
+      });
+      return;
+    }
+    const src = resolveIcon(r, r.ascended
+      ? `textures/items/tiered/${bareId(r.id)}.png`
+      : `textures/items/${bareId(r.id)}.png`);
+    root.innerHTML = detailShell({
+      backHash: r.ascended ? "#ch-7" : "#ch-6",
+      backLabel: r.ascended ? "Ascended" : "Relic catalog",
+      icon: src,
+      title: r.name || bareId(r.id),
+      metaHtml: `
+        ${r.slot ? `<span class="badge">${escapeHtml(SLOT_LABELS[r.slot] || r.slot)}</span>` : ""}
+        ${r.tier ? `<span class="badge ${escapeHtml(r.tier)}">${escapeHtml(r.tier)}</span>` : ""}`,
+      bodyHtml: `
+        <p>${escapeHtml(r.blurb || r.summary || "No description yet.")}</p>
+        ${r.effect ? `<p>${escapeHtml(r.effect)}</p>` : ""}
+        ${Array.isArray(r.notes) ? `<ul class="detail-list">${r.notes.map((n) => `<li>${escapeHtml(n)}</li>`).join("")}</ul>` : ""}`,
+    });
+    return;
+  }
+
+  if (type === "material") {
+    const m = findMaterial(id);
+    const src = resolveIcon(m || { id });
+    root.innerHTML = detailShell({
+      backHash: "#materials",
+      backLabel: "Materials",
+      icon: src,
+      title: m?.name || titleCase(bareId(id)),
+      metaHtml: `<span class="badge">Material</span>`,
+      bodyHtml: m
+        ? `<p>${escapeHtml(m.blurb || m.summary || "—")}</p>
+           ${m.sources ? `<p><strong style="color:var(--gold)">Sources:</strong> ${escapeHtml(m.sources)}</p>` : ""}`
+        : `<p>Material <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
+    });
+    return;
+  }
+
+  if (type === "mimic") {
+    const m = findMimic(id);
+    const src = resolveIcon(m || { id }, `textures/entity/${bareId(id)}.png`);
+    root.innerHTML = detailShell({
+      backHash: "#mimics",
+      backLabel: "Mimics",
+      icon: src,
+      title: m?.name || titleCase(bareId(id)),
+      metaHtml: m?.biome
+        ? `<span class="badge">${escapeHtml(m.biome)}</span>`
+        : `<span class="badge">Mimic</span>`,
+      bodyHtml: m
+        ? `<p>${escapeHtml(m.blurb || m.summary || "Defeat for relic loot and Relic Shards.")}</p>
+           ${m.loot ? `<p>${escapeHtml(m.loot)}</p>` : ""}`
+        : `<p>Mimic <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
+    });
+    return;
+  }
+
+  if (type === "skill") {
+    const found = findSkill(group, key);
+    const g = found?.group;
+    const s = found?.skill;
+    root.innerHTML = detailShell({
+      backHash: "#ch-5",
+      backLabel: "Attune",
+      icon: "RP/textures/items/attunement_tome.png",
+      title: s?.name || titleCase(key),
+      metaHtml: `<span class="badge">${escapeHtml(g?.name || group || "Skill")}</span>
+        ${s?.kind ? `<span class="badge">${escapeHtml(s.kind)}</span>` : ""}`,
+      bodyHtml: s
+        ? `<p>${escapeHtml(s.summary || s.blurb || "—")}</p>
+           ${s.when ? `<p><strong style="color:var(--gold)">When:</strong> ${escapeHtml(s.when)}</p>` : ""}
+           ${s.cost ? `<p><strong style="color:var(--gold)">Cost:</strong> ${escapeHtml(s.cost)}</p>` : ""}
+           ${
+             Array.isArray(s.tiers) && s.tiers.length
+               ? `<p class="section-label" style="margin-top:1rem">Ranks</p>
+                  <ul class="detail-list">${s.tiers.map((t, i) => `<li><strong>${TIER_ROMAN[i] || i + 1}</strong> — ${escapeHtml(typeof t === "string" ? t : t.text || t)}</li>`).join("")}</ul>`
+               : ""
+           }`
+        : `<p>Skill <code>${escapeHtml(group)}/${escapeHtml(key)}</code> is not in the catalog yet.</p>`,
+    });
+  }
+}
+
+/* ---------- routing ---------- */
+
+function parseHash(hash) {
+  const raw = (hash || "").replace(/^#/, "").trim();
+  if (!raw) return { type: "chapter", id: "ch-1" };
+
+  const relic = raw.match(/^relic\/(.+)$/i);
+  if (relic) return { type: "relic", id: decodeURIComponent(relic[1]) };
+
+  const material = raw.match(/^material\/(.+)$/i);
+  if (material) return { type: "material", id: decodeURIComponent(material[1]) };
+
+  const mimic = raw.match(/^mimic\/(.+)$/i);
+  if (mimic) return { type: "mimic", id: decodeURIComponent(mimic[1]) };
+
+  const skill = raw.match(/^skill\/([^/]+)\/(.+)$/i);
+  if (skill) {
+    return {
+      type: "skill",
+      group: decodeURIComponent(skill[1]),
+      key: decodeURIComponent(skill[2]),
+      id: `${skill[1]}/${skill[2]}`,
+    };
+  }
+
+  if (raw === "materials" || raw === "mimics") return { type: "chapter", id: raw };
+  if (CHAPTERS[raw]) return { type: "chapter", id: raw };
+
+  // Legacy / unknown → start
+  if (/^ch-\d+$/.test(raw)) return { type: "chapter", id: raw };
+  return { type: "chapter", id: "ch-1" };
+}
+
+function routeToHash(route) {
+  if (route.type === "chapter") return `#${route.id}`;
+  if (route.type === "relic") return `#relic/${encodeURIComponent(bareId(route.id))}`;
+  if (route.type === "material") return `#material/${encodeURIComponent(bareId(route.id))}`;
+  if (route.type === "mimic") return `#mimic/${encodeURIComponent(bareId(route.id))}`;
+  if (route.type === "skill") {
+    return `#skill/${encodeURIComponent(route.group)}/${encodeURIComponent(route.key)}`;
+  }
+  return "#ch-1";
+}
+
+function crumbFor(route) {
+  if (route.type === "chapter") return CHAPTERS[route.id] || "Wiki";
+  if (route.type === "relic") {
+    const r = findRelic(route.id);
+    return `Relic · ${r?.name || titleCase(bareId(route.id))}`;
+  }
+  if (route.type === "material") {
+    const m = findMaterial(route.id);
+    return `Material · ${m?.name || titleCase(bareId(route.id))}`;
+  }
+  if (route.type === "mimic") {
+    const m = findMimic(route.id);
+    return `Mimic · ${m?.name || titleCase(bareId(route.id))}`;
+  }
+  if (route.type === "skill") {
+    const found = findSkill(route.group, route.key);
+    return `Skill · ${found?.skill?.name || titleCase(route.key)}`;
+  }
+  return "Wiki";
+}
+
+function panelIdFor(route) {
+  if (route.type === "chapter") {
+    if (route.id === "materials") return "panel-materials";
+    if (route.id === "mimics") return "panel-mimics";
+    return `panel-${route.id}`;
+  }
+  return "panel-detail";
 }
 
 function closeMobileNav() {
@@ -262,29 +819,55 @@ function closeMobileNav() {
   if (backdrop) backdrop.hidden = true;
 }
 
-function showTab(id) {
-  if (!CHAPTERS[id]) id = "ch-1";
-  state.tab = id;
+function navigate(route, { replace = false } = {}) {
+  state.route = route;
   setFilterOpen(false);
   hideTooltip();
 
+  const chapterId = route.type === "chapter" ? route.id : null;
   document.querySelectorAll(".chapter").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.tab === id);
+    const r = btn.dataset.route;
+    let active = false;
+    if (chapterId && r === chapterId) active = true;
+    if (route.type === "relic" && (r === "ch-6" || r === "ch-7")) {
+      const relic = findRelic(route.id);
+      active = r === (relic?.ascended ? "ch-7" : "ch-6");
+    }
+    if (route.type === "material" && r === "materials") active = true;
+    if (route.type === "mimic" && r === "mimics") active = true;
+    if (route.type === "skill" && r === "ch-5") active = true;
+    btn.classList.toggle("active", active);
   });
 
+  const showId = panelIdFor(route);
   document.querySelectorAll(".panel").forEach((panel) => {
-    panel.hidden = panel.id !== `panel-${id}`;
+    panel.hidden = panel.id !== showId;
   });
+
+  if (route.type !== "chapter") renderDetail();
 
   const crumb = document.getElementById("crumb");
-  if (crumb) crumb.textContent = CHAPTERS[id];
+  if (crumb) crumb.textContent = crumbFor(route);
 
-  const hash = `#${id}`;
-  if (location.hash !== hash) history.replaceState(null, "", hash);
+  const hash = routeToHash(route);
+  if (location.hash !== hash) {
+    if (replace) history.replaceState(null, "", hash);
+    else history.pushState(null, "", hash);
+  }
 
   closeMobileNav();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+function go(hashOrRoute, opts) {
+  if (typeof hashOrRoute === "string") {
+    navigate(parseHash(hashOrRoute.startsWith("#") ? hashOrRoute : `#${hashOrRoute}`), opts);
+  } else {
+    navigate(hashOrRoute, opts);
+  }
+}
+
+/* ---------- tooltips ---------- */
 
 function tipEl() {
   return document.getElementById("tooltip");
@@ -317,28 +900,37 @@ function showTooltip(card, x, y) {
   el.style.top = `${top}px`;
 }
 
+/* ---------- setup ---------- */
+
 function setupNav() {
-  document.querySelector(".chapters")?.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-tab]");
-    if (!btn) return;
-    e.preventDefault();
-    showTab(btn.dataset.tab);
+  document.querySelectorAll(".chapter[data-route]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      go(btn.dataset.route, { replace: true });
+    });
   });
 
   document.querySelectorAll(".path-link, .next-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const id = e.currentTarget.dataset.tab;
-      if (id) showTab(id);
+      const id = e.currentTarget.dataset.route;
+      if (id) go(id, { replace: true });
     });
   });
 
   document.querySelector(".brand")?.addEventListener("click", (e) => {
     e.preventDefault();
-    showTab("ch-1");
+    go("ch-1", { replace: true });
+  });
+
+  document.getElementById("detail-root")?.addEventListener("click", (e) => {
+    const back = e.target.closest("[data-back]");
+    if (!back) return;
+    e.preventDefault();
+    go(back.dataset.back, { replace: true });
   });
 
   window.addEventListener("hashchange", () => {
-    showTab(location.hash.replace(/^#/, "") || "ch-1");
+    navigate(parseHash(location.hash), { replace: true });
   });
 
   document.getElementById("menu-btn")?.addEventListener("click", () => {
@@ -391,10 +983,40 @@ function setupFilters() {
     renderAscended();
   });
 
+  document.getElementById("material-search")?.addEventListener("input", (e) => {
+    state.materialQuery = e.target.value;
+    renderMaterials();
+  });
+
+  document.getElementById("mimic-search")?.addEventListener("input", (e) => {
+    state.mimicQuery = e.target.value;
+    renderMimics();
+  });
+
   document.addEventListener("click", (e) => {
     if (!state.filterOpen) return;
     const wrap = document.querySelector(".filter-wrap");
     if (wrap && !wrap.contains(e.target)) setFilterOpen(false);
+  });
+}
+
+function setupBoosts() {
+  document.getElementById("boost-grid")?.addEventListener("click", (e) => {
+    const btn = e.target.closest(".tier-btn");
+    if (!btn) return;
+    const card = btn.closest("[data-boost-id]");
+    if (!card) return;
+    const id = card.dataset.boostId;
+    const idx = Number(btn.dataset.tierIdx);
+    state.boostTier[id] = idx;
+    const boost = boostsList().find((b) => (b.id || b.name?.toLowerCase()) === id);
+    const tiers = normalizeTierText(boost?.tiers);
+    card.querySelectorAll(".tier-btn").forEach((b, i) => {
+      b.classList.toggle("active", i === idx);
+      b.setAttribute("aria-pressed", i === idx ? "true" : "false");
+    });
+    const val = card.querySelector("[data-boost-value]");
+    if (val) val.textContent = tiers[idx] || "—";
   });
 }
 
@@ -427,12 +1049,16 @@ function setupTooltips() {
 function init() {
   setupNav();
   setupFilters();
+  setupBoosts();
   setupTooltips();
   renderFilters();
   renderRelicGrid();
   renderAscended();
   renderBoosts();
-  showTab(location.hash.replace(/^#/, "") || "ch-1");
+  renderAttuneSkills();
+  renderMaterials();
+  renderMimics();
+  navigate(parseHash(location.hash), { replace: true });
 }
 
 if (document.readyState === "loading") {
