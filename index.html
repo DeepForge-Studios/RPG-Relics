@@ -3,156 +3,219 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RPG Relics — DeepForge Studios</title>
-  <meta name="description" content="Equip relics in a Reliquary wardrobe. Boosts, Attunement, and world finds for Minecraft Bedrock." />
+  <title>RPG Relics Wiki — DeepForge Studios</title>
+  <meta name="description" content="Player wiki for RPG Relics: Reliquary, relics, boosts, and attunement on Minecraft Bedrock." />
   <link rel="icon" href="RP/textures/ui/curio_gem.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="site/styles.css" />
 </head>
 <body>
-  <div class="bg"></div>
-
-  <header class="top">
-    <div class="brand">
-      <img src="RP/textures/ui/curio_gem.png" alt="" width="28" height="28" />
-      <div>
-        <p class="studio">DeepForge Studios</p>
-        <h1>RPG Relics</h1>
-      </div>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#start">
+        <img src="RP/textures/ui/curio_gem.png" alt="" width="32" height="32" />
+        <span>
+          <span class="studio">DeepForge Studios</span>
+          <span class="title">RPG Relics</span>
+        </span>
+      </a>
+      <p class="tagline">Player wiki · Bedrock Edition</p>
     </div>
-    <p class="tagline">Find relics. Equip them. Attune what you keep.</p>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Wiki sections">
-    <button type="button" class="tab active" data-tab="start">Start</button>
-    <button type="button" class="tab" data-tab="relics">Relics</button>
-    <button type="button" class="tab" data-tab="ascended">Ascended</button>
-    <button type="button" class="tab" data-tab="boosts">Boosts</button>
-    <button type="button" class="tab" data-tab="attune">Attune</button>
-    <button type="button" class="tab" data-tab="world">World</button>
+    <button type="button" class="tab" data-tab="start" role="tab">Start</button>
+    <button type="button" class="tab" data-tab="relics" role="tab">Relics</button>
+    <button type="button" class="tab" data-tab="ascended" role="tab">Ascended</button>
+    <button type="button" class="tab" data-tab="boosts" role="tab">Boosts</button>
+    <button type="button" class="tab" data-tab="attune" role="tab">Attune</button>
+    <button type="button" class="tab" data-tab="world" role="tab">World</button>
   </nav>
 
   <main>
-    <section id="panel-start" class="panel active">
-      <h2>Getting started</h2>
-      <ol class="steps">
-        <li>
-          <img src="RP/textures/items/relic_guidebook.png" alt="" />
-          <div>
-            <strong>Relic Tome</strong>
-            <span>Guide, Boost Codex, and settings</span>
-          </div>
-        </li>
-        <li>
-          <img src="RP/textures/items/reliquary.png" alt="" />
-          <div>
-            <strong>Relic Crate</strong>
-            <span>Opens your Reliquary wardrobe to equip</span>
-          </div>
-        </li>
-        <li>
-          <img src="RP/textures/items/attunement_tome.png" alt="" />
-          <div>
-            <strong>Attunement Tome</strong>
-            <span>Inspect, rank, and attune relics</span>
-          </div>
-        </li>
-      </ol>
+    <section id="panel-start" class="panel" hidden>
+      <h1>Getting started</h1>
+      <p class="lead">Find relics, equip them in the Reliquary, then deepen them at the forge.</p>
 
-      <div class="callout">
-        <p>First join also gives starter relics, shards, and craft materials.</p>
-        <div class="starter-icons">
+      <div class="steps">
+        <article class="step">
+          <div class="icon-well"><img src="RP/textures/items/relic_guidebook.png" alt="" /></div>
+          <div>
+            <h2>Relic Tome</h2>
+            <p>Guide, Boost Codex, and per-player settings.</p>
+          </div>
+        </article>
+        <article class="step">
+          <div class="icon-well"><img src="RP/textures/items/reliquary.png" alt="" /></div>
+          <div>
+            <h2>Relic Crate</h2>
+            <p>Opens your Reliquary wardrobe to equip.</p>
+          </div>
+        </article>
+        <article class="step">
+          <div class="icon-well"><img src="RP/textures/items/attunement_tome.png" alt="" /></div>
+          <div>
+            <h2>Attunement Codex</h2>
+            <p>Browse skills and ranks. Crafting happens at the Attunement Forge block.</p>
+          </div>
+        </article>
+      </div>
+
+      <aside class="note">
+        <p>First join includes starter relics, shards, and craft materials.</p>
+        <div class="starter-row">
           <figure>
-            <img src="RP/textures/items/tiered/lumen_visor.png" alt="Nightwatch Goggles" />
+            <div class="icon-well sm"><img src="RP/textures/items/lumen_visor.png" alt="" /></div>
             <figcaption>Nightwatch Goggles</figcaption>
           </figure>
           <figure>
-            <img src="RP/textures/items/tiered/vital_band.png" alt="Heartward Ring" />
+            <div class="icon-well sm"><img src="RP/textures/items/vital_band.png" alt="" /></div>
             <figcaption>Heartward Ring</figcaption>
           </figure>
           <figure>
-            <img src="RP/textures/items/relic_shard.png" alt="Relic Shard" />
+            <div class="icon-well sm"><img src="RP/textures/items/arcane_dust.png" alt="" /></div>
             <figcaption>Relic Shard</figcaption>
           </figure>
         </div>
-      </div>
+      </aside>
 
-      <h3>Install</h3>
-      <ol class="plain">
+      <h2 class="section-label">Install</h2>
+      <ol class="install">
         <li>Import the <code>.mcaddon</code> and enable Behavior + Resource packs.</li>
         <li>Leave Experiments / Beta APIs off (and Cheats off) for achievements.</li>
       </ol>
+
+      <h2 class="section-label">In game</h2>
+      <div class="shots">
+        <figure class="shot">
+          <img src="site/media/reliquary-ui.png" alt="Reliquary wardrobe UI" loading="lazy" />
+          <figcaption>Reliquary — equip slots, extras, and charms</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="site/media/guide-menu.png" alt="Relic Tome guide menu" loading="lazy" />
+          <figcaption>Relic Tome — guide, catalog, boosts, settings</figcaption>
+        </figure>
+      </div>
     </section>
 
-    <section id="panel-relics" class="panel">
-      <h2>Relics</h2>
-      <p class="lead">Browse by slot or rarity. Equip in the Reliquary.</p>
+    <section id="panel-relics" class="panel" hidden>
+      <h1>Relics</h1>
+      <p class="lead">Browse by slot or rarity. Hover a card for more. Click to pin a tip.</p>
 
-      <div class="filters">
-        <div class="filter-row" id="slot-filters"></div>
-        <div class="filter-row" id="tier-filters"></div>
+      <div class="toolbar">
+        <input type="search" id="relic-search" placeholder="Search relics…" autocomplete="off" />
+        <p class="count" id="relic-count"></p>
       </div>
-      <p class="count" id="relic-count"></p>
+      <div class="filters" id="slot-filters"></div>
+      <div class="filters" id="tier-filters"></div>
       <div class="grid" id="relic-grid"></div>
     </section>
 
-    <section id="panel-ascended" class="panel">
-      <h2>Ascended</h2>
+    <section id="panel-ascended" class="panel" hidden>
+      <h1>Ascended</h1>
       <p class="lead">Fuse two relics + a catalyst at the Relic Forge.</p>
+      <div class="toolbar">
+        <input type="search" id="ascended-search" placeholder="Search ascended…" autocomplete="off" />
+        <p class="count" id="ascended-count"></p>
+      </div>
       <div class="grid" id="ascended-grid"></div>
     </section>
 
-    <section id="panel-boosts" class="panel">
-      <h2>Boost Codex</h2>
-      <p class="lead">Equipped relics add Boost power by rarity (Common 1 · Uncommon 2 · Rare/Ascended 3). Your strongest style becomes active.</p>
+    <section id="panel-boosts" class="panel" hidden>
+      <h1>Boost Codex</h1>
+      <p class="lead">Equipped relics add power by rarity (Common 1 · Uncommon 2 · Rare/Ascended 3). Your strongest style becomes active.</p>
       <div class="boost-grid" id="boost-grid"></div>
     </section>
 
-    <section id="panel-attune" class="panel">
-      <h2>Attunement</h2>
-      <p class="lead">Bind skills to relics at the Attunement Forge. Wear them to grow ranks.</p>
-      <div class="feature-cards">
-        <article>
-          <img src="RP/textures/blocks/attunement_forge.png" alt="" />
-          <h3>Attunement Forge</h3>
-          <p>Place the forge or use the Attunement Tome. Offer Relic Shards and focus materials to roll a skill.</p>
+    <section id="panel-attune" class="panel" hidden>
+      <h1>Attunement</h1>
+      <p class="lead">Learn skills in the Codex. Perform rituals at the Forge.</p>
+      <div class="feature-grid">
+        <article class="feature">
+          <div class="icon-well"><img src="RP/textures/items/attunement_tome.png" alt="" /></div>
+          <h2>Attunement Codex</h2>
+          <p>Skill list, affinities, ranks, and how each ability triggers.</p>
         </article>
-        <article>
-          <img src="RP/textures/ui/curio_gem.png" alt="" />
-          <h3>Ranks</h3>
-          <p>Common → Uncommon → Rare → Epic. Higher rarities add new behavior, not just bigger numbers.</p>
+        <article class="feature">
+          <div class="icon-well"><img src="RP/textures/blocks/attunement_forge.png" alt="" /></div>
+          <h2>Attunement Forge</h2>
+          <p>Placeable block for the ritual — shards, focus materials, and rolls.</p>
         </article>
-        <article>
-          <img src="RP/textures/items/relic_shard.png" alt="" />
-          <h3>Materials</h3>
-          <p>Focus pairs pick an affinity group. Shards and material amounts set the rarity cap.</p>
+        <article class="feature">
+          <div class="icon-well"><img src="RP/textures/ui/curio_gem.png" alt="" /></div>
+          <h2>Ranks</h2>
+          <p>Common → Uncommon → Rare → Epic. Higher ranks unlock new behavior.</p>
         </article>
+      </div>
+
+      <div class="shots triple">
+        <figure class="shot">
+          <img src="site/media/forge-block.png" alt="Placed Attunement Forge" loading="lazy" />
+          <figcaption>Placed Attunement Forge</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="site/media/attune-forge-ui.png" alt="Choosing a relic to attune" loading="lazy" />
+          <figcaption>Choose a relic to attune</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="site/media/attune-affinity.png" alt="Affinity picker" loading="lazy" />
+          <figcaption>Pick an affinity</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="site/media/attune-skills.png" alt="Might skills list" loading="lazy" />
+          <figcaption>Skill list (e.g. Might)</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section id="panel-world" class="panel">
-      <h2>World finds</h2>
-      <div class="feature-cards">
-        <article>
-          <img src="RP/textures/entity/mimic_forest.png" alt="" />
-          <h3>Mimics</h3>
-          <p>Fake chests that bite. Biome skins and different bite effects. Defeat them for relic loot.</p>
+    <section id="panel-world" class="panel" hidden>
+      <h1>World</h1>
+      <p class="lead">Where relics and materials show up in survival.</p>
+      <div class="feature-grid">
+        <article class="feature">
+          <div class="icon-well"><img src="RP/textures/entity/mimic_forest.png" alt="" /></div>
+          <h2>Mimics</h2>
+          <p>Fake chests that bite. Biome skins and different bite effects.</p>
         </article>
-        <article>
-          <img src="RP/textures/items/relic_forge_v4.png" alt="" />
-          <h3>Relic Forge</h3>
-          <p>Craft materials into relics and ascend fusions. Recipe: crafting table, book, 2 amethyst, deepslate bricks.</p>
+        <article class="feature">
+          <div class="icon-well"><img src="RP/textures/items/relic_forge_v4.png" alt="" /></div>
+          <h2>Relic Forge</h2>
+          <p>Craft and ascend. Recipe: crafting table, book, 2 amethyst, deepslate bricks.</p>
         </article>
-        <article>
-          <img src="RP/textures/items/monster_heart.png" alt="" />
-          <h3>Structures & drops</h3>
-          <p>Towers, witch homes, underground camps, archaeology, and rare mob drops feed your Reliquary.</p>
+        <article class="feature">
+          <div class="icon-well"><img src="RP/textures/items/monster_heart.png" alt="" /></div>
+          <h2>Structures & drops</h2>
+          <p>Towers, witch homes, underground camps, archaeology, and rare mob drops.</p>
         </article>
+      </div>
+
+      <div class="shots">
+        <figure class="shot wide">
+          <img src="site/media/tower.png" alt="Relic tower in the savanna rain" loading="lazy" />
+          <figcaption>Relic tower — explore for chests and defenders</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="site/media/relics-chest.png" alt="Chest full of relics" loading="lazy" />
+          <figcaption>Relic loot</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="site/media/materials.png" alt="Craft materials in a chest" loading="lazy" />
+          <figcaption>Craft materials</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="site/media/chest-glint.png" alt="Chest with glint message" loading="lazy" />
+          <figcaption>Something glints in the chest…</figcaption>
+        </figure>
       </div>
     </section>
   </main>
 
-  <footer>
-    <p>Made by <strong>DeepForge Studios</strong> · <a href="https://github.com/DeepForge-Studios/RPG-Relics">GitHub</a></p>
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+
+  <footer class="site-footer">
+    <p>DeepForge Studios · <a href="https://github.com/DeepForge-Studios/RPG-Relics">GitHub</a></p>
   </footer>
 
   <script src="site/catalog.js"></script>
