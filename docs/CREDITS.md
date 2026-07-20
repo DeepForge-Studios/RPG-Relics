@@ -1,12 +1,5 @@
 # Credits
 
-## Treasure Chest [Minecraft]
-
-- Creator: Staralighto
-- Source: https://sketchfab.com/3d-models/treasure-chest-minecraft-450e2625f08b4af4987c1a24fec971d0
-- License: Creative Commons Attribution (CC BY)
-- Use: Converted and rigged as the `relics:mimic` Bedrock entity model.
-
 ## Minecraft Anvil (reference)
 
 - Creator: Coller (TheCollerroller)
