@@ -18,7 +18,7 @@ const SLOT_ORDER = [
   "belt", "hands", "feet", "any", "held",
 ];
 
-const TIER_ORDER = ["common", "uncommon", "rare", "ascended"];
+const TIER_ORDER = ["common", "uncommon", "rare", "epic", "legendary", "ascended"];
 /** Boost preview tiers (3). */
 const TIER_ROMAN = ["I", "II", "III"];
 /** Skill ranks — attune skills use four ranks (I–IV). */
@@ -26,6 +26,19 @@ const RANK_ROMAN = ["I", "II", "III", "IV", "V"];
 
 function rankLabel(index) {
   return RANK_ROMAN[index] || String(index + 1);
+}
+
+function tierRank(tier) {
+  const i = TIER_ORDER.indexOf(String(tier || "").toLowerCase());
+  return i === -1 ? TIER_ORDER.length : i;
+}
+
+/** Common → Uncommon → Rare → … → Ascended, then A–Z by name. */
+function compareRelicsByRarity(a, b) {
+  return (
+    tierRank(a.tier) - tierRank(b.tier) ||
+    (a.name || "").localeCompare(b.name || "", undefined, { sensitivity: "base" })
+  );
 }
 
 const CHAPTERS = {
@@ -517,12 +530,7 @@ function renderRelicGrid() {
         (r.tier || "").toLowerCase().includes(q)
     );
   }
-  list = [...list].sort(
-    (a, b) =>
-      SLOT_ORDER.indexOf(a.slot) - SLOT_ORDER.indexOf(b.slot) ||
-      TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier) ||
-      (a.name || "").localeCompare(b.name || "")
-  );
+  list = [...list].sort(compareRelicsByRarity);
 
   if (countEl) countEl.textContent = `${list.length} shown`;
   grid.innerHTML = list.length
@@ -543,7 +551,7 @@ function renderAscended() {
         (r.blurb || "").toLowerCase().includes(q)
     );
   }
-  list = [...list].sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  list = [...list].sort(compareRelicsByRarity);
   if (countEl) countEl.textContent = `${list.length} shown`;
   grid.innerHTML = list.length
     ? list.map(cardHtml).join("")
