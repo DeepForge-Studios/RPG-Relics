@@ -1,8 +1,6 @@
 /**
  * RPG Relics visual theme — single source for ActionForm § colors + JSON UI RGB.
- * Always import from here (or Vault/design docs). Do not invent random palette codes.
- *
- * Mirror: docs/UI_THEME.md · Vault/2-Areas/UI/
+ * Import from here; do not invent random palette codes.
  */
 
 /** Bedrock § formatting codes used in forms / chat. */

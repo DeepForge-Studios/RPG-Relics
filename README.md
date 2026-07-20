@@ -97,7 +97,7 @@ Creates `rpg_relics.mcaddon` (behavior + resource packs). Each run stamps a visi
 ```
 BP/     Behavior pack (scripts, items, loot, structures)
 RP/     Resource pack (textures, UI, models)
-docs/   Credits, CurseForge draft, theme notes
+docs/   Credits and attribution
 ```
 
 ---
@@ -107,7 +107,6 @@ docs/   Credits, CurseForge draft, theme notes
 | Doc | Contents |
 |-----|----------|
 | [Credits](docs/CREDITS.md) | Third-party art attribution |
-| [CurseForge description](docs/CURSEFORGE_DESCRIPTION.md) | Paste-ready store listing |
 
 ---
 
