@@ -5651,12 +5651,12 @@ window.RELIC_CATALOG = {
       "name": "Relic Dust",
       "icon": "textures/items/arcane_dust.png",
       "role": "fuel",
-      "blurb": "Fuel for every Attunement Forge ritual and Relic Forge crafts.",
-      "sources": "Chest / structure loot tables · Mimic kills (~65%) · Hostile mob relic rolls (+25% shard) · Archaeology brush finds (~50% with relic)",
+      "blurb": "Ritual fuel and craft dust — spent at the Forge and in ascended fusions.",
+      "sources": "Chest / structure loot · Mimic kills (~65%) · Hostile relic rolls · Archaeology finds",
       "sourceLines": [
         "Chest / structure loot tables",
         "Mimic kills (~65%)",
-        "Hostile mob relic rolls (+25% shard)",
+        "Hostile mob relic rolls (+25% dust chance)",
         "Archaeology brush finds (~50% with relic)"
       ],
       "focusGroups": []
@@ -5666,7 +5666,7 @@ window.RELIC_CATALOG = {
       "name": "Monster Heart",
       "icon": "textures/items/monster_heart.png",
       "role": "focus",
-      "blurb": "Forge focus / upgrade catalyst.",
+      "blurb": "Heavy focus for Might, Ward, Vitality, and Necromancy rituals.",
       "sources": "Mob drops (~8%): zombie, husk, drowned, piglin_brute, ravager, warden · Also appears in relic tower / home / camp loot tables",
       "sourceLines": [
         "Mob drops (~8%): zombie, husk, drowned, piglin_brute, ravager, warden",
@@ -5684,7 +5684,7 @@ window.RELIC_CATALOG = {
       "name": "Beast Fang",
       "icon": "textures/items/beast_fang.png",
       "role": "focus",
-      "blurb": "Forge focus / upgrade catalyst.",
+      "blurb": "Sharp focus for Might, Gale, and Fortune rituals.",
       "sources": "Mob drops (~12%): spider, cave_spider, hoglin, ravager, warden · Also appears in relic tower / home / camp loot tables",
       "sourceLines": [
         "Mob drops (~12%): spider, cave_spider, hoglin, ravager, warden",
@@ -5701,7 +5701,7 @@ window.RELIC_CATALOG = {
       "name": "Arcane Gem",
       "icon": "textures/items/relic_shard.png",
       "role": "focus",
-      "blurb": "Arcane Gem — Forge focus / upgrade catalyst.",
+      "blurb": "Glowing focus for Gale, Alchemy, and Radiance — also used in many crafts.",
       "sources": "Mob drops (~16%): witch, enderman, evocation_illager, shulker · Also appears in relic tower / home / camp loot tables",
       "sourceLines": [
         "Mob drops (~16%): witch, enderman, evocation_illager, shulker",
@@ -5718,7 +5718,7 @@ window.RELIC_CATALOG = {
       "name": "Silver Fragment",
       "icon": "textures/items/silver_fragment.png",
       "role": "focus",
-      "blurb": "Forge focus / upgrade catalyst.",
+      "blurb": "Bright focus for Ward, Fortune, and Radiance rituals.",
       "sources": "Mob drops (~12%): skeleton, stray, pillager, vindicator, zombie_villager · Also appears in relic tower / home / camp loot tables",
       "sourceLines": [
         "Mob drops (~12%): skeleton, stray, pillager, vindicator, zombie_villager",
@@ -5735,8 +5735,7 @@ window.RELIC_CATALOG = {
       "name": "Crimson Crystal",
       "icon": "textures/items/crimson_crystal.png",
       "role": "focus",
-      "blurb": "Forge focus / upgrade catalyst.",
-      "sources": "Mob drops (~10%): creeper, blaze, magma_cube, wither_skeleton · Also appears in relic tower / home / camp loot tables",
+      "blurb": "Dark focus for Necromancy rituals.",
       "sourceLines": [
         "Mob drops (~10%): creeper, blaze, magma_cube, wither_skeleton",
         "Also appears in relic tower / home / camp loot tables"
@@ -5750,7 +5749,7 @@ window.RELIC_CATALOG = {
       "name": "Mystic Herb",
       "icon": "textures/items/mystic_herb.png",
       "role": "focus",
-      "blurb": "Forge focus / upgrade catalyst. Gathered from plants.",
+      "blurb": "Soft focus for Vitality and Alchemy — gathered from plants.",
       "sources": "Breaking plants (~12%): grass, tall_grass, fern, large_fern, dandelion, poppy, blue_orchid, allium, … · Relic tower & home chests",
       "sourceLines": [
         "Breaking plants (~12%): grass, tall_grass, fern, large_fern, dandelion, poppy, blue_orchid, allium, …",
@@ -5780,7 +5779,8 @@ window.RELIC_CATALOG = {
         "sunflower",
         "pale_garden"
       ],
-      "blurb": "Thorns dig into you! Effects: poison, slowness.",
+      "blurb": "A woodland chest that bites back. Hits apply poison and slowness.",
+      "where": "Forests, plains, meadows, birch, cherry, dark forest, and similar.",
       "attackMessage": "§2Thorns dig into you!",
       "attackEffects": [
         {
@@ -5810,7 +5810,8 @@ window.RELIC_CATALOG = {
         "warm_ocean",
         "deep_warm"
       ],
-      "blurb": "A dry heat drains your strength! Effects: hunger, weakness.",
+      "blurb": "A sunbaked chest mimic. Hits drain you with hunger and weakness.",
+      "where": "Deserts, beaches, and warm oceans.",
       "attackMessage": "§eA dry heat drains your strength!",
       "attackEffects": [
         {
@@ -5841,7 +5842,8 @@ window.RELIC_CATALOG = {
         "savanna",
         "savanna_mutated"
       ],
-      "blurb": "Scorching clay sears you! Effects: weakness; sets you on fire (4s).",
+      "blurb": "Clay-banded mesa mimic. Hits weaken you and set you on fire briefly.",
+      "where": "Badlands / mesa and savanna lands.",
       "attackMessage": "§cScorching clay sears you!",
       "attackEffects": [
         {
@@ -5870,7 +5872,8 @@ window.RELIC_CATALOG = {
         "jagged",
         "stony_peaks"
       ],
-      "blurb": "Frostbite numbs your limbs! Effects: slowness, mining fatigue.",
+      "blurb": "A frosted chest mimic. Hits numb you with slowness and mining fatigue.",
+      "where": "Snow, ice, frozen peaks, groves, and cold biomes.",
       "attackMessage": "§bFrostbite numbs your limbs!",
       "attackEffects": [
         {
@@ -5899,7 +5902,8 @@ window.RELIC_CATALOG = {
         "mangrove",
         "marsh"
       ],
-      "blurb": "Bog venom saturates the wound! Effects: poison, nausea.",
+      "blurb": "A boggy chest mimic. Hits soak you in poison and nausea.",
+      "where": "Swamps and mangrove marshes.",
       "attackMessage": "§2Bog venom saturates the wound!",
       "attackEffects": [
         {
@@ -5928,7 +5932,8 @@ window.RELIC_CATALOG = {
         "bamboo",
         "sparse_jungle"
       ],
-      "blurb": "Jungle venom clouds your senses! Effects: blindness, poison.",
+      "blurb": "A canopy chest mimic. Hits blind and poison you.",
+      "where": "Jungles and bamboo groves.",
       "attackMessage": "§aJungle venom clouds your senses!",
       "attackEffects": [
         {

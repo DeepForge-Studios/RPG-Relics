@@ -802,6 +802,11 @@ a.feature.link-card:hover { text-decoration: none; }
   margin: 0;
 }
 .detail-body p { margin: 0 0 0.55rem; }
+.detail-body .muted-line {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+}
 .detail-meta { margin-bottom: 0.75rem; }
 .detail-cols {
   display: grid;

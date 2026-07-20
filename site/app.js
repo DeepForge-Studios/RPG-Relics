@@ -127,61 +127,61 @@ const FALLBACK_MATERIALS = [
   {
     id: "relics:relic_shard",
     name: "Relic Dust",
-    blurb: "Spent for Forge rituals and ascended fusions.",
+    blurb: "Ritual fuel — spent at the Forge and in ascended crafts.",
     sources: "Mimics, relic chests, archaeology, hostile kills",
     icon: "textures/items/relic_shard.png",
   },
   {
     id: "relics:arcane_dust",
     name: "Arcane Gem",
-    blurb: "Focus material for Gale / Alchemy-style crafts.",
+    blurb: "Glowing focus for Gale, Alchemy, and Radiance — also used in many crafts.",
     sources: "Witches, endermen, evokers, shulkers",
     icon: "textures/items/arcane_dust.png",
   },
   {
     id: "relics:monster_heart",
     name: "Monster Heart",
-    blurb: "Focus material for Might, Ward, Vitality, Necromancy.",
+    blurb: "Heavy focus for Might, Ward, Vitality, and Necromancy rituals.",
     sources: "Zombies, husks, drowned, brutes, ravagers, wardens",
     icon: "textures/items/monster_heart.png",
   },
   {
     id: "relics:beast_fang",
     name: "Beast Fang",
-    blurb: "Focus material for Might, Gale, Fortune.",
+    blurb: "Sharp focus for Might, Gale, and Fortune rituals.",
     sources: "Spiders, hoglins, ravagers, wardens",
     icon: "textures/items/beast_fang.png",
   },
   {
     id: "relics:mystic_herb",
     name: "Mystic Herb",
-    blurb: "Focus material for Vitality and Alchemy.",
+    blurb: "Soft focus for Vitality and Alchemy — gathered from plants.",
     sources: "Grass, ferns, flowers, tower chests",
     icon: "textures/items/mystic_herb.png",
   },
   {
     id: "relics:silver_fragment",
     name: "Silver Fragment",
-    blurb: "Focus material for Ward, Fortune, Radiance.",
+    blurb: "Bright focus for Ward, Fortune, and Radiance rituals.",
     sources: "Skeletons, strays, illagers, relic chests",
     icon: "textures/items/silver_fragment.png",
   },
   {
     id: "relics:crimson_crystal",
     name: "Crimson Crystal",
-    blurb: "Focus material for Necromancy.",
+    blurb: "Dark focus for Necromancy rituals.",
     sources: "Creepers, blazes, magma cubes, wither skeletons",
     icon: "textures/items/crimson_crystal.png",
   },
 ];
 
 const FALLBACK_MIMICS = [
-  { id: "mimic_forest", name: "Forest Mimic", blurb: "Woodland chest mimic.", biome: "Forest", icon: "textures/entity/mimic_forest.png", media: "site/media/mimics/forest.png" },
-  { id: "mimic_desert", name: "Desert Mimic", blurb: "Sandy chest mimic.", biome: "Desert", icon: "textures/entity/mimic_desert.png", media: "site/media/mimics/desert.png" },
-  { id: "mimic_jungle", name: "Jungle Mimic", blurb: "Canopy chest mimic.", biome: "Jungle", icon: "textures/entity/mimic_jungle.png", media: "site/media/mimics/jungle.png" },
-  { id: "mimic_swamp", name: "Swamp Mimic", blurb: "Murky chest mimic.", biome: "Swamp", icon: "textures/entity/mimic_swamp.png", media: "site/media/mimics/swamp.png" },
-  { id: "mimic_snow", name: "Snow Mimic", blurb: "Frosted chest mimic.", biome: "Snow", icon: "textures/entity/mimic_snow.png", media: "site/media/mimics/snow.png" },
-  { id: "mimic_badlands", name: "Badlands Mimic", blurb: "Clay mesa chest mimic.", biome: "Badlands", icon: "textures/entity/mimic_badlands.png", media: "site/media/mimics/badlands.png" },
+  { id: "mimic_forest", name: "Forest Mimic", blurb: "A woodland chest that bites back. Hits apply poison and slowness.", where: "Forests, plains, meadows, and similar.", biome: "Forest", icon: "textures/entity/mimic_forest.png", media: "site/media/mimics/forest.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_desert", name: "Desert Mimic", blurb: "A sunbaked chest mimic. Hits drain you with hunger and weakness.", where: "Deserts, beaches, and warm oceans.", biome: "Desert", icon: "textures/entity/mimic_desert.png", media: "site/media/mimics/desert.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_jungle", name: "Jungle Mimic", blurb: "A canopy chest mimic. Hits blind and poison you.", where: "Jungles and bamboo groves.", biome: "Jungle", icon: "textures/entity/mimic_jungle.png", media: "site/media/mimics/jungle.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_swamp", name: "Swamp Mimic", blurb: "A boggy chest mimic. Hits soak you in poison and nausea.", where: "Swamps and mangrove marshes.", biome: "Swamp", icon: "textures/entity/mimic_swamp.png", media: "site/media/mimics/swamp.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_snow", name: "Snow Mimic", blurb: "A frosted chest mimic. Hits numb you with slowness and mining fatigue.", where: "Snow, ice, and cold biomes.", biome: "Snow", icon: "textures/entity/mimic_snow.png", media: "site/media/mimics/snow.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_badlands", name: "Badlands Mimic", blurb: "Clay-banded mesa mimic. Hits weaken you and set you on fire briefly.", where: "Badlands and savanna lands.", biome: "Badlands", icon: "textures/entity/mimic_badlands.png", media: "site/media/mimics/badlands.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
 ];
 
 const FALLBACK_SKILL_GROUPS = [
@@ -784,7 +784,9 @@ function renderDetail() {
         : `<span class="badge">Mimic</span>`,
       bodyHtml: m
         ? `<p>${colorizeText(m.blurb || m.summary || "Defeat for relic loot and Relic Dust.", "var(--gem)")}</p>
-           ${m.loot ? `<p>${colorizeText(m.loot, "var(--gem)")}</p>` : ""}`
+           ${m.where ? `<p><strong style="color:var(--gold)">Where:</strong> ${colorizeText(m.where, "var(--gem)")}</p>` : ""}
+           ${m.loot ? `<p><strong style="color:var(--gold)">Loot:</strong> ${colorizeText(m.loot, "var(--gem)")}</p>` : ""}
+           <p class="muted-line">Deep and camp chests can awaken as mimics. Kill them standing above the chest — Relic Dust is common; relics often come from nearby structure loot.</p>`
         : `<p>Mimic <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
     });
     return;
