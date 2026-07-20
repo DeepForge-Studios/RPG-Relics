@@ -57,7 +57,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -75,7 +75,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -84,7 +84,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Nightseer's Gaze",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -161,7 +161,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -179,7 +179,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -189,7 +189,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Venom Ward",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -250,7 +250,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -268,7 +268,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -277,7 +277,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Nightseer's Gaze",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -332,7 +332,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -350,7 +350,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -358,7 +358,7 @@ window.RELIC_CATALOG = {
         "Attune groups: Vitality, Ward",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -419,7 +419,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -437,7 +437,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -446,7 +446,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Abyssal Gillchain",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -507,7 +507,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -525,7 +525,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -534,7 +534,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Soothsayer's Reap",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -589,7 +589,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -607,7 +607,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -615,7 +615,7 @@ window.RELIC_CATALOG = {
         "Attune groups: Fortune, Alchemy",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -676,7 +676,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -694,7 +694,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -703,7 +703,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Abyssal Gillchain",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -766,7 +766,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -784,7 +784,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -794,7 +794,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Sanguine Heartguard",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -855,7 +855,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -873,7 +873,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -882,7 +882,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Inferno Brand",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -937,7 +937,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -955,7 +955,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -963,7 +963,7 @@ window.RELIC_CATALOG = {
         "Attune groups: Ward, Radiance",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1018,7 +1018,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1036,7 +1036,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1044,7 +1044,7 @@ window.RELIC_CATALOG = {
         "Attune groups: Fortune, Alchemy",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1099,7 +1099,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1117,7 +1117,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1125,7 +1125,7 @@ window.RELIC_CATALOG = {
         "Attune groups: Alchemy, Radiance",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1188,7 +1188,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1206,7 +1206,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1216,7 +1216,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Tempest Choker",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1280,7 +1280,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1298,7 +1298,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1308,7 +1308,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Thornroot Ward",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1369,7 +1369,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1387,7 +1387,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1396,7 +1396,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Tempest Choker",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1473,7 +1473,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1491,7 +1491,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1501,7 +1501,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Veinheart Gauntlets",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1564,7 +1564,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1582,7 +1582,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1592,7 +1592,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Vital Bloom",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1669,7 +1669,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1687,7 +1687,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1697,7 +1697,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Vital Bloom",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1758,7 +1758,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1776,7 +1776,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1785,7 +1785,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Alchemist's Focus",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1848,7 +1848,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1866,7 +1866,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1876,7 +1876,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Executioner's Phantom",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -1937,7 +1937,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -1955,7 +1955,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -1964,7 +1964,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Executioner's Phantom",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2028,7 +2028,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2046,7 +2046,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2056,7 +2056,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Nimbus Mantle",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2120,7 +2120,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2138,7 +2138,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2148,7 +2148,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Gale Aegis",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2206,7 +2206,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2224,7 +2224,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2233,7 +2233,7 @@ window.RELIC_CATALOG = {
         "Blocked skills: oathchain, quillguard",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2296,7 +2296,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2314,7 +2314,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2324,7 +2324,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Bulwark Plate",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2385,7 +2385,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2403,7 +2403,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2412,7 +2412,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Alchemist's Focus",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2469,7 +2469,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2487,7 +2487,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2496,7 +2496,7 @@ window.RELIC_CATALOG = {
         "Blocked skills: tempest tithe",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2557,7 +2557,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2575,7 +2575,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2584,7 +2584,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Sanguine Heartguard",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2645,7 +2645,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2663,7 +2663,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2672,7 +2672,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Gale Aegis",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2733,7 +2733,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2751,7 +2751,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2760,7 +2760,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Bulwark Plate",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2821,7 +2821,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2839,7 +2839,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2848,7 +2848,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Treasure Lure",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -2925,7 +2925,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -2943,7 +2943,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -2953,7 +2953,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Venom Ward",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3033,7 +3033,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3051,7 +3051,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3062,7 +3062,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Nimbus Mantle",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3139,7 +3139,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3157,7 +3157,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3167,7 +3167,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Veinheart Gauntlets",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3228,7 +3228,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3246,7 +3246,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3255,7 +3255,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Crimson Wargrip",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3316,7 +3316,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3334,7 +3334,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3343,7 +3343,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Inferno Brand",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3404,7 +3404,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3422,7 +3422,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3431,7 +3431,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Soothsayer's Reap",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3494,7 +3494,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3512,7 +3512,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3522,7 +3522,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Warhammer Fist",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3586,7 +3586,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3604,7 +3604,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3614,7 +3614,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Warhammer Fist",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3677,7 +3677,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3695,7 +3695,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3705,7 +3705,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Crimson Wargrip",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3766,7 +3766,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3784,7 +3784,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3793,7 +3793,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Treasure Lure",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3854,7 +3854,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3872,7 +3872,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3881,7 +3881,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Leviathan Striders",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -3944,7 +3944,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -3962,7 +3962,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -3972,7 +3972,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Windsprint Greaves",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -4033,7 +4033,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -4051,7 +4051,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -4060,7 +4060,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Leviathan Striders",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -4115,7 +4115,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -4133,7 +4133,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -4141,7 +4141,7 @@ window.RELIC_CATALOG = {
         "Attune groups: Ward, Radiance",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -4202,7 +4202,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -4220,7 +4220,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -4229,7 +4229,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Windsprint Greaves",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -4290,7 +4290,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -4308,7 +4308,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -4317,7 +4317,7 @@ window.RELIC_CATALOG = {
         "Upgrades into: Thornroot Ward",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -4372,7 +4372,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -4390,7 +4390,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -4398,7 +4398,7 @@ window.RELIC_CATALOG = {
         "Attune groups: Alchemy, Radiance",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -4453,7 +4453,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -4471,7 +4471,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -4479,7 +4479,7 @@ window.RELIC_CATALOG = {
         "Attune groups: Alchemy, Radiance",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
@@ -4534,7 +4534,7 @@ window.RELIC_CATALOG = {
             "campAmbush": 0.22,
             "killShard": 0.65
           },
-          "note": "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot)."
+          "note": "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot)."
         },
         {
           "kind": "archaeology",
@@ -4552,7 +4552,7 @@ window.RELIC_CATALOG = {
             "uncommon": 0.15,
             "common": 0.85
           },
-          "note": "Hostile / monster family kills — 5% relic drop (+25% shard chance)."
+          "note": "Hostile / monster family kills — 5% relic drop (+25% Relic Dust chance)."
         }
       ],
       "notes": [
@@ -4560,7 +4560,7 @@ window.RELIC_CATALOG = {
         "Attune groups: Alchemy, Radiance",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
-        "Deep/camp chests can awaken as mimics; kill for shards (relics via nearby loot).",
+        "Deep/camp chests can awaken as mimics; kill for Relic Dust (relics via nearby loot).",
         "Archaeology: ~22% when brushing suspicious blocks",
         "Hostile mobs: ~5% relic drop"
       ]
