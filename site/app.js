@@ -260,7 +260,7 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;");
 }
 
-/** Color-code affinities, numbers, and key phrases in wiki copy. */
+/** Color-code affinities and key phrases. Numbers stay gold — not accent rainbow. */
 function colorizeText(raw, accentCssVar) {
   let t = escapeHtml(raw);
   const accent = accentCssVar || "var(--gold)";
@@ -281,19 +281,34 @@ function colorizeText(raw, accentCssVar) {
     /\b(Relic Dust|Arcane Gems?|Arcane Dust|Monster Heart|Beast Fang|Mystic Herb|Silver Fragment|Crimson Crystal)\b/g,
     (m) => `<span class="kw kw-gold">${m}</span>`
   );
-  t = t.replace(/\bshards?\b/gi, (m) => {
-    const dust = m.toLowerCase() === "shards" ? "Relic Dust" : "Relic Dust";
-    return `<span class="kw kw-gold">${dust}</span>`;
-  });
+  t = t.replace(/\bshards?\b/gi, () => `<span class="kw kw-gold">Relic Dust</span>`);
   t = t.replace(
     /\b(Execute Pulse|Execute|Tailwind|Sanguine Pact|Judgment Brand|Thunderbrand|Lumen Chorus|Dirge Mark|Vialmark|Bastion Glyph|Siege Root|Soul Charges?|Chorus Notes?|Scarbrand|Rivets?|Marked Weak|Pact Slam)\b/g,
     (m) => `<span class="kw-em" style="--accent:${accent}">${m}</span>`
   );
   t = t.replace(
     /(\+?\d+(?:\.\d+)?%?|\d+\s*hearts?)/gi,
-    (m) => `<span class="kw-num" style="--accent:${accent}">${m}</span>`
+    (m) => `<span class="kw-num">${m}</span>`
   );
   return t;
+}
+
+/** Split "Label: value" catalog notes into a simple fact list (no NOTES box). */
+function factListHtml(notes, accent) {
+  if (!Array.isArray(notes) || !notes.length) return "";
+  const rows = notes
+    .map((n) => {
+      const raw = String(n ?? "");
+      const i = raw.indexOf(":");
+      if (i > 0 && i < 40) {
+        const label = raw.slice(0, i).trim();
+        const value = raw.slice(i + 1).trim();
+        return `<div class="fact"><dt>${escapeHtml(label)}</dt><dd>${colorizeText(value, accent)}</dd></div>`;
+      }
+      return `<p class="fact-loose">${colorizeText(raw, accent)}</p>`;
+    })
+    .join("");
+  return `<dl class="facts">${rows}</dl>`;
 }
 
 function bareId(id) {
@@ -681,24 +696,20 @@ function renderAttuneSkills() {
 /* ---------- detail views ---------- */
 
 function detailShell({ backHash, backLabel, icon, title, metaHtml, bodyHtml, accent, shot }) {
-  const accentStyle = accent ? ` style="--accent:${escapeHtml(accent)}"` : "";
-  const media = shot
-    ? `<div class="detail-shot"><img src="${escapeHtml(shot)}" alt="${escapeHtml(title)}" /></div>`
-    : "";
   return `
     <button type="button" class="back-link" data-back="${escapeHtml(backHash)}">← ${escapeHtml(backLabel)}</button>
-    <article class="detail-card"${accentStyle}>
-      <div class="detail-head">
-        <div class="icon-well lg">
+    <article class="entry"${accent ? ` style="--accent:${escapeHtml(accent)}"` : ""}>
+      <header class="entry-head">
+        <div class="icon-well">
           <img src="${escapeHtml(icon)}" alt="" onerror="this.onerror=null;this.src='RP/textures/ui/curio_gem.png'" />
         </div>
         <div>
           <h1>${escapeHtml(title)}</h1>
-          <div class="detail-meta meta">${metaHtml || ""}</div>
+          ${metaHtml ? `<p class="entry-meta">${metaHtml}</p>` : ""}
         </div>
-      </div>
-      ${media}
-      <div class="detail-body">${bodyHtml}</div>
+      </header>
+      ${shot ? `<figure class="entry-shot"><img src="${escapeHtml(shot)}" alt="${escapeHtml(title)}" /></figure>` : ""}
+      <div class="entry-body">${bodyHtml}</div>
     </article>`;
 }
 
@@ -725,29 +736,29 @@ function renderDetail() {
       ? `textures/items/tiered/${bareId(r.id)}.png`
       : `textures/items/${bareId(r.id)}.png`);
     const notes = Array.isArray(r.notes) ? r.notes : [];
-    const hasSide = notes.length > 0 || (r.effect && r.effect !== r.blurb && r.effect !== r.summary);
-    const mainHtml = `
-      <p>${colorizeText(r.blurb || r.summary || "No description yet.", accent)}</p>
-      ${r.effect && r.effect !== r.blurb && r.effect !== r.summary ? `<p>${colorizeText(r.effect, accent)}</p>` : ""}`;
-    const sideHtml = notes.length
-      ? `<p class="section-label">Notes</p>
-         <ul class="detail-list plain">${notes
-           .map((n) => `<li>${colorizeText(n, accent)}</li>`)
-           .join("")}</ul>`
-      : "";
+    const slot = r.slot ? SLOT_LABELS[r.slot] || r.slot : "";
+    const tier = r.tier ? String(r.tier) : "";
+    const aff = r.relicAffinity || r.affinity || "";
+    const metaBits = [
+      slot ? escapeHtml(slot) : "",
+      tier ? escapeHtml(tier) : "",
+      aff ? `<span class="kw kw-${escapeHtml(String(aff).toLowerCase())}">${escapeHtml(titleCase(aff))}</span>` : "",
+    ].filter(Boolean);
     root.innerHTML = detailShell({
       backHash: r.ascended ? "#ch-7" : "#ch-6",
       backLabel: r.ascended ? "Ascended" : "Relic catalog",
       icon: src,
       title: r.name || bareId(r.id),
       accent,
-      metaHtml: `
-        ${r.slot ? `<span class="badge">${escapeHtml(SLOT_LABELS[r.slot] || r.slot)}</span>` : ""}
-        ${r.tier ? `<span class="badge ${escapeHtml(r.tier)}">${escapeHtml(r.tier)}</span>` : ""}
-        ${r.relicAffinity || r.affinity ? `<span class="badge ${escapeHtml((r.relicAffinity || r.affinity || "").toLowerCase())}">${escapeHtml(titleCase(r.relicAffinity || r.affinity))}</span>` : ""}`,
-      bodyHtml: hasSide && sideHtml
-        ? `<div class="detail-cols"><div class="detail-main">${mainHtml}</div><div class="detail-side">${sideHtml}</div></div>`
-        : mainHtml,
+      metaHtml: metaBits.join(" · "),
+      bodyHtml: `
+        <p class="entry-lead">${colorizeText(r.blurb || r.summary || "No description yet.", accent)}</p>
+        ${
+          r.effect && r.effect !== r.blurb && r.effect !== r.summary
+            ? `<p>${colorizeText(r.effect, accent)}</p>`
+            : ""
+        }
+        ${factListHtml(notes, accent)}`,
     });
     return;
   }
@@ -760,10 +771,10 @@ function renderDetail() {
       backLabel: "Materials",
       icon: src,
       title: m?.name || titleCase(bareId(id)),
-      metaHtml: `<span class="badge">Material</span>`,
+      metaHtml: `<span class="kw kw-gold">Material</span>`,
       bodyHtml: m
-        ? `<p>${colorizeText(m.blurb || m.summary || "—", "var(--gold)")}</p>
-           ${m.sources ? `<p><strong style="color:var(--gold)">Sources:</strong> ${colorizeText(m.sources, "var(--gold)")}</p>` : ""}`
+        ? `<p class="entry-lead">${colorizeText(m.blurb || m.summary || "—", "var(--gold)")}</p>
+           ${m.sources ? factListHtml([`Sources: ${m.sources}`], "var(--gold)") : ""}`
         : `<p>Material <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
     });
     return;
@@ -779,14 +790,17 @@ function renderDetail() {
       icon: src,
       shot,
       title: m?.name || titleCase(bareId(id)),
-      metaHtml: m?.biome
-        ? `<span class="badge">${escapeHtml(m.biome)}</span>`
-        : `<span class="badge">Mimic</span>`,
+      metaHtml: m?.biome ? escapeHtml(m.biome) : "Mimic",
       bodyHtml: m
-        ? `<p>${colorizeText(m.blurb || m.summary || "Defeat for relic loot and Relic Dust.", "var(--gem)")}</p>
-           ${m.where ? `<p><strong style="color:var(--gold)">Where:</strong> ${colorizeText(m.where, "var(--gem)")}</p>` : ""}
-           ${m.loot ? `<p><strong style="color:var(--gold)">Loot:</strong> ${colorizeText(m.loot, "var(--gem)")}</p>` : ""}
-           <p class="muted-line">Deep and camp chests can awaken as mimics. Kill them standing above the chest — Relic Dust is common; relics often come from nearby structure loot.</p>`
+        ? `<p class="entry-lead">${colorizeText(m.blurb || m.summary || "Defeat for relic loot and Relic Dust.", "var(--gold)")}</p>
+           ${factListHtml(
+             [
+               m.where ? `Where: ${m.where}` : null,
+               m.loot ? `Loot: ${m.loot}` : null,
+             ].filter(Boolean),
+             "var(--gold)"
+           )}
+           <p class="entry-aside">Deep and camp chests can awaken as mimics. Relic Dust is the usual drop; relics often sit in nearby structure loot.</p>`
         : `<p>Mimic <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
     });
     return;
@@ -796,22 +810,15 @@ function renderDetail() {
     const found = findSkill(group, key);
     const g = found?.group;
     const s = found?.skill;
-    const accent = GROUP_COLORS[g?.id] || "var(--gem)";
-    const groupCls = g?.id || "";
+    const accent = GROUP_COLORS[g?.id] || "var(--gold)";
     const ranks = Array.isArray(s?.tiers) ? s.tiers : [];
-    const mainHtml = s
-      ? `<p>${colorizeText(s.summary || s.blurb || "—", accent)}</p>
-         ${s.when ? `<p><strong class="field-label">When:</strong> ${colorizeText(s.when, accent)}</p>` : ""}
-         ${s.cost ? `<p><strong class="field-label">Cost:</strong> ${colorizeText(s.cost, accent)}</p>` : ""}`
-      : `<p>Skill <code>${escapeHtml(group)}/${escapeHtml(key)}</code> is not in the catalog yet.</p>`;
     const ranksHtml = ranks.length
-      ? `<p class="section-label">Ranks</p>
-         <ul class="detail-list">${ranks
-           .map((t, i) => {
-             const text = typeof t === "string" ? t : t.text || t;
-             return `<li><span class="rank-label">${rankLabel(i)}</span><span>${colorizeText(text, accent)}</span></li>`;
-           })
-           .join("")}</ul>`
+      ? `<ol class="ranks">${ranks
+          .map((t, i) => {
+            const text = typeof t === "string" ? t : t.text || t;
+            return `<li><span class="ranks-n">${rankLabel(i)}</span> ${colorizeText(text, accent)}</li>`;
+          })
+          .join("")}</ol>`
       : "";
     root.innerHTML = detailShell({
       backHash: "#ch-5",
@@ -819,11 +826,23 @@ function renderDetail() {
       icon: "RP/textures/items/attunement_tome.png",
       title: s?.name || titleCase(key),
       accent,
-      metaHtml: `<span class="badge ${escapeHtml(groupCls)}">${escapeHtml(g?.name || group || "Skill")}</span>
-        ${s?.kind ? `<span class="badge">${escapeHtml(s.kind)}</span>` : ""}`,
-      bodyHtml: ranksHtml
-        ? `<div class="detail-cols"><div class="detail-main">${mainHtml}</div><div class="detail-side">${ranksHtml}</div></div>`
-        : mainHtml,
+      metaHtml: [
+        g?.name ? `<span class="kw kw-${escapeHtml(g.id || "")}">${escapeHtml(g.name)}</span>` : escapeHtml(group || "Skill"),
+        s?.kind ? escapeHtml(String(s.kind).replace(/_/g, " ")) : "",
+      ]
+        .filter(Boolean)
+        .join(" · "),
+      bodyHtml: s
+        ? `<p class="entry-lead">${colorizeText(s.summary || s.blurb || "—", accent)}</p>
+           ${factListHtml(
+             [
+               s.when ? `When: ${s.when}` : null,
+               s.cost ? `Cost: ${s.cost}` : null,
+             ].filter(Boolean),
+             accent
+           )}
+           ${ranksHtml ? `<h2 class="entry-sub">Ranks</h2>${ranksHtml}` : ""}`
+        : `<p>Skill <code>${escapeHtml(group)}/${escapeHtml(key)}</code> is not in the catalog yet.</p>`,
     });
   }
 }

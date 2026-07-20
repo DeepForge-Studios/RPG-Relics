@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg: #0c0b10;
   --surface: #14131a;
   --elevated: #1c1a24;
@@ -28,8 +28,9 @@
   --ch-6: var(--rare);
   --ch-7: var(--alchemy);
   --ease: 160ms ease;
-  --font: "DM Sans", system-ui, sans-serif;
-  --radius: 10px;
+  --font: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-display: "Source Serif 4", "Times New Roman", serif;
+  --radius: 6px;
   --page-max: 1640px;
   --nav-h: 58px;
 }
@@ -241,17 +242,17 @@ main {
 .kw-gold { color: var(--gold); }
 .kw-gem { color: var(--gem); }
 .kw-num {
-  color: var(--accent, var(--gold));
+  color: var(--gold);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 .kw-em {
-  color: var(--accent, var(--text));
+  color: var(--text);
   font-weight: 650;
 }
 
 .panel[hidden] { display: none !important; }
-.panel { animation: fadeIn 200ms ease; }
+.panel { }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
@@ -299,7 +300,7 @@ h2 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.55rem;
-  /* Start at 1 so first link shows 2 (Find) — chapter 1 is the current page */
+  /* Start at 1 so first link shows 2 (Find) â€” chapter 1 is the current page */
   counter-reset: path 1;
 }
 .path li { counter-increment: path; }
@@ -354,7 +355,7 @@ h2 {
   gap: 0.55rem;
 }
 
-.step, .feature, .card, .boost, .note, .shot, .skill-group, .detail-card {
+.step, .feature, .card, .boost, .note, .shot, .skill-group {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -776,95 +777,125 @@ a.feature.link-card:hover { text-decoration: none; }
   border-top: 1px solid var(--border);
 }
 
-.detail-card {
-  padding: 1.35rem 1.5rem 1.5rem;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  border-top: 3px solid var(--accent, var(--gold));
-  background:
-    linear-gradient(165deg, color-mix(in srgb, var(--accent, var(--gold)) 10%, transparent), transparent 48%),
-    var(--surface);
+.entry {
+  max-width: 38rem;
+  margin: 0;
+  padding: 0 0 2rem;
+  background: none;
+  border: none;
+  box-shadow: none;
 }
-.detail-head {
+.entry-head {
   display: flex;
-  gap: 1.15rem;
+  gap: 1rem;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
 }
-.detail-card h1 {
-  font-size: 1.55rem;
-  margin-bottom: 0.35rem;
-}
-.detail-body {
-  color: var(--muted);
-  font-size: 0.95rem;
-  margin: 0;
-}
-.detail-body p { margin: 0 0 0.55rem; }
-.detail-body .muted-line {
-  color: var(--muted);
-  font-size: 0.85rem;
-  margin-top: 0.75rem;
-}
-.detail-meta { margin-bottom: 0.75rem; }
-.detail-cols {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
-  gap: 1.15rem 1.75rem;
-  align-items: start;
-}
-.detail-main,
-.detail-side {
-  min-width: 0;
-}
-.detail-side {
-  padding: 0.85rem 0.95rem;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-.detail-side .section-label {
-  margin-top: 0;
-}
-.detail-list {
-  margin: 0.5rem 0 0;
-  padding-left: 0;
-  list-style: none;
+.entry h1 {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.35rem;
   color: var(--text);
-  font-size: 0.9rem;
-  display: grid;
-  gap: 0.55rem;
 }
-.detail-list li {
+.entry-meta {
   margin: 0;
-  line-height: 1.45;
-  display: grid;
-  grid-template-columns: 2.1rem minmax(0, 1fr);
-  gap: 0.55rem;
-  align-items: start;
+  font-size: 0.82rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
-.detail-list.plain li {
-  display: list-item;
-  padding-left: 0.15rem;
-  margin-left: 1.1rem;
-  list-style: disc;
+.entry-body {
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
 }
-.rank-label {
-  display: inline-grid;
-  place-items: center;
-  min-width: 1.85rem;
-  height: 1.45rem;
-  padding: 0 0.3rem;
-  border-radius: 6px;
+.entry-lead {
+  margin: 0 0 1rem;
+  color: var(--text);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.entry-aside {
+  margin: 1.25rem 0 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+.entry-sub {
+  margin: 1.35rem 0 0.55rem;
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--accent, var(--gold));
-  background: color-mix(in srgb, var(--accent, var(--gold)) 18%, var(--elevated));
-  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 35%, transparent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
 }
-.detail-list strong.field-label { color: var(--gold); }
+.entry-shot {
+  margin: 0 0 1.15rem;
+  border: 1px solid var(--border);
+  background: #0a0a0c;
+}
+.entry-shot img {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+}
+.facts {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem 1rem;
+}
+.fact {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 0.65rem 1rem;
+  margin: 0;
+  align-items: baseline;
+}
+.fact dt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+.fact dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+.fact-loose {
+  margin: 0.35rem 0 0;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+.ranks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.65rem;
+}
+.ranks li {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.ranks-n {
+  display: inline-block;
+  min-width: 1.6rem;
+  margin-right: 0.35rem;
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
 .back-link {
   appearance: none;
   border: none;
@@ -874,9 +905,9 @@ a.feature.link-card:hover { text-decoration: none; }
   font-size: 0.85rem;
   font-weight: 600;
   padding: 0;
-  margin: 0 auto 0.85rem;
+  margin: 0 0 1rem;
   display: block;
-  max-width: 1100px;
+  max-width: 38rem;
   width: 100%;
   text-align: left;
   cursor: pointer;
@@ -885,8 +916,8 @@ a.feature.link-card:hover { text-decoration: none; }
 
 #detail-root {
   width: 100%;
+  max-width: 38rem;
 }
-
 .next-row {
   display: flex;
   flex-wrap: wrap;
