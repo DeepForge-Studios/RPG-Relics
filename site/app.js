@@ -106,7 +106,7 @@ const FALLBACK_BOOSTS = [
 const FALLBACK_MATERIALS = [
   {
     id: "relics:relic_shard",
-    name: "Relic Shard",
+    name: "Relic Dust",
     blurb: "Spent for Forge rituals and ascended fusions.",
     sources: "Mimics, relic chests, archaeology, hostile kills",
     icon: "textures/items/relic_shard.png",
@@ -240,6 +240,38 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;");
 }
 
+/** Color-code affinities, numbers, and key phrases in wiki copy. */
+function colorizeText(raw, accentCssVar) {
+  let t = escapeHtml(raw);
+  const accent = accentCssVar || "var(--gold)";
+  const groups = [
+    ["might", "Might"],
+    ["ward", "Ward"],
+    ["gale", "Gale"],
+    ["fortune", "Fortune"],
+    ["vitality", "Vitality"],
+    ["alchemy", "Alchemy"],
+    ["necromancy", "Necromancy"],
+    ["radiance", "Radiance"],
+  ];
+  for (const [cls, label] of groups) {
+    t = t.replace(new RegExp(`\\b${label}\\b`, "g"), `<span class="kw kw-${cls}">${label}</span>`);
+  }
+  t = t.replace(
+    /\b(Relic Dust|Arcane Gems?|Arcane Dust|Monster Heart|Beast Fang|Mystic Herb|Silver Fragment|Crimson Crystal)\b/g,
+    (m) => `<span class="kw kw-gold">${m}</span>`
+  );
+  t = t.replace(
+    /\b(Execute Pulse|Execute|Tailwind|Sanguine Pact|Judgment Brand|Thunderbrand|Lumen Chorus|Dirge Mark|Vialmark|Bastion Glyph|Siege Root|Soul Charges?|Chorus Notes?)\b/g,
+    (m) => `<span class="kw-em" style="--accent:${accent}">${m}</span>`
+  );
+  t = t.replace(
+    /(\+?\d+(?:\.\d+)?%?|\d+\s*hearts?)/gi,
+    (m) => `<span class="kw-num" style="--accent:${accent}">${m}</span>`
+  );
+  return t;
+}
+
 function bareId(id) {
   return String(id || "").replace(/^relics:/, "");
 }
@@ -371,7 +403,7 @@ function cardHtml(relic) {
           ${relic.slot ? `<span class="badge">${escapeHtml(SLOT_LABELS[relic.slot] || relic.slot)}</span>` : ""}
           ${relic.tier ? `<span class="badge ${escapeHtml(relic.tier)}">${escapeHtml(relic.tier)}</span>` : ""}
         </div>
-        <p>${escapeHtml(relic.blurb || relic.summary || "—")}</p>
+        <p>${colorizeText(relic.blurb || relic.summary || "—", GROUP_COLORS[(relic.affinity || relic.boost || "").toLowerCase()] || "var(--gold)")}</p>
       </div>
     </a>`;
 }
@@ -393,7 +425,7 @@ function simpleCardHtml(entry, href, meta) {
       <div>
         <h3>${escapeHtml(title)}</h3>
         ${meta ? `<div class="meta"><span class="badge">${escapeHtml(meta)}</span></div>` : ""}
-        <p>${escapeHtml(body || "—")}</p>
+        <p>${colorizeText(body || "—", "var(--gold)")}</p>
       </div>
     </a>`;
 }
@@ -573,16 +605,16 @@ function renderBoosts() {
       const selected = state.boostTier[id] ?? 0;
       const color = b.color || GROUP_COLORS[id] || "var(--gold)";
       return `
-      <article class="boost" style="--boost:${color}" data-boost-id="${escapeHtml(id)}">
+      <article class="boost" style="--boost:${color}; --accent:${color}" data-boost-id="${escapeHtml(id)}">
         <h2>${escapeHtml(b.name || titleCase(id))}</h2>
-        <p class="boost-summary">${escapeHtml(b.summary || b.blurb || "")}</p>
+        <p class="boost-summary">${colorizeText(b.summary || b.blurb || "", color)}</p>
         <div class="boost-tiers" role="group" aria-label="${escapeHtml(b.name || id)} tiers">
           ${TIER_ROMAN.map(
             (label, i) =>
               `<button type="button" class="tier-btn ${selected === i ? "active" : ""}" data-tier-idx="${i}" aria-pressed="${selected === i}">${label}</button>`
           ).join("")}
         </div>
-        <p class="boost-value" data-boost-value>${escapeHtml(tiers[selected])}</p>
+        <p class="boost-value" data-boost-value>${colorizeText(tiers[selected], color)}</p>
       </article>`;
     })
     .join("");
@@ -601,9 +633,9 @@ function renderAttuneSkills() {
       const color = GROUP_COLORS[g.id] || "var(--gem)";
       const skills = g.skills || [];
       return `
-      <article class="skill-group" style="--group:${color}">
+      <article class="skill-group" style="--group:${color}; --accent:${color}">
         <h2>${escapeHtml(g.name || titleCase(g.id))}</h2>
-        <p class="group-blurb">${escapeHtml(g.tagline || g.blurb || g.summary || "")}</p>
+        <p class="group-blurb">${colorizeText(g.tagline || g.blurb || g.summary || "", color)}</p>
         <div class="skill-list">
           ${
             skills.length
@@ -670,9 +702,15 @@ function renderDetail() {
         ${r.slot ? `<span class="badge">${escapeHtml(SLOT_LABELS[r.slot] || r.slot)}</span>` : ""}
         ${r.tier ? `<span class="badge ${escapeHtml(r.tier)}">${escapeHtml(r.tier)}</span>` : ""}`,
       bodyHtml: `
-        <p>${escapeHtml(r.blurb || r.summary || "No description yet.")}</p>
-        ${r.effect ? `<p>${escapeHtml(r.effect)}</p>` : ""}
-        ${Array.isArray(r.notes) ? `<ul class="detail-list">${r.notes.map((n) => `<li>${escapeHtml(n)}</li>`).join("")}</ul>` : ""}`,
+        <p>${colorizeText(r.blurb || r.summary || "No description yet.", GROUP_COLORS[(r.affinity || r.boost || "").toLowerCase()] || "var(--gold)")}</p>
+        ${r.effect && r.effect !== r.blurb && r.effect !== r.summary ? `<p>${colorizeText(r.effect, "var(--gold)")}</p>` : ""}
+        ${
+          Array.isArray(r.notes)
+            ? `<ul class="detail-list">${r.notes
+                .map((n) => `<li>${colorizeText(n, "var(--gold)")}</li>`)
+                .join("")}</ul>`
+            : ""
+        }`,
     });
     return;
   }
@@ -687,8 +725,8 @@ function renderDetail() {
       title: m?.name || titleCase(bareId(id)),
       metaHtml: `<span class="badge">Material</span>`,
       bodyHtml: m
-        ? `<p>${escapeHtml(m.blurb || m.summary || "—")}</p>
-           ${m.sources ? `<p><strong style="color:var(--gold)">Sources:</strong> ${escapeHtml(m.sources)}</p>` : ""}`
+        ? `<p>${colorizeText(m.blurb || m.summary || "—", "var(--gold)")}</p>
+           ${m.sources ? `<p><strong style="color:var(--gold)">Sources:</strong> ${colorizeText(m.sources, "var(--gold)")}</p>` : ""}`
         : `<p>Material <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
     });
     return;
@@ -706,8 +744,8 @@ function renderDetail() {
         ? `<span class="badge">${escapeHtml(m.biome)}</span>`
         : `<span class="badge">Mimic</span>`,
       bodyHtml: m
-        ? `<p>${escapeHtml(m.blurb || m.summary || "Defeat for relic loot and Relic Shards.")}</p>
-           ${m.loot ? `<p>${escapeHtml(m.loot)}</p>` : ""}`
+        ? `<p>${colorizeText(m.blurb || m.summary || "Defeat for relic loot and Relic Dust.", "var(--gem)")}</p>
+           ${m.loot ? `<p>${colorizeText(m.loot, "var(--gem)")}</p>` : ""}`
         : `<p>Mimic <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
     });
     return;
@@ -717,21 +755,28 @@ function renderDetail() {
     const found = findSkill(group, key);
     const g = found?.group;
     const s = found?.skill;
+    const accent = GROUP_COLORS[g?.id] || "var(--gem)";
+    const groupCls = g?.id || "";
     root.innerHTML = detailShell({
       backHash: "#ch-5",
       backLabel: "Attune",
       icon: "RP/textures/items/attunement_tome.png",
       title: s?.name || titleCase(key),
-      metaHtml: `<span class="badge">${escapeHtml(g?.name || group || "Skill")}</span>
+      metaHtml: `<span class="badge ${escapeHtml(groupCls)}">${escapeHtml(g?.name || group || "Skill")}</span>
         ${s?.kind ? `<span class="badge">${escapeHtml(s.kind)}</span>` : ""}`,
       bodyHtml: s
-        ? `<p>${escapeHtml(s.summary || s.blurb || "—")}</p>
-           ${s.when ? `<p><strong style="color:var(--gold)">When:</strong> ${escapeHtml(s.when)}</p>` : ""}
-           ${s.cost ? `<p><strong style="color:var(--gold)">Cost:</strong> ${escapeHtml(s.cost)}</p>` : ""}
+        ? `<p>${colorizeText(s.summary || s.blurb || "—", accent)}</p>
+           ${s.when ? `<p><strong style="color:var(--gold)">When:</strong> ${colorizeText(s.when, accent)}</p>` : ""}
+           ${s.cost ? `<p><strong style="color:var(--gold)">Cost:</strong> ${colorizeText(s.cost, accent)}</p>` : ""}
            ${
              Array.isArray(s.tiers) && s.tiers.length
                ? `<p class="section-label" style="margin-top:1rem">Ranks</p>
-                  <ul class="detail-list">${s.tiers.map((t, i) => `<li><strong>${TIER_ROMAN[i] || i + 1}</strong> — ${escapeHtml(typeof t === "string" ? t : t.text || t)}</li>`).join("")}</ul>`
+                  <ul class="detail-list">${s.tiers
+                    .map((t, i) => {
+                      const text = typeof t === "string" ? t : t.text || t;
+                      return `<li><strong>${TIER_ROMAN[i] || i + 1}</strong> — ${colorizeText(text, accent)}</li>`;
+                    })
+                    .join("")}</ul>`
                : ""
            }`
         : `<p>Skill <code>${escapeHtml(group)}/${escapeHtml(key)}</code> is not in the catalog yet.</p>`,
@@ -814,7 +859,10 @@ function panelIdFor(route) {
 }
 
 function closeMobileNav() {
+  document.getElementById("topnav")?.classList.remove("nav-open");
   document.querySelector(".sidebar")?.classList.remove("open");
+  const btn = document.getElementById("menu-btn");
+  if (btn) btn.setAttribute("aria-expanded", "false");
   const backdrop = document.getElementById("sidebar-backdrop");
   if (backdrop) backdrop.hidden = true;
 }
@@ -934,10 +982,12 @@ function setupNav() {
   });
 
   document.getElementById("menu-btn")?.addEventListener("click", () => {
-    const side = document.querySelector(".sidebar");
+    const nav = document.getElementById("topnav");
     const backdrop = document.getElementById("sidebar-backdrop");
-    const open = !side?.classList.contains("open");
-    side?.classList.toggle("open", open);
+    const open = !nav?.classList.contains("nav-open");
+    nav?.classList.toggle("nav-open", open);
+    const btn = document.getElementById("menu-btn");
+    if (btn) btn.setAttribute("aria-expanded", String(open));
     if (backdrop) backdrop.hidden = !open;
   });
 
@@ -1011,12 +1061,13 @@ function setupBoosts() {
     state.boostTier[id] = idx;
     const boost = boostsList().find((b) => (b.id || b.name?.toLowerCase()) === id);
     const tiers = normalizeTierText(boost?.tiers);
+    const color = boost?.color || GROUP_COLORS[id] || "var(--gold)";
     card.querySelectorAll(".tier-btn").forEach((b, i) => {
       b.classList.toggle("active", i === idx);
       b.setAttribute("aria-pressed", i === idx ? "true" : "false");
     });
     const val = card.querySelector("[data-boost-value]");
-    if (val) val.textContent = tiers[idx] || "—";
+    if (val) val.innerHTML = colorizeText(tiers[idx] || "—", color);
   });
 }
 

@@ -13,7 +13,7 @@
 </head>
 <body>
   <div class="shell">
-    <aside class="sidebar">
+    <header class="topnav" id="topnav">
       <a class="brand" href="#ch-1">
         <img src="RP/textures/ui/curio_gem.png" alt="" width="28" height="28" />
         <span>
@@ -21,7 +21,6 @@
           <span class="title">RPG Relics</span>
         </span>
       </a>
-      <p class="side-label">Progression</p>
       <nav class="chapters" aria-label="Chapters">
         <button type="button" class="chapter" data-route="ch-1"><span>1</span> Start</button>
         <button type="button" class="chapter" data-route="ch-2"><span>2</span> Find</button>
@@ -30,19 +29,17 @@
         <button type="button" class="chapter" data-route="ch-5"><span>5</span> Attune</button>
         <button type="button" class="chapter" data-route="ch-6"><span>6</span> Relics</button>
         <button type="button" class="chapter" data-route="ch-7"><span>7</span> Ascended</button>
-      </nav>
-      <p class="side-label">Codex</p>
-      <nav class="chapters side-sub" aria-label="Codex">
+        <span class="nav-sep" aria-hidden="true"></span>
         <button type="button" class="chapter slim" data-route="materials">Materials</button>
         <button type="button" class="chapter slim" data-route="mimics">Mimics</button>
       </nav>
-      <a class="side-link" href="https://github.com/DeepForge-Studios/RPG-Relics">GitHub</a>
-    </aside>
+      <a class="nav-github" href="https://github.com/DeepForge-Studios/RPG-Relics">GitHub</a>
+      <button type="button" class="menu-btn" id="menu-btn" aria-label="Open chapters" aria-expanded="false">Menu</button>
+    </header>
 
     <div class="content">
       <header class="topbar">
         <p class="crumb" id="crumb">Chapter 1 · Start</p>
-        <button type="button" class="menu-btn" id="menu-btn" aria-label="Open chapters">Chapters</button>
       </header>
 
       <main>
@@ -84,7 +81,7 @@
           </div>
 
           <aside class="note">
-            <p>First join includes starter relics plus Relic Shards and an Arcane Gem for early crafts.</p>
+            <p>First join includes starter relics plus <span class="kw kw-fortune">Relic Dust</span> and an <span class="kw kw-alchemy">Arcane Gem</span> for early crafts.</p>
             <div class="starter-row">
               <figure>
                 <div class="icon-well sm"><img src="RP/textures/items/lumen_visor.png" alt="" /></div>
@@ -96,11 +93,11 @@
               </figure>
               <figure>
                 <div class="icon-well sm"><img src="RP/textures/items/relic_shard.png" alt="" /></div>
-                <figcaption>Relic Shard</figcaption>
+                <figcaption><span class="kw kw-fortune">Relic Dust</span></figcaption>
               </figure>
               <figure>
                 <div class="icon-well sm"><img src="RP/textures/items/arcane_dust.png" alt="" /></div>
-                <figcaption>Arcane Gem</figcaption>
+                <figcaption><span class="kw kw-alchemy">Arcane Gem</span></figcaption>
               </figure>
             </div>
           </aside>
@@ -141,7 +138,7 @@
             <a class="feature link-card" href="#materials">
               <div class="icon-well"><img src="RP/textures/items/monster_heart.png" alt="" /></div>
               <h2>Materials</h2>
-              <p>Hearts, fangs, Relic Shards, Arcane Gems, and herbs fuel crafts and attune rituals.</p>
+              <p>Hearts, fangs, Relic Dust, Arcane Gems, and herbs fuel crafts and attune rituals.</p>
             </a>
           </div>
           <div class="shots">
@@ -202,7 +199,7 @@
         <section id="panel-ch-5" class="panel" hidden>
           <p class="chapter-tag">Chapter 5</p>
           <h1>Attunement</h1>
-          <p class="lead">Learn skills in the <strong>Attunement Codex</strong>. Run rituals on the <strong>Forge</strong> block — Relic Shards + focus materials roll an affinity skill.</p>
+          <p class="lead">Learn skills in the <strong>Attunement Codex</strong>. Run rituals on the <strong>Forge</strong> block — Relic Dust + focus materials roll an affinity skill.</p>
           <div class="feature-grid">
             <article class="feature">
               <div class="icon-well"><img src="RP/textures/items/attunement_tome.png" alt="" /></div>
@@ -295,7 +292,7 @@
         <section id="panel-materials" class="panel" hidden>
           <p class="chapter-tag">Codex</p>
           <h1>Materials</h1>
-          <p class="lead">Focus materials, Relic Shards for ritual cost, and Arcane Gems for crafts. Catalog entries light up as the wiki data expands.</p>
+          <p class="lead">Focus materials, Relic Dust for ritual cost, and Arcane Gems for crafts. Catalog entries light up as the wiki data expands.</p>
           <div class="toolbar">
             <input type="search" id="material-search" placeholder="Search materials…" autocomplete="off" />
             <p class="count" id="material-count"></p>
@@ -311,7 +308,7 @@
         <section id="panel-mimics" class="panel" hidden>
           <p class="chapter-tag">Codex</p>
           <h1>Mimics</h1>
-          <p class="lead">Biome-tinted chest mimics. Defeat them for relics and Relic Shards.</p>
+          <p class="lead">Biome-tinted chest mimics. Defeat them for relics and Relic Dust.</p>
           <div class="toolbar">
             <input type="search" id="mimic-search" placeholder="Search mimics…" autocomplete="off" />
             <p class="count" id="mimic-count"></p>
@@ -336,7 +333,7 @@
   </div>
 
   <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
-  <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+  <div class="nav-backdrop" id="sidebar-backdrop" hidden></div>
 
   <script src="site/catalog.js"></script>
   <script src="site/app.js"></script>

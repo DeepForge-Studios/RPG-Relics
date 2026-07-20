@@ -185,7 +185,7 @@ window.RELIC_CATALOG = {
       "notes": [
         "Boost affinity: Alchemy",
         "Attune groups: Alchemy, Radiance",
-        "Craft (Relic Forge): Relic Shard + Beast Fang ×2 + leather",
+        "Craft (Relic Forge): Relic Dust + Beast Fang ×2 + leather",
         "Upgrades into: Venom Ward",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
@@ -1497,7 +1497,7 @@ window.RELIC_CATALOG = {
       "notes": [
         "Boost affinity: Fortune",
         "Attune groups: Fortune, Alchemy",
-        "Craft (Relic Forge): Relic Shard ×2 + Silver Fragment ×2 + redstone",
+        "Craft (Relic Forge): Relic Dust ×2 + Silver Fragment ×2 + redstone",
         "Upgrades into: Veinheart Gauntlets",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
@@ -1693,7 +1693,7 @@ window.RELIC_CATALOG = {
       "notes": [
         "Boost affinity: Vitality",
         "Attune groups: Vitality, Ward",
-        "Craft (Relic Forge): Relic Shard ×2 + Mystic Herb ×2 + gold nugget",
+        "Craft (Relic Forge): Relic Dust ×2 + Mystic Herb ×2 + gold nugget",
         "Upgrades into: Vital Bloom",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
@@ -2949,7 +2949,7 @@ window.RELIC_CATALOG = {
       "notes": [
         "Boost affinity: Alchemy",
         "Attune groups: Alchemy, Radiance",
-        "Craft (Relic Forge): Monster Heart + Arcane Gem ×2 + Relic Shard ×2",
+        "Craft (Relic Forge): Monster Heart + Arcane Gem ×2 + Relic Dust ×2",
         "Upgrades into: Venom Ward",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
@@ -3163,7 +3163,7 @@ window.RELIC_CATALOG = {
       "notes": [
         "Boost affinity: Fortune",
         "Attune groups: Fortune, Alchemy",
-        "Craft (Relic Forge): Silver Fragment ×3 + Relic Shard ×2 + diamond",
+        "Craft (Relic Forge): Silver Fragment ×3 + Relic Dust ×2 + diamond",
         "Upgrades into: Veinheart Gauntlets",
         "Chests: ~14% surface / 22% shallow / 32% deep / 60% camp (first open)",
         "Towers & homes: ~45% structure chest stamp",
@@ -5090,7 +5090,7 @@ window.RELIC_CATALOG = {
         "Boost affinity: Fortune",
         "Attune groups: Fortune, Alchemy",
         "Blocked skills: gilded rumor",
-        "Ascended from: Gilded Angler + Lodestone Charm + Relic Shard",
+        "Ascended from: Gilded Angler + Lodestone Charm + Relic Dust",
         "Crafted at the Relic Forge from two base relics + a catalyst material."
       ]
     },
@@ -5648,7 +5648,7 @@ window.RELIC_CATALOG = {
   "materials": [
     {
       "id": "relics:relic_shard",
-      "name": "Relic Shard",
+      "name": "Relic Dust",
       "icon": "textures/items/arcane_dust.png",
       "role": "fuel",
       "blurb": "Fuel for every Attunement Forge ritual and Relic Forge crafts.",
@@ -5794,7 +5794,7 @@ window.RELIC_CATALOG = {
           "amplifier": 0
         }
       ],
-      "loot": "Defeat for Relic Shards (~65%) and nearby structure relic loot.",
+      "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_forest.png",
       "icon": "textures/entity/mimic_forest.png"
     },
@@ -5823,7 +5823,7 @@ window.RELIC_CATALOG = {
           "amplifier": 0
         }
       ],
-      "loot": "Defeat for Relic Shards (~65%) and nearby structure relic loot.",
+      "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_desert.png",
       "icon": "textures/entity/mimic_desert.png"
     },
@@ -5849,7 +5849,7 @@ window.RELIC_CATALOG = {
         }
       ],
       "setOnFireSeconds": 4,
-      "loot": "Defeat for Relic Shards (~65%) and nearby structure relic loot.",
+      "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_badlands.png",
       "icon": "textures/entity/mimic_badlands.png"
     },
@@ -5881,7 +5881,7 @@ window.RELIC_CATALOG = {
           "amplifier": 0
         }
       ],
-      "loot": "Defeat for Relic Shards (~65%) and nearby structure relic loot.",
+      "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_snow.png",
       "icon": "textures/entity/mimic_snow.png"
     },
@@ -5909,7 +5909,7 @@ window.RELIC_CATALOG = {
           "amplifier": 0
         }
       ],
-      "loot": "Defeat for Relic Shards (~65%) and nearby structure relic loot.",
+      "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_swamp.png",
       "icon": "textures/entity/mimic_swamp.png"
     },
@@ -5937,7 +5937,7 @@ window.RELIC_CATALOG = {
           "amplifier": 0
         }
       ],
-      "loot": "Defeat for Relic Shards (~65%) and nearby structure relic loot.",
+      "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_jungle.png",
       "icon": "textures/entity/mimic_jungle.png"
     }
