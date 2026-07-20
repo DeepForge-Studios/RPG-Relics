@@ -5796,7 +5796,8 @@ window.RELIC_CATALOG = {
       ],
       "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_forest.png",
-      "icon": "textures/entity/mimic_forest.png"
+      "icon": "textures/entity/mimic_forest.png",
+      "media": "site/media/mimics/forest.png"
     },
     {
       "id": "relics:mimic_desert",
@@ -5825,7 +5826,8 @@ window.RELIC_CATALOG = {
       ],
       "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_desert.png",
-      "icon": "textures/entity/mimic_desert.png"
+      "icon": "textures/entity/mimic_desert.png",
+      "media": "site/media/mimics/desert.png"
     },
     {
       "id": "relics:mimic_badlands",
@@ -5851,7 +5853,8 @@ window.RELIC_CATALOG = {
       "setOnFireSeconds": 4,
       "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_badlands.png",
-      "icon": "textures/entity/mimic_badlands.png"
+      "icon": "textures/entity/mimic_badlands.png",
+      "media": "site/media/mimics/badlands.png"
     },
     {
       "id": "relics:mimic_snow",
@@ -5883,7 +5886,8 @@ window.RELIC_CATALOG = {
       ],
       "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_snow.png",
-      "icon": "textures/entity/mimic_snow.png"
+      "icon": "textures/entity/mimic_snow.png",
+      "media": "site/media/mimics/snow.png"
     },
     {
       "id": "relics:mimic_swamp",
@@ -5911,7 +5915,8 @@ window.RELIC_CATALOG = {
       ],
       "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_swamp.png",
-      "icon": "textures/entity/mimic_swamp.png"
+      "icon": "textures/entity/mimic_swamp.png",
+      "media": "site/media/mimics/swamp.png"
     },
     {
       "id": "relics:mimic_jungle",
@@ -5939,7 +5944,8 @@ window.RELIC_CATALOG = {
       ],
       "loot": "Defeat for Relic Dust (~65%) and nearby structure relic loot.",
       "texture": "textures/entity/mimic_jungle.png",
-      "icon": "textures/entity/mimic_jungle.png"
+      "icon": "textures/entity/mimic_jungle.png",
+      "media": "site/media/mimics/jungle.png"
     }
   ],
   "skillGroups": [

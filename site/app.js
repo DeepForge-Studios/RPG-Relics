@@ -176,12 +176,12 @@ const FALLBACK_MATERIALS = [
 ];
 
 const FALLBACK_MIMICS = [
-  { id: "mimic_forest", name: "Forest Mimic", blurb: "Woodland chest mimic.", biome: "Forest", icon: "textures/entity/mimic_forest.png" },
-  { id: "mimic_desert", name: "Desert Mimic", blurb: "Sandy chest mimic.", biome: "Desert", icon: "textures/entity/mimic_desert.png" },
-  { id: "mimic_jungle", name: "Jungle Mimic", blurb: "Canopy chest mimic.", biome: "Jungle", icon: "textures/entity/mimic_jungle.png" },
-  { id: "mimic_swamp", name: "Swamp Mimic", blurb: "Murky chest mimic.", biome: "Swamp", icon: "textures/entity/mimic_swamp.png" },
-  { id: "mimic_snow", name: "Snow Mimic", blurb: "Frosted chest mimic.", biome: "Snow", icon: "textures/entity/mimic_snow.png" },
-  { id: "mimic_badlands", name: "Badlands Mimic", blurb: "Clay mesa chest mimic.", biome: "Badlands", icon: "textures/entity/mimic_badlands.png" },
+  { id: "mimic_forest", name: "Forest Mimic", blurb: "Woodland chest mimic.", biome: "Forest", icon: "textures/entity/mimic_forest.png", media: "site/media/mimics/forest.png" },
+  { id: "mimic_desert", name: "Desert Mimic", blurb: "Sandy chest mimic.", biome: "Desert", icon: "textures/entity/mimic_desert.png", media: "site/media/mimics/desert.png" },
+  { id: "mimic_jungle", name: "Jungle Mimic", blurb: "Canopy chest mimic.", biome: "Jungle", icon: "textures/entity/mimic_jungle.png", media: "site/media/mimics/jungle.png" },
+  { id: "mimic_swamp", name: "Swamp Mimic", blurb: "Murky chest mimic.", biome: "Swamp", icon: "textures/entity/mimic_swamp.png", media: "site/media/mimics/swamp.png" },
+  { id: "mimic_snow", name: "Snow Mimic", blurb: "Frosted chest mimic.", biome: "Snow", icon: "textures/entity/mimic_snow.png", media: "site/media/mimics/snow.png" },
+  { id: "mimic_badlands", name: "Badlands Mimic", blurb: "Clay mesa chest mimic.", biome: "Badlands", icon: "textures/entity/mimic_badlands.png", media: "site/media/mimics/badlands.png" },
 ];
 
 const FALLBACK_SKILL_GROUPS = [
@@ -436,20 +436,26 @@ function simpleCardHtml(entry, href, meta) {
   const src = resolveIcon(entry);
   const title = entry.name || bareId(entry.id) || "Unknown";
   const body = entry.blurb || entry.summary || entry.sources || "";
+  const shot = entry.media ? mediaOrRp(entry.media) : "";
+  const isShot = Boolean(shot);
   return `
-    <a class="card" href="${href}"
+    <a class="card${isShot ? " card-shot" : ""}" href="${href}"
       data-tip-title="${escapeHtml(title)}"
       data-tip-body="${escapeHtml(body)}"
       data-tip-meta="${escapeHtml(meta || "")}"
       data-tip-icon="${escapeHtml(src)}">
-      <div class="icon-well sm">
+      ${
+        isShot
+          ? `<div class="shot"><img src="${escapeHtml(shot)}" alt="${escapeHtml(title)}" loading="lazy" /></div>`
+          : `<div class="icon-well sm">
         <img src="${src}" alt="" loading="lazy"
           onerror="this.onerror=null;this.src='RP/textures/ui/curio_gem.png'" />
-      </div>
+      </div>`
+      }
       <div>
         <h3>${escapeHtml(title)}</h3>
         ${meta ? `<div class="meta"><span class="badge">${escapeHtml(meta)}</span></div>` : ""}
-        <p>${colorizeText(body || "—", "var(--gold)")}</p>
+        <p>${colorizeText(body || "—", isShot ? "var(--gem)" : "var(--gold)")}</p>
       </div>
     </a>`;
 }
@@ -674,8 +680,11 @@ function renderAttuneSkills() {
 
 /* ---------- detail views ---------- */
 
-function detailShell({ backHash, backLabel, icon, title, metaHtml, bodyHtml, accent }) {
+function detailShell({ backHash, backLabel, icon, title, metaHtml, bodyHtml, accent, shot }) {
   const accentStyle = accent ? ` style="--accent:${escapeHtml(accent)}"` : "";
+  const media = shot
+    ? `<div class="detail-shot"><img src="${escapeHtml(shot)}" alt="${escapeHtml(title)}" /></div>`
+    : "";
   return `
     <button type="button" class="back-link" data-back="${escapeHtml(backHash)}">← ${escapeHtml(backLabel)}</button>
     <article class="detail-card"${accentStyle}>
@@ -688,6 +697,7 @@ function detailShell({ backHash, backLabel, icon, title, metaHtml, bodyHtml, acc
           <div class="detail-meta meta">${metaHtml || ""}</div>
         </div>
       </div>
+      ${media}
       <div class="detail-body">${bodyHtml}</div>
     </article>`;
 }
@@ -762,10 +772,12 @@ function renderDetail() {
   if (type === "mimic") {
     const m = findMimic(id);
     const src = resolveIcon(m || { id }, `textures/entity/${bareId(id)}.png`);
+    const shot = m?.media ? mediaOrRp(m.media) : "";
     root.innerHTML = detailShell({
       backHash: "#mimics",
       backLabel: "Mimics",
       icon: src,
+      shot,
       title: m?.name || titleCase(bareId(id)),
       metaHtml: m?.biome
         ? `<span class="badge">${escapeHtml(m.biome)}</span>`
