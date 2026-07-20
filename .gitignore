@@ -21,9 +21,11 @@ tools/
 examples/
 design/
 generate_items.ps1
+publish-github.ps1
 docs/ADDING_TRINKETS.md
 docs/TOWERS.md
 docs/UI_THEME.md
+docs/CURSEFORGE_DESCRIPTION.md
 
 # OS / editor
 .DS_Store
