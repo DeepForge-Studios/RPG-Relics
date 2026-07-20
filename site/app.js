@@ -293,22 +293,53 @@ function colorizeText(raw, accentCssVar) {
   return t;
 }
 
-/** Split "Label: value" catalog notes into a simple fact list (no NOTES box). */
+/** Split "Label: value" catalog notes into a wiki-style stats table. */
 function factListHtml(notes, accent) {
   if (!Array.isArray(notes) || !notes.length) return "";
-  const rows = notes
-    .map((n) => {
-      const raw = String(n ?? "");
-      const i = raw.indexOf(":");
-      if (i > 0 && i < 40) {
-        const label = raw.slice(0, i).trim();
-        const value = raw.slice(i + 1).trim();
-        return `<div class="fact"><dt>${escapeHtml(label)}</dt><dd>${colorizeText(value, accent)}</dd></div>`;
-      }
-      return `<p class="fact-loose">${colorizeText(raw, accent)}</p>`;
-    })
-    .join("");
-  return `<dl class="facts">${rows}</dl>`;
+  const rows = [];
+  const loose = [];
+  for (const n of notes) {
+    const raw = String(n ?? "");
+    const i = raw.indexOf(":");
+    if (i > 0 && i < 48) {
+      rows.push(
+        `<tr><th scope="row">${escapeHtml(raw.slice(0, i).trim())}</th><td>${colorizeText(raw.slice(i + 1).trim(), accent)}</td></tr>`
+      );
+    } else if (raw.trim()) {
+      loose.push(`<p class="fact-loose">${colorizeText(raw, accent)}</p>`);
+    }
+  }
+  const table = rows.length
+    ? `<table class="wiki-table"><tbody>${rows.join("")}</tbody></table>`
+    : "";
+  return `${table}${loose.join("")}`;
+}
+
+function splitRelicNotes(notes) {
+  const stats = [];
+  const obtain = [];
+  const other = [];
+  for (const n of notes || []) {
+    const low = String(n).toLowerCase();
+    if (/chest|tower|home|archaeology|hostile|mimic|camp|drop|brush/.test(low)) obtain.push(n);
+    else if (/boost|attune|upgrade|ascend/.test(low)) stats.push(n);
+    else other.push(n);
+  }
+  return { stats, obtain, other };
+}
+
+function relicProse(r) {
+  const name = r.name || bareId(r.id) || "This relic";
+  const tier = r.tier ? String(r.tier).toLowerCase() : "";
+  const slot = r.slot ? (SLOT_LABELS[r.slot] || r.slot).toLowerCase() : "wearable";
+  const effect = (r.blurb || r.summary || "").trim();
+  const article = /^[aeiou]/i.test(tier) ? "an" : "a";
+  const typeBit = tier ? `${article} ${tier} ${slot} relic` : `a ${slot} relic`;
+  if (effect) {
+    const effectSentence = /[.!?]$/.test(effect) ? effect : `${effect}.`;
+    return `The <strong>${escapeHtml(name)}</strong> is ${typeBit} that ${escapeHtml(effectSentence.charAt(0).toLowerCase() + effectSentence.slice(1))}`;
+  }
+  return `The <strong>${escapeHtml(name)}</strong> is ${typeBit}.`;
 }
 
 function bareId(id) {
@@ -736,6 +767,7 @@ function renderDetail() {
       ? `textures/items/tiered/${bareId(r.id)}.png`
       : `textures/items/${bareId(r.id)}.png`);
     const notes = Array.isArray(r.notes) ? r.notes : [];
+    const { stats, obtain, other } = splitRelicNotes(notes);
     const slot = r.slot ? SLOT_LABELS[r.slot] || r.slot : "";
     const tier = r.tier ? String(r.tier) : "";
     const aff = r.relicAffinity || r.affinity || "";
@@ -752,13 +784,14 @@ function renderDetail() {
       accent,
       metaHtml: metaBits.join(" · "),
       bodyHtml: `
-        <p class="entry-lead">${colorizeText(r.blurb || r.summary || "No description yet.", accent)}</p>
+        <p class="entry-lead">${relicProse(r)}</p>
         ${
           r.effect && r.effect !== r.blurb && r.effect !== r.summary
-            ? `<p>${colorizeText(r.effect, accent)}</p>`
+            ? `<p class="entry-para">${colorizeText(r.effect, accent)}</p>`
             : ""
         }
-        ${factListHtml(notes, accent)}`,
+        ${stats.length || other.length ? `<h2 class="wiki-h2">Statistics</h2>${factListHtml([...stats, ...other], accent)}` : ""}
+        ${obtain.length ? `<h2 class="wiki-h2">Obtaining</h2>${factListHtml(obtain, accent)}` : ""}`,
     });
     return;
   }
@@ -774,7 +807,7 @@ function renderDetail() {
       metaHtml: `<span class="kw kw-gold">Material</span>`,
       bodyHtml: m
         ? `<p class="entry-lead">${colorizeText(m.blurb || m.summary || "—", "var(--gold)")}</p>
-           ${m.sources ? factListHtml([`Sources: ${m.sources}`], "var(--gold)") : ""}`
+           ${m.sources ? `<h2 class="wiki-h2">Sources</h2>${factListHtml([`Sources: ${m.sources}`], "var(--gold)")}` : ""}`
         : `<p>Material <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
     });
     return;
@@ -800,7 +833,8 @@ function renderDetail() {
              ].filter(Boolean),
              "var(--gold)"
            )}
-           <p class="entry-aside">Deep and camp chests can awaken as mimics. Relic Dust is the usual drop; relics often sit in nearby structure loot.</p>`
+           <h2 class="wiki-h2">Notes</h2>
+           <p class="entry-para">Deep and camp chests can awaken as mimics. Relic Dust is the usual drop; relics often sit in nearby structure loot.</p>`
         : `<p>Mimic <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
     });
     return;
@@ -834,14 +868,14 @@ function renderDetail() {
         .join(" · "),
       bodyHtml: s
         ? `<p class="entry-lead">${colorizeText(s.summary || s.blurb || "—", accent)}</p>
-           ${factListHtml(
+           ${(s.when || s.cost) ? `<h2 class="wiki-h2">Details</h2>${factListHtml(
              [
                s.when ? `When: ${s.when}` : null,
                s.cost ? `Cost: ${s.cost}` : null,
              ].filter(Boolean),
              accent
-           )}
-           ${ranksHtml ? `<h2 class="entry-sub">Ranks</h2>${ranksHtml}` : ""}`
+           )}` : ""}
+           ${ranksHtml ? `<h2 class="wiki-h2">Ranks</h2>${ranksHtml}` : ""}`
         : `<p>Skill <code>${escapeHtml(group)}/${escapeHtml(key)}</code> is not in the catalog yet.</p>`,
     });
   }
