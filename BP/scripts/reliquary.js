@@ -4,13 +4,14 @@ import {
   getEquippedStack,
   setEquippedStack,
   serializeRelicStack,
+  refreshPlayerRelicLore,
 } from "./relics.js";
 import {
   WARDROBE_SLOT_ORDER,
   matchesSlot,
   getRelicDef,
 } from "./registry.js";
-import { loreLinesForItem } from "./descriptions.js";
+import { loreLinesForItem, loreOptsForPlayer } from "./descriptions.js";
 import { syncCurioUi, clearCurioTitleLeak } from "./ui_sync.js";
 import { Ink, paint } from "./theme.js";
 import {
@@ -25,7 +26,6 @@ import {
   FOCUS_B_SLOT,
   RITUAL_INPUT_SLOTS,
   GAUGE_ID,
-  ITEM_ATTUNE_PROP,
 } from "./attune_data.js";
 import {
   SHARD_ID,
@@ -35,6 +35,7 @@ import {
   ritualRarity,
   rollRitualAttunement,
 } from "./attune_pool.js";
+import { isAttunementEnabled } from "./settings.js";
 
 function countPlayerItem(player, typeId) {
   const inv = player?.getComponent?.("minecraft:inventory")?.container;
@@ -92,7 +93,7 @@ function givePlayerItem(player, typeId, amount) {
 }
 
 /**
- * Drop Forge bay + focus materials at the entity (logout / orphan scrub safety).
+ * Drop Forge bay + focus materials at the entity (orphan scrub safety when no owner).
  * Never touch slots 0–23 — those mirror equipped relics already saved on the player.
  */
 function dropForgeBayContents(entity) {
@@ -117,6 +118,76 @@ function dropForgeBayContents(entity) {
   }
 }
 
+/** Return Forge bay / focus items to the player (preferred over world drops). */
+function returnForgeBayToPlayer(player, entity) {
+  if (!player || !entity) return;
+  const inv = getContainer(entity);
+  if (!inv) return;
+  for (const i of [EXAMINE_SLOT, ...RITUAL_INPUT_SLOTS]) {
+    let stack;
+    try {
+      stack = inv.getItem(i);
+      if (!stack) continue;
+      inv.setItem(i, undefined);
+    } catch {
+      continue;
+    }
+    giveOrDrop(player, stack);
+  }
+}
+
+/**
+ * Flush open Reliquary/Forge UI into player dynamic properties, then despawn the
+ * temp chest. Safe for death + logout so equipped relics are never lost.
+ */
+export function flushReliquarySession(player, opts = {}) {
+  if (!player) return false;
+  const sess = sessions.get(player.id);
+  let entity =
+    opts.entity ??
+    (sess?.entityId ? findEntityById(player.dimension, sess.entityId) : undefined);
+  if (!entity) {
+    try {
+      for (const e of player.dimension.getEntities({ type: RELIQUARY_ID })) {
+        if (ownerOf(e) === player.id && isTemp(e)) {
+          entity = e;
+          break;
+        }
+      }
+    } catch {
+    }
+  }
+  if (!entity) {
+    sessions.delete(player.id);
+    return false;
+  }
+  try {
+    returnExamineToPlayer(player, entity);
+  } catch {
+  }
+  try {
+    returnForgeBayToPlayer(player, entity);
+  } catch {
+  }
+  try {
+    pullReliquaryToEquipped(player, entity);
+  } catch {
+  }
+  try {
+    stripGaugeFromPlayer(player);
+  } catch {
+  }
+  destroyEntity(entity, { dropForgeBay: false });
+  sessions.delete(player.id);
+  return true;
+}
+
+export function isReliquarySessionOpen(player) {
+  if (!player) return false;
+  const sess = sessions.get(player.id);
+  return !!(sess && !sess.closing && sess.entityId);
+}
+
 export const RELIQUARY_ID = "relics:reliquary";
 export const RELIQUARY_ITEM = "relics:reliquary";
 export const RELIQUARY_TITLE = "Reliquary";
@@ -135,10 +206,10 @@ const MAX_AWAY2 = 25;
 
 const sessions = new Map();
 
-function stampLore(stack) {
+function stampLore(stack, opts) {
   if (!stack?.typeId?.startsWith("relics:")) return false;
   const def = getRelicDef(stack.typeId);
-  const lines = loreLinesForItem(stack.typeId, def);
+  const lines = loreLinesForItem(stack.typeId, def, opts);
   if (!lines.length) return false;
   try {
     const current = typeof stack.getLore === "function" ? stack.getLore() : [];
@@ -152,17 +223,20 @@ function stampLore(stack) {
   }
 }
 
-function loreStack(itemIdOrStack) {
-  if (typeof itemIdOrStack !== "string") return itemIdOrStack;
+function loreStack(itemIdOrStack, opts) {
+  if (typeof itemIdOrStack !== "string") {
+    stampLore(itemIdOrStack, opts);
+    return itemIdOrStack;
+  }
   const stack = new ItemStack(itemIdOrStack, 1);
-  stampLore(stack);
+  stampLore(stack, opts);
   return stack;
 }
 
 function giveOrDrop(player, itemIdOrStack) {
   const inv = player.getComponent("minecraft:inventory")?.container;
   if (!inv) return;
-  const stack = loreStack(itemIdOrStack);
+  const stack = loreStack(itemIdOrStack, loreOptsForPlayer(player));
   const leftover = inv.addItem(stack);
   if (leftover) player.dimension.spawnItem(leftover, player.location);
 }
@@ -238,12 +312,14 @@ function playerForEntity(entity) {
 export function pushEquippedToReliquary(player, entity) {
   const inv = getContainer(entity);
   if (!inv) return;
+  const opts = loreOptsForPlayer(player);
 
   for (let i = 0; i < ACCESSORY_COUNT; i++) {
     const slot = WARDROBE_SLOT_ORDER[i];
     const equipped = getEquippedStack(player, slot);
     try {
       if (equipped) {
+        stampLore(equipped, opts);
         const existing = inv.getItem(i);
         const same =
           existing?.typeId === equipped.typeId &&
@@ -370,9 +446,10 @@ function ritualHint(player, sess, message) {
   }
 }
 
-/** Attunement Forge V3: two focus materials + Relic Shards from your bag. */
+/** Attunement Forge V3: two focus materials + Arcane Dust from your bag. */
 function tryCatalystFeed(player, entity, sess) {
   if (!player || !entity || sess?.closing) return;
+  if (!isAttunementEnabled(player)) return;
   if (getUiMode(entity) !== "attune") return;
 
   const inv = getContainer(entity);
@@ -421,13 +498,13 @@ function tryCatalystFeed(player, entity, sess) {
   }
   const group = groupForFocus(focusA.typeId, focusB.typeId);
   if (!group) {
-    ritualHint(player, sess, "that focus pair has no affinity");
+    ritualHint(player, sess, "that focus pair has no attune path");
     return;
   }
   const shardCount = countPlayerItem(player, SHARD_ID);
   const rarity = ritualRarity(shardCount, focusA.amount, focusB.amount);
   if (!rarity) {
-    ritualHint(player, sess, "Common needs 2 Relic Shards in your bag + 1 of each focus");
+    ritualHint(player, sess, "Common needs 2 Arcane Dust in your bag + 1 of each focus");
     return;
   }
   if (sess?.ritualLocked) {
@@ -460,7 +537,7 @@ function tryCatalystFeed(player, entity, sess) {
     if (!consumePlayerItem(player, SHARD_ID, cost.shards)) {
       givePlayerItem(player, focusA.typeId, cost.focus);
       givePlayerItem(player, focusB.typeId, cost.focus);
-      ritualHint(player, sess, "need more Relic Shards in your bag");
+      ritualHint(player, sess, "need more Arcane Dust in your bag");
       return;
     }
   } catch {
@@ -543,7 +620,9 @@ function tryExamineBay(player, entity, sess) {
 
 export function pullReliquaryToEquipped(player, entity) {
   const inv = getContainer(entity);
-  if (!inv) return;
+  if (!inv) return false;
+  let changed = false;
+  const opts = loreOptsForPlayer(player);
 
   for (let i = 0; i < ACCESSORY_COUNT; i++) {
     let stack;
@@ -574,7 +653,8 @@ export function pullReliquaryToEquipped(player, entity) {
     if (dest < 0 || dest === i) continue;
     try {
       inv.setItem(i, undefined);
-      inv.setItem(dest, loreStack(stack));
+      inv.setItem(dest, loreStack(stack, opts));
+      changed = true;
     } catch {
     }
   }
@@ -589,7 +669,10 @@ export function pullReliquaryToEquipped(player, entity) {
     }
 
     if (!stack) {
-      if (getEquipped(player, slot)) setEquippedStack(player, slot, undefined, { sync: false });
+      if (getEquipped(player, slot)) {
+        setEquippedStack(player, slot, undefined, { sync: false });
+        changed = true;
+      }
       continue;
     }
 
@@ -600,6 +683,7 @@ export function pullReliquaryToEquipped(player, entity) {
       } catch {
       }
       giveOrDrop(player, stack);
+      changed = true;
       continue;
     }
 
@@ -607,17 +691,19 @@ export function pullReliquaryToEquipped(player, entity) {
       const extra = stack.clone();
       extra.amount = stack.amount - 1;
       stack.amount = 1;
-      stampLore(stack);
+      stampLore(stack, opts);
       try {
         inv.setItem(i, stack);
       } catch {
       }
       giveOrDrop(player, extra);
-    } else if (!stack.getDynamicProperty?.(ITEM_ATTUNE_PROP) && stampLore(stack)) {
+      changed = true;
+    } else if (stampLore(stack, opts)) {
       try {
         inv.setItem(i, stack);
       } catch {
       }
+      changed = true;
     }
 
     const equipped = getEquippedStack(player, slot);
@@ -625,10 +711,15 @@ export function pullReliquaryToEquipped(player, entity) {
       equipped?.typeId === stack.typeId &&
       JSON.stringify(serializeRelicStack(equipped)) ===
         JSON.stringify(serializeRelicStack(stack));
-    if (!same) setEquippedStack(player, slot, stack, { sync: false });
+    if (!same) {
+      setEquippedStack(player, slot, stack, { sync: false });
+      changed = true;
+    }
   }
 
-  syncCurioUi(player);
+  // Avoid title spam every pull — only when loadout actually changed.
+  if (changed) syncCurioUi(player);
+  return changed;
 }
 
 function findEmptyMatchingIndex(inv, def, skip = -1) {
@@ -752,8 +843,34 @@ export function scrubOrphanReliquaries() {
       const dim = world.getDimension(id);
       for (const e of dim.getEntities({ type: RELIQUARY_ID })) {
         if (keep.has(e.id)) continue;
-        // Drop bay/focus only — equipment slots are already on the player.
-        destroyEntity(e, { dropForgeBay: true });
+        const ownerId = ownerOf(e);
+        let owner;
+        if (ownerId) {
+          for (const p of world.getPlayers()) {
+            if (p.id === ownerId) {
+              owner = p;
+              break;
+            }
+          }
+        }
+        if (owner) {
+          try {
+            returnExamineToPlayer(owner, e);
+          } catch {
+          }
+          try {
+            returnForgeBayToPlayer(owner, e);
+          } catch {
+          }
+          try {
+            pullReliquaryToEquipped(owner, e);
+          } catch {
+          }
+          destroyEntity(e, { dropForgeBay: false });
+        } else {
+          // No online owner — drop bay/focus only; equipment slots already live on player DPs.
+          destroyEntity(e, { dropForgeBay: true });
+        }
       }
     } catch {
     }
@@ -782,7 +899,8 @@ function sparkle(player, loc) {
  * instead of respawning, so repeat block taps don't reset the bay.
  */
 export function spawnReliquary(player, opts = {}) {
-  const wantMode = opts.mode === "attune" ? "attune" : "equip";
+  const wantMode =
+    opts.mode === "attune" && isAttunementEnabled(player) ? "attune" : "equip";
   const loc = opts.location ?? {
     x: player.location.x,
     y: player.location.y + 0.1,
@@ -834,6 +952,7 @@ export function spawnReliquary(player, opts = {}) {
   } catch {
   }
 
+  refreshPlayerRelicLore(player);
   pushEquippedToReliquary(player, entity);
   sessions.set(player.id, {
     entityId: entity.id,
@@ -859,6 +978,15 @@ export function spawnReliquary(player, opts = {}) {
 
 /** Open Reliquary on the separate Attunement Forge JSON UI. */
 export function spawnAttuneReliquary(player, opts = {}) {
+  if (player && !isAttunementEnabled(player)) {
+    try {
+      player.sendMessage(
+        "§8Attunement is disabled in Relic Tome settings (Relics-only mode)."
+      );
+    } catch {
+    }
+    return spawnReliquary(player, { ...opts, mode: "equip" });
+  }
   const entity = spawnReliquary(player, { ...opts, mode: "attune" });
   try {
     if (player && !player.getDynamicProperty("relics:tip_attune")) {
@@ -889,20 +1017,29 @@ function safeSub(signal, handler) {
 }
 
 export function registerReliquary() {
-  // Logout / dimension leave while Attune/Reliquary is open — return bay relic + sync equip.
+  // Logout while Reliquary/Forge is open — flush equipped relics first (never wipe).
   safeSub(world.beforeEvents?.playerLeave, (ev) => {
     const player = ev.player;
     if (!player) return;
-    const sess = sessions.get(player.id);
-    if (!sess?.entityId) return;
-    const dim = player.dimension;
-    const entityId = sess.entityId;
-    // before-leave is restricted — defer writes; scrub also drops contents as a safety net.
-    system.run(() => {
-      const entity = findEntityById(dim, entityId);
-      if (entity) destroyEntity(entity, { dropForgeBay: true });
-      sessions.delete(player.id);
-    });
+    try {
+      flushReliquarySession(player);
+    } catch {
+      const sess = sessions.get(player.id);
+      if (sess?.entityId) {
+        const entity = findEntityById(player.dimension, sess.entityId);
+        if (entity) {
+          try {
+            pullReliquaryToEquipped(player, entity);
+          } catch {
+          }
+          try {
+            destroyEntity(entity, { dropForgeBay: true });
+          } catch {
+          }
+        }
+        sessions.delete(player.id);
+      }
+    }
   });
 
   safeSub(world.beforeEvents?.playerInteractWithEntity, (ev) => {
@@ -937,7 +1074,10 @@ export function registerReliquary() {
         }
       }
       const prev = sessions.get(player.id);
-      const mode = prev?.mode === "attune" || getUiMode(entity) === "attune" ? "attune" : "equip";
+      const wantAttune =
+        isAttunementEnabled(player) &&
+        (prev?.mode === "attune" || getUiMode(entity) === "attune");
+      const mode = wantAttune ? "attune" : "equip";
       applyUiMode(entity, mode);
       pushEquippedToReliquary(player, entity);
       sessions.set(player.id, {
@@ -961,7 +1101,10 @@ export function registerReliquary() {
       src?.typeId === "minecraft:player" ? src : playerForEntity(ev.entity);
     if (!player) return;
     const prev = sessions.get(player.id);
-    const mode = prev?.mode === "attune" || getUiMode(ev.entity) === "attune" ? "attune" : "equip";
+    const wantAttune =
+      isAttunementEnabled(player) &&
+      (prev?.mode === "attune" || getUiMode(ev.entity) === "attune");
+    const mode = wantAttune ? "attune" : "equip";
     applyUiMode(ev.entity, mode);
     sessions.set(player.id, {
       entityId: ev.entity.id,
@@ -1052,19 +1195,24 @@ export function registerReliquary() {
         }
       }
 
+      // Interval is already 5 ticks — sync loadout every pass; bay/examine half as often.
       try {
         pullReliquaryToEquipped(player, entity);
       } catch {
       }
       const live = sessions.get(player.id) ?? sess;
-      try {
-        tryCatalystFeed(player, entity, live);
-      } catch {
-      }
-      try {
-        tryExamineBay(player, entity, sessions.get(player.id) ?? live);
-      } catch {
+      const n = (live.uiTick = (live.uiTick ?? 0) + 1);
+      sessions.set(player.id, live);
+      if (n % 2 === 0) {
+        try {
+          tryCatalystFeed(player, entity, live);
+        } catch {
+        }
+        try {
+          tryExamineBay(player, entity, sessions.get(player.id) ?? live);
+        } catch {
+        }
       }
     }
-  }, 1);
+  }, 5);
 }

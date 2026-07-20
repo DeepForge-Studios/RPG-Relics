@@ -25,7 +25,7 @@
         <button type="button" class="chapter" data-route="ch-1"><span>1</span> Start</button>
         <button type="button" class="chapter" data-route="ch-2"><span>2</span> Find</button>
         <button type="button" class="chapter" data-route="ch-3"><span>3</span> Equip</button>
-        <button type="button" class="chapter" data-route="ch-4"><span>4</span> Boosts</button>
+        <button type="button" class="chapter" data-route="ch-4"><span>4</span> Affinity</button>
         <button type="button" class="chapter" data-route="ch-5"><span>5</span> Attune</button>
         <button type="button" class="chapter" data-route="ch-6"><span>6</span> Relics</button>
         <button type="button" class="chapter" data-route="ch-7"><span>7</span> Ascended</button>
@@ -47,12 +47,12 @@
         <section id="panel-ch-1" class="panel" hidden>
           <p class="chapter-tag">Chapter 1</p>
           <h1>Getting started</h1>
-          <p class="lead">Install the pack, grab your starter kit, then walk chapters 2–5: find relics → equip them → build a Boost → attune skills.</p>
+          <p class="lead">Install the pack, grab your starter kit, then walk chapters 2–5: find relics → equip them → build an Affinity → attune skills.</p>
 
           <ol class="path" aria-label="Progression path">
             <li><button type="button" class="path-link" data-route="ch-2">Find relics in the world</button></li>
             <li><button type="button" class="path-link" data-route="ch-3">Equip them in the Reliquary</button></li>
-            <li><button type="button" class="path-link" data-route="ch-4">Build a Boost playstyle</button></li>
+            <li><button type="button" class="path-link" data-route="ch-4">Build an Affinity playstyle</button></li>
             <li><button type="button" class="path-link" data-route="ch-5">Browse the Codex, then ritual at the Forge</button></li>
           </ol>
 
@@ -61,7 +61,7 @@
               <div class="icon-well"><img src="RP/textures/items/relic_guidebook.png" alt="" /></div>
               <div>
                 <h2>Relic Tome</h2>
-                <p>Your pocket guide — Boost Codex, relic catalog, and settings (including Attunement on/off and Standard / OP balance).</p>
+                <p>Your pocket guide — Affinity Codex, relic catalog, and settings (including Attunement on/off and Standard / OP balance).</p>
               </div>
             </article>
             <article class="step">
@@ -142,7 +142,7 @@
             </a>
           </div>
           <div class="shots">
-            <figure class="shot wide">
+            <figure class="shot">
               <img src="site/media/tower.png" alt="Tower" loading="lazy" />
               <figcaption>Relic tower</figcaption>
             </figure>
@@ -170,7 +170,7 @@
         <section id="panel-ch-3" class="panel" hidden>
           <p class="chapter-tag">Chapter 3</p>
           <h1>Equip in the Reliquary</h1>
-          <p class="lead">Open a Relic Crate to wear what you found. Slots cover face, head, neck, ring, back, body, hands, belt, feet, plus extras and charms — your loadout feeds Boosts and attunements.</p>
+          <p class="lead">Open a Relic Crate to wear what you found. Slots cover face, head, neck, ring, back, body, hands, belt, feet, plus extras and charms — your loadout feeds Affinity and Attunement.</p>
           <div class="shots">
             <figure class="shot wide">
               <img src="site/media/reliquary-ui.png" alt="Reliquary UI" loading="lazy" />
@@ -179,15 +179,15 @@
           </div>
           <div class="next-row">
             <button type="button" class="next-btn ghost" data-route="ch-2">← Find</button>
-            <button type="button" class="next-btn" data-route="ch-4">Next: Boosts →</button>
+            <button type="button" class="next-btn" data-route="ch-4">Next: Affinity →</button>
           </div>
         </section>
 
-        <!-- 4 Boosts -->
+        <!-- 4 Affinity -->
         <section id="panel-ch-4" class="panel" hidden>
           <p class="chapter-tag">Chapter 4</p>
-          <h1>Boost Codex</h1>
-          <p class="lead">Each equipped relic adds Boost power by rarity (Common 1 · Uncommon 2 · Rare / Ascended 3). Your strongest style becomes active — tap I / II / III to preview what that tier does.</p>
+          <h1>Affinity Codex</h1>
+          <p class="lead">Each equipped relic adds Affinity power by rarity (Common 1 · Uncommon 2 · Rare / Ascended 3). Your strongest class becomes active — tap I / II / III to preview what that tier does. Classes: Berserker, Guardian, Scout, Trickster, Healer, Arcanist.</p>
           <div class="boost-grid" id="boost-grid"></div>
           <div class="next-row">
             <button type="button" class="next-btn ghost" data-route="ch-3">← Equip</button>
@@ -199,7 +199,7 @@
         <section id="panel-ch-5" class="panel" hidden>
           <p class="chapter-tag">Chapter 5</p>
           <h1>Attunement</h1>
-          <p class="lead">Study skills in the <strong>Attunement Codex</strong>, then run the ritual on a placed <strong>Forge</strong>. Spend Relic Dust plus a matching focus pair to roll an affinity skill onto a relic your Boost style allows.</p>
+          <p class="lead">Study skills in the <strong>Attunement Codex</strong>, then run the ritual on a placed <strong>Forge</strong>. Spend Relic Dust plus a matching focus pair to roll a skill onto a relic your Affinity class allows. Matching the primary path grants Synergy.</p>
           <div class="feature-grid">
             <article class="feature">
               <div class="icon-well"><img src="RP/textures/items/attunement_tome.png" alt="" /></div>
@@ -235,7 +235,7 @@
             </figure>
           </div>
           <div class="next-row">
-            <button type="button" class="next-btn ghost" data-route="ch-4">← Boosts</button>
+            <button type="button" class="next-btn ghost" data-route="ch-4">← Affinity</button>
             <button type="button" class="next-btn" data-route="ch-6">Next: Relic catalog →</button>
           </div>
         </section>
@@ -244,7 +244,7 @@
         <section id="panel-ch-6" class="panel" hidden>
           <p class="chapter-tag">Chapter 6</p>
           <h1>Relic catalog</h1>
-          <p class="lead">Every relic at a glance — effect, slot, rarity, Boost affinity, and where it tends to drop. Sorted Common → Ascended. Click a card for the full entry; hover for a quick tip.</p>
+          <p class="lead">Every relic at a glance — effect, slot, rarity, Affinity, and where it tends to drop. Sorted Common → Ascended. Click a card for the full entry; hover for a quick tip.</p>
 
           <div class="toolbar">
             <input type="search" id="relic-search" placeholder="Search relics…" autocomplete="off" />
@@ -276,7 +276,7 @@
         <section id="panel-ch-7" class="panel" hidden>
           <p class="chapter-tag">Chapter 7</p>
           <h1>Ascended fusions</h1>
-          <p class="lead">Fuse two matching relics plus a catalyst at the Relic Forge for a stronger Ascended form. These count as Rare-tier Boost power when equipped.</p>
+          <p class="lead">Fuse two matching relics plus a catalyst at the Relic Forge for a stronger Ascended form. These count as Rare-tier Affinity power when equipped.</p>
           <div class="toolbar">
             <input type="search" id="ascended-search" placeholder="Search ascended…" autocomplete="off" />
             <p class="count" id="ascended-count"></p>

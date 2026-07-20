@@ -1,9 +1,9 @@
-# Build curio_relics.mcaddon (Bedrock: valid ZIP, forward-slash paths).
+# Build rpg_relics.mcaddon (Bedrock: valid ZIP, forward-slash paths).
 # Bumps a visible test build label (v.01, v.02, ...) on every run so you know when to reimport.
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Build = Join-Path $Root "_mcaddon_build"
-$Mcaddon = Join-Path $Root "curio_relics.mcaddon"
+$Mcaddon = Join-Path $Root "rpg_relics.mcaddon"
 $CounterFile = Join-Path $Root "test_build_counter.txt"
 
 # Regenerate live inventory/HUD icon UI from RELIC_REGISTRY (optional; inventory overlay currently disabled)
@@ -57,12 +57,18 @@ function Stamp-PackManifests {
     $label = "v.{0:D2}" -f $TestBuildNumber
     $ver = @(0, 0, $TestBuildNumber)
 
-    $bpPath = Join-Path $BuildRoot "curio_relics_bp\manifest.json"
-    $rpPath = Join-Path $BuildRoot "curio_relics_rp\manifest.json"
-    $langPath = Join-Path $BuildRoot "curio_relics_rp\texts\en_US.lang"
+    $bpPath = Join-Path $BuildRoot "rpg_relics_bp\manifest.json"
+    $rpPath = Join-Path $BuildRoot "rpg_relics_rp\manifest.json"
+    $langPath = Join-Path $BuildRoot "rpg_relics_rp\texts\en_US.lang"
+
+    # ASCII-only descriptions (hyphen, not em-dash) so Minecraft pack list never shows mojibake.
+    $bpDesc = "Equipable relics, Reliquary wardrobe, and Attunement - DeepForge Studios"
+    $rpDesc = "Textures and UI for RPG Relics - DeepForge Studios"
+    $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
     $bp = Get-Content $bpPath -Raw | ConvertFrom-Json
     $bp.header.name = "RPG Relics (Behavior) $label"
+    $bp.header.description = $bpDesc
     $bp.header.version = $ver
     foreach ($mod in $bp.modules) { $mod.version = $ver }
     foreach ($dep in $bp.dependencies) {
@@ -70,26 +76,28 @@ function Stamp-PackManifests {
             $dep.version = $ver
         }
     }
-    $bp | ConvertTo-Json -Depth 10 | Set-Content -Path $bpPath -Encoding utf8
+    [System.IO.File]::WriteAllText($bpPath, ($bp | ConvertTo-Json -Depth 10), $utf8NoBom)
 
     $rp = Get-Content $rpPath -Raw | ConvertFrom-Json
     $rp.header.name = "RPG Relics (Resources) $label"
+    $rp.header.description = $rpDesc
     $rp.header.version = $ver
     foreach ($mod in $rp.modules) { $mod.version = $ver }
-    $rp | ConvertTo-Json -Depth 10 | Set-Content -Path $rpPath -Encoding utf8
+    [System.IO.File]::WriteAllText($rpPath, ($rp | ConvertTo-Json -Depth 10), $utf8NoBom)
 
     if (Test-Path $langPath) {
-        $lang = Get-Content $langPath
+        # UTF-8 read/write — default Get-Content drops ZWSP used to hide item.customProperties
+        $lang = [System.IO.File]::ReadAllLines($langPath, $utf8NoBom)
         $lang = $lang | ForEach-Object {
             if ($_ -match '^pack\.name=') { "pack.name=RPG Relics $label" }
             elseif ($_ -match '^pack\.description=') { "pack.description=Test build $label - reimport when this number goes up" }
             else { $_ }
         }
-        Set-Content -Path $langPath -Value $lang -Encoding utf8
+        [System.IO.File]::WriteAllLines($langPath, [string[]]$lang, $utf8NoBom)
     }
 
     # Stamp test build into a tiny module (never rewrite main.js — regex/encoding broke it before)
-    $stampPath = Join-Path $BuildRoot "curio_relics_bp\scripts\build_info.js"
+    $stampPath = Join-Path $BuildRoot "rpg_relics_bp\scripts\build_info.js"
     $stamp = @"
 /** Injected at build time by build_mcaddon.ps1 — do not edit by hand. */
 export const TEST_BUILD = "$label";
@@ -107,23 +115,25 @@ Write-BuildCounter $testBuildNumber
 if (Test-Path $Build) { Remove-Item $Build -Recurse -Force }
 New-Item -ItemType Directory -Path $Build | Out-Null
 
-Copy-Item (Join-Path $Root "BP") (Join-Path $Build "curio_relics_bp") -Recurse
-Copy-Item (Join-Path $Root "RP") (Join-Path $Build "curio_relics_rp") -Recurse
+Copy-Item (Join-Path $Root "BP") (Join-Path $Build "rpg_relics_bp") -Recurse
+Copy-Item (Join-Path $Root "RP") (Join-Path $Build "rpg_relics_rp") -Recurse
 
 $label = Stamp-PackManifests -BuildRoot $Build -TestBuildNumber $testBuildNumber
 
 if (Test-Path $Mcaddon) { Remove-Item $Mcaddon -Force }
 
-# Remove any old labeled copies from earlier builds (one output file only)
-Get-ChildItem -Path $Root -Filter "curio_relics_v.*.mcaddon" -File -ErrorAction SilentlyContinue |
+# Remove any old labeled copies / legacy Curio slug output
+Get-ChildItem -Path $Root -Filter "rpg_relics_v.*.mcaddon" -File -ErrorAction SilentlyContinue |
+    Remove-Item -Force
+Get-ChildItem -Path $Root -Filter "curio_relics*.mcaddon" -File -ErrorAction SilentlyContinue |
     Remove-Item -Force
 
 $stream = [System.IO.File]::Open($Mcaddon, [System.IO.FileMode]::CreateNew)
 try {
     $zip = New-Object System.IO.Compression.ZipArchive($stream, [System.IO.Compression.ZipArchiveMode]::Create, $false)
     try {
-        Add-FolderToZip -Zip $zip -SourceDir (Join-Path $Build "curio_relics_bp") -ArchiveRoot "curio_relics_bp"
-        Add-FolderToZip -Zip $zip -SourceDir (Join-Path $Build "curio_relics_rp") -ArchiveRoot "curio_relics_rp"
+        Add-FolderToZip -Zip $zip -SourceDir (Join-Path $Build "rpg_relics_bp") -ArchiveRoot "rpg_relics_bp"
+        Add-FolderToZip -Zip $zip -SourceDir (Join-Path $Build "rpg_relics_rp") -ArchiveRoot "rpg_relics_rp"
     }
     finally {
         $zip.Dispose()

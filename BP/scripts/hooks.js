@@ -1,7 +1,12 @@
 import { system, EntityDamageCause, BlockPermutation, world, ItemStack } from "@minecraft/server";
 import { getEquippedAll, setEquippedStack } from "./relics.js";
 import { getRelicTier, shortBlurb } from "./descriptions.js";
-import { areBoostsEnabled, areEffectNotificationsEnabled } from "./settings.js";
+import {
+  areBoostsEnabled,
+  areEffectNotificationsEnabled,
+  areCooldownsEnabled,
+  isAttunementEnabled,
+} from "./settings.js";
 import { BOOST_ORDER, BOOST_LABELS, BOOST_ABILITIES } from "./boosts_data.js";
 import {
   resolveAttuneEffects,
@@ -11,6 +16,7 @@ import {
   hasAttuneIdentity,
   syncExamineRelic,
 } from "./attune_data.js";
+import { relicAffinity } from "./attune_pool.js";
 import { guardBonusDamage, isBonusDamageGuarded } from "./combat_guard.js";
 import {
   handleAttuneAttack,
@@ -22,7 +28,8 @@ import {
 export { BOOST_ABILITIES };
 
 const TICK = 20;
-const PASSIVE_DUR = TICK * 8;
+/** Long enough that we only refresh every few seconds (avoids effect HUD flicker). */
+const PASSIVE_DUR = TICK * 12;
 const cooldowns = new Map();
 const resonanceHits = new Map();
 
@@ -42,43 +49,6 @@ function showActionBar(player, message) {
 }
 
 const RESONANCE_LABELS = BOOST_LABELS;
-
-const GALE_CUSTOM = new Set([
-  "fluid_movement",
-  "swim_boost",
-  "liquid_sprint",
-  "double_jump",
-  "triple_jump",
-  "gale_glide",
-  "no_fall_damage",
-  "leviathan_striders",
-  "windsprint_greaves",
-]);
-const WARD_CUSTOM = new Set([
-  "phase_dodge",
-  "knockback_resist",
-  "fire_res_on_burn",
-  "repel_creepers",
-  "crystal_shards",
-]);
-const FORTUNE_CUSTOM = new Set([
-  "double_ore",
-  "item_magnet",
-  "fishing_haul",
-  "reveal_hostiles",
-]);
-const VITALITY_CUSTOM = new Set([
-  "second_wind",
-  "sustaining_cap",
-]);
-const ALCHEMY_CUSTOM = new Set([
-  "purify_effects",
-  "grand_alchemy",
-  "potion_linger",
-  "toxin_filter",
-  "wither_cleanse",
-  "full_toxin_ward",
-]);
 
 const tideFloor = new Map();
 const ICE = "minecraft:frosted_ice";
@@ -111,6 +81,7 @@ function isTideFooting(id) {
 }
 
 function isCooling(player, tag, durationTicks) {
+  if (!areCooldownsEnabled(player)) return false;
   const key = `${player.id}:${tag}`;
   const until = cooldowns.get(key) ?? 0;
   if (system.currentTick < until) return true;
@@ -121,41 +92,6 @@ function isCooling(player, tag, durationTicks) {
 function tierRank(itemId) {
   const tier = getRelicTier(itemId);
   return tier === "rare" ? 3 : tier === "uncommon" ? 2 : 1;
-}
-
-function relicAffinity(def) {
-  if (def.onAttack?.lifesteal) return "vitality";
-  if (def.onAttack || def.custom === "execute_low_hp") return "might";
-  if (
-    def.onHurt ||
-    WARD_CUSTOM.has(def.custom) ||
-    def.passive?.effect === "resistance" ||
-    def.passive?.effect === "fire_resistance"
-  ) {
-    return "ward";
-  }
-  if (
-    GALE_CUSTOM.has(def.custom) ||
-    ["speed", "jump_boost", "slow_falling", "dolphins_grace"].includes(def.passive?.effect)
-  ) {
-    return "gale";
-  }
-  if (
-    FORTUNE_CUSTOM.has(def.custom) ||
-    def.onKill ||
-    ["luck", "village_hero", "haste"].includes(def.passive?.effect)
-  ) {
-    return "fortune";
-  }
-  if (
-    VITALITY_CUSTOM.has(def.custom) ||
-    def.onAttack?.lifesteal ||
-    ["regeneration", "health_boost", "saturation"].includes(def.passive?.effect)
-  ) {
-    return "vitality";
-  }
-  if (ALCHEMY_CUSTOM.has(def.custom)) return "alchemy";
-  return "alchemy";
 }
 
 function emptyBoostScores() {
@@ -234,9 +170,26 @@ export function applyEffect(entity, effectId, duration, amplifier = 0, showParti
   for (const a of aliases) {
     ids.push(a, `minecraft:${a}`);
   }
+  // Skip re-apply when the same (or stronger) effect still has plenty of time left.
+  // Constant refreshes cause HUD flicker / choppy potion icons.
+  const need = Math.max(1, Math.floor(duration));
+  const refreshBelow = Math.max(20, Math.floor(need * 0.4));
   for (const id of ids) {
     try {
-      entity.addEffect(id, Math.max(1, Math.floor(duration)), opts);
+      const cur = entity.getEffect?.(id);
+      if (
+        cur &&
+        (cur.amplifier ?? 0) >= (amplifier ?? 0) &&
+        (cur.duration ?? 0) > refreshBelow
+      ) {
+        return true;
+      }
+    } catch {
+    }
+  }
+  for (const id of ids) {
+    try {
+      entity.addEffect(id, need, opts);
       return true;
     } catch {
     }
@@ -605,7 +558,7 @@ function igniteEntity(entity, seconds) {
  * @param {number} cd   cooldown ticks (0 = none)
  */
 export function grantWearXp(player, amount, tag, cd = 0) {
-  if (!player) return;
+  if (!player || !isAttunementEnabled(player)) return;
   if (cd > 0 && isCooling(player, `wx_${tag}`, cd)) return;
   for (const { slot, stack } of attuneLoadout(player)) {
     if (!isAttuned(player, stack)) continue;
@@ -617,17 +570,19 @@ export function grantWearXp(player, amount, tag, cd = 0) {
 
 /** Apply periodic (mcEffect) attunement effects — called from tickPassiveRelics. */
 function applyAttunePassive(player) {
+  if (!isAttunementEnabled(player)) return;
   for (const { stack } of attuneLoadout(player)) {
     for (const eff of resolveAttuneEffects(player, stack)) {
       if (eff.def.kind !== "mcEffect") continue;
       const amp = Math.max(0, Math.round(eff.magnitude));
-      applyEffect(player, eff.def.effect, TICK * 3, amp, false);
+      applyEffect(player, eff.def.effect, TICK * 12, amp, false);
     }
   }
 }
 
 /** On-hit attunement effects. Returns bonus melee damage to add. */
 function applyAttuneAttack(player, victim, damage) {
+  if (!isAttunementEnabled(player)) return 0;
   let bonus = 0;
   for (const { stack } of attuneLoadout(player)) {
     for (const eff of resolveAttuneEffects(player, stack)) {
@@ -649,7 +604,7 @@ function applyAttuneAttack(player, victim, damage) {
 
 /** Reflect attunement — called from handlePlayerHurtAfter. */
 function applyAttuneHurt(player, attacker, damage) {
-  if (!attacker || damage <= 0) return;
+  if (!attacker || damage <= 0 || !isAttunementEnabled(player)) return;
   for (const { stack } of attuneLoadout(player)) {
     for (const eff of resolveAttuneEffects(player, stack)) {
       if (eff.def.kind !== "reflect") continue;
@@ -671,6 +626,7 @@ function applyAttuneHurt(player, attacker, damage) {
 
 /** Kill attunement (heal / xp) — called from handlePlayerKill. */
 function applyAttuneKill(player, victim) {
+  if (!isAttunementEnabled(player)) return;
   for (const { stack } of attuneLoadout(player)) {
     for (const eff of resolveAttuneEffects(player, stack)) {
       const k = eff.def.kind;
@@ -694,7 +650,7 @@ function applyAttuneKill(player, victim) {
 
 /** Ore-bonus attunement — called from handleOreBreak. */
 function applyAttuneMine(player, blockTypeId, blockLocation) {
-  if (!blockTypeId || !/ore/.test(blockTypeId)) return;
+  if (!blockTypeId || !/ore/.test(blockTypeId) || !isAttunementEnabled(player)) return;
   for (const { stack } of attuneLoadout(player)) {
     for (const eff of resolveAttuneEffects(player, stack)) {
       if (eff.def.kind !== "oreBonus") continue;
@@ -716,7 +672,7 @@ export function tickPassiveRelics(player) {
   if (
     resonance?.affinity === "gale" &&
     player.isSprinting &&
-    !isCooling(player, "resonance_gale", [0, 160, 140, 120][resonance.level])
+    !isCooling(player, "resonance_gale", [0, 140, 120, 100][resonance.level])
   ) {
     const duration = [0, 60, 80, 100][resonance.level];
     const amplifier = resonance.level >= 2 ? 1 : 0;
@@ -724,7 +680,7 @@ export function tickPassiveRelics(player) {
     if (resonance.level >= 3) applyEffect(player, "jump_boost", duration, 1, true);
     try {
       player.playSound("random.orb", { volume: 0.35, pitch: 1.65 });
-      showActionBar(player, `§bGale Boost ${"I".repeat(resonance.level)} — Tailwind`);
+      showActionBar(player, `§bScout Affinity ${"I".repeat(resonance.level)} — Tailwind`);
     } catch {
     }
   }
@@ -734,7 +690,7 @@ export function tickPassiveRelics(player) {
       if (def.passive) {
         const dur =
           def.passive.effect === "night_vision" || def.passive.effect === "minecraft:night_vision"
-            ? TICK * 15
+            ? TICK * 20
             : PASSIVE_DUR;
         applyEffect(player, def.passive.effect, dur, def.passive.amplifier ?? 0, false);
       }
@@ -948,7 +904,7 @@ export function handleOreBreak(player, blockTypeId, blockLocation) {
   const resonance = resonanceProfile(player);
   const resonanceChance =
     resonance?.affinity === "fortune"
-      ? [0, 0.06, 0.12, 0.2][resonance.level]
+      ? [0, 0.1, 0.16, 0.24][resonance.level]
       : 0;
   const chance = Math.max(def?.oreChance ?? 0, resonanceChance);
   if (chance <= 0 || Math.random() > chance) return;
@@ -964,7 +920,7 @@ export function handleOreBreak(player, blockTypeId, blockLocation) {
         player.playSound("random.orb", { volume: 0.35, pitch: 1.4 });
         if (!def && resonanceChance > 0) {
           showActionBar(player, 
-            `§6Fortune Boost ${"I".repeat(resonance.level)} — bonus ore`
+            `§6Trickster Affinity ${"I".repeat(resonance.level)} — bonus ore`
           );
         }
       } catch {
@@ -1090,7 +1046,9 @@ function repelCreepers(player, radius) {
 }
 
 export function handlePlayerHurtBefore(player, damageSource, incomingDamage = 0) {
-  const attune = handleAttuneHurtBefore(player, damageSource, incomingDamage);
+  const attune = isAttunementEnabled(player)
+    ? handleAttuneHurtBefore(player, damageSource, incomingDamage)
+    : { cancel: false };
   if (attune.cancel) return attune;
   let cancel = false;
   for (const { def } of getEquippedAll(player)) {
@@ -1143,8 +1101,8 @@ export function handlePlayerHurtBefore(player, damageSource, incomingDamage = 0)
   }
   const resonance = resonanceProfile(player);
   if (!cancel && resonance?.affinity === "ward" && damageSource.damagingEntity) {
-    const chance = [0, 0.08, 0.14, 0.2][resonance.level];
-    const cooldown = [0, 120, 100, 80][resonance.level];
+    const chance = [0, 0.1, 0.16, 0.24][resonance.level];
+    const cooldown = [0, 100, 85, 70][resonance.level];
     if (
       Math.random() < chance &&
       !isCooling(player, "resonance_ward", cooldown)
@@ -1154,7 +1112,7 @@ export function handlePlayerHurtBefore(player, damageSource, incomingDamage = 0)
         try {
           player.playSound("item.shield.block", { volume: 0.7, pitch: 1.2 });
           showActionBar(player, 
-            `§9Ward Boost ${"I".repeat(resonance.level)} — attack deflected`
+            `§9Guardian Affinity ${"I".repeat(resonance.level)} — attack deflected`
           );
         } catch {
         }
@@ -1271,11 +1229,11 @@ export function handlePlayerAttack(player, victim, damage, context = {}) {
     const hits = (resonanceHits.get(player.id) ?? 0) + 1;
     if (hits >= requiredHits) {
       resonanceHits.set(player.id, 0);
-      bonus += [0, 2, 3, 4][resonance.level];
+      bonus += [0, 2, 3, 5][resonance.level];
       try {
         player.playSound("random.anvil_land", { volume: 0.25, pitch: 1.7 });
         showActionBar(player, 
-          `§cMight Boost ${"I".repeat(resonance.level)} — crushing echo`
+          `§cBerserker Affinity ${"I".repeat(resonance.level)} — crushing echo`
         );
       } catch {
       }
@@ -1414,7 +1372,7 @@ export function handlePlayerKill(player, victim) {
     try {
       player.playSound("random.orb", { volume: 0.35, pitch: 0.9 });
       showActionBar(player, 
-        `§aVitality Boost ${"I".repeat(resonance.level)} — ${healing / 2} hearts restored`
+        `§aHealer Affinity ${"I".repeat(resonance.level)} — ${healing / 2} hearts restored`
       );
     } catch {
     }
@@ -1449,7 +1407,7 @@ export function handlePotionDrink(player, itemStack) {
   const resonance = resonanceProfile(player);
   const resonanceBonus =
     resonance?.affinity === "alchemy"
-      ? [0, 0.15, 0.3, 0.5][resonance.level]
+      ? [0, 0.2, 0.35, 0.5][resonance.level]
       : 0;
   if (!def && resonanceBonus <= 0) return;
   const bonusMul = Math.max(def?.potionBonus ?? 0, resonanceBonus);
@@ -1469,7 +1427,7 @@ export function handlePotionDrink(player, itemStack) {
         player.playSound("random.drink", { volume: 0.4, pitch: 1.25 });
         if (!def && resonanceBonus > 0) {
           showActionBar(player, 
-            `§dAlchemy Boost ${"I".repeat(resonance.level)} — potion extended`
+            `§dArcanist Affinity ${"I".repeat(resonance.level)} — potion extended`
           );
         }
       } catch {
@@ -1573,7 +1531,7 @@ export function statusLines(player) {
   const resonance = resonanceProfile(player);
   if (!resonance) {
     return [
-      "§8Boosts are disabled in the Relic Tome settings.§r",
+      "§8Affinity is disabled in the Relic Tome settings.§r",
       ...equipped.map(
         ({ slot, def }) => `§e${slot}§r: ${def.displayName} §8(${shortBlurb(def)})`
       ),
@@ -1583,26 +1541,26 @@ export function statusLines(player) {
   let resonanceEffect = "";
   switch (resonance.affinity) {
     case "might":
-      resonanceEffect = `every ${[0, 5, 4, 3][resonance.level]} hits echoes for +${[0, 2, 3, 4][resonance.level]} damage`;
+      resonanceEffect = `every ${[0, 5, 4, 3][resonance.level]} hits echoes for +${[0, 2, 3, 5][resonance.level]} damage`;
       break;
     case "ward":
-      resonanceEffect = `${Math.round([0, 0.08, 0.14, 0.2][resonance.level] * 100)}% chance to deflect an attack`;
+      resonanceEffect = `${Math.round([0, 0.1, 0.16, 0.24][resonance.level] * 100)}% chance to deflect an attack`;
       break;
     case "gale":
       resonanceEffect = "sprinting periodically triggers Tailwind";
       break;
     case "fortune":
-      resonanceEffect = `${Math.round([0, 0.06, 0.12, 0.2][resonance.level] * 100)}% bonus ore chance`;
+      resonanceEffect = `${Math.round([0, 0.1, 0.16, 0.24][resonance.level] * 100)}% bonus ore chance`;
       break;
     case "vitality":
       resonanceEffect = `kills restore ${[0, 1, 2, 3][resonance.level]} hearts`;
       break;
     case "alchemy":
-      resonanceEffect = `drunk potions last ${Math.round([0, 0.15, 0.3, 0.5][resonance.level] * 100)}% longer`;
+      resonanceEffect = `drunk potions last ${Math.round([0, 0.2, 0.35, 0.5][resonance.level] * 100)}% longer`;
       break;
   }
   return [
-    `§d${resonance.label} Boost ${levelText}§r: §f${resonanceEffect}§r §8(${resonance.score} power)§r`,
+    `§d${resonance.label} Affinity ${levelText}§r: §f${resonanceEffect}§r §8(${resonance.score} power)§r`,
     ...equipped.map(
     ({ slot, def }) => `§e${slot}§r: ${def.displayName} §8(${shortBlurb(def)})`
     ),

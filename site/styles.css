@@ -7,6 +7,12 @@
   --muted: #9b93a8;
   --gold: #e8c56a;
   --gem: #c86bb0;
+  /* Soft lavender — Attune group keywords (UiRgb.softLavender / Reliquary tips) */
+  --attune: #d1b8eb;
+  /* Item / material names — forge gold reserved for this role */
+  --item: #e8c56a;
+  /* Rates / percentages — muted, not gold */
+  --num: #b7b0c2;
   --well: #d8d0c4;
   --common: #a3a3a3;
   --uncommon: #5ecf6a;
@@ -229,8 +235,9 @@ main {
   padding: 0.85rem clamp(1.25rem, 3vw, 2.5rem) 2.75rem;
 }
 
-/* Keyword color coding */
+/* Keyword color coding — roles by *group*, not one shared gold */
 .kw { font-weight: 650; }
+/* Boost affinities (per-boost theme tokens) */
 .kw-might { color: var(--might); }
 .kw-ward { color: var(--ward); }
 .kw-gale { color: var(--gale); }
@@ -239,10 +246,15 @@ main {
 .kw-alchemy { color: var(--alchemy); }
 .kw-necromancy { color: var(--necromancy); }
 .kw-radiance { color: var(--radiance); }
-.kw-gold { color: var(--gold); }
+/* Attune groups — soft lavender family (not per-affinity gold) */
+.kw-attune { color: var(--attune); }
+/* Relics / craft materials */
+.kw-item { color: var(--item); }
+.kw-gold { color: var(--item); } /* alias */
 .kw-gem { color: var(--gem); }
+/* Numbers / percentages / rates */
 .kw-num {
-  color: var(--gold);
+  color: var(--num);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -763,6 +775,14 @@ a.feature.link-card:hover { text-decoration: none; }
 }
 .shots.triple { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .shot { margin: 0; overflow: hidden; }
+.shots .shot {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #0a0a0c;
+  display: flex;
+  flex-direction: column;
+}
+/* Full-row only for lone gallery heroes (e.g. Reliquary); never stretch height */
 .shot.wide { grid-column: 1 / -1; }
 .shot img {
   display: block;
@@ -770,6 +790,12 @@ a.feature.link-card:hover { text-decoration: none; }
   height: auto;
   image-rendering: auto;
   background: #000;
+}
+.shots .shot img {
+  height: 180px;
+  object-fit: cover;
+  object-position: center;
+  background: #0a0a0c;
 }
 .shot figcaption {
   padding: 0.45rem 0.65rem;

@@ -9,6 +9,7 @@
     },
     "components": {
       "minecraft:max_stack_size": 1,
+      "minecraft:glint": false,
       "minecraft:icon": "relics_stratos_pack",
       "minecraft:display_name": {
         "value": "item.relics:stratos_pack"

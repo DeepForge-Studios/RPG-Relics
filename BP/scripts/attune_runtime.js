@@ -1,7 +1,19 @@
 import { EntityDamageCause, ItemStack, MolangVariableMap, system, world } from "@minecraft/server";
 import { getEquippedAll } from "./relics.js";
 import { resolveAttuneEffects } from "./attune_data.js";
+import { getRelicDef } from "./registry.js";
 import { guardBonusDamage, isBonusDamageGuarded } from "./combat_guard.js";
+import { areCooldownsEnabled, isAttunementEnabled } from "./settings.js";
+import { relicAffinity } from "./attune_pool.js";
+import {
+  synergyTierForRelic,
+  synergyMods,
+  synCooldown,
+  synDuration,
+  synChance,
+  playSynergyFeedback,
+  playSynergyEchoFeedback,
+} from "./attune_synergy.js";
 
 const TICK = 20;
 const cooldowns = new Map();
@@ -12,7 +24,12 @@ const helpers = [];
 const pendingDrops = new Map();
 const RETALIATE_CD = 120;
 const MAX_FIELDS = 2;
-const MAX_HELPERS = 1;
+const MAX_HELPERS = 5;
+
+/** Per-victim throttle for synergy echo pulses. */
+const echoThrottle = new Map();
+/** Per-player throttle for the "◆ Synergy" action-bar / feedback cue. */
+const synProcAt = new Map();
 
 function state(player) {
   let value = players.get(player.id);
@@ -39,12 +56,80 @@ function cooldownKey(player, key) {
   return `${player.id}:${key}`;
 }
 
+/**
+ * Active synergy tier for the skill currently being processed. Set at the top of
+ * each `attunements()` loop iteration (and in activate()); reset to "none" when
+ * no authored skill number is being produced so field/helper DoT never scales.
+ */
+function synTier(player) {
+  try {
+    return state(player)._synTier ?? "none";
+  } catch {
+    return "none";
+  }
+}
+
+function setSyn(player, tier, affinityKey) {
+  try {
+    const st = state(player);
+    st._synTier = tier ?? "none";
+    if (affinityKey) st._synAffinity = affinityKey;
+  } catch {
+  }
+}
+
+function synAffinity(player) {
+  try {
+    return state(player)._synAffinity;
+  } catch {
+    return undefined;
+  }
+}
+
+/** true/false chance roll with the current skill's synergy bonus applied. */
+function synRoll(player, chance) {
+  return Math.random() < synChance(synTier(player), chance);
+}
+
+/** Throttled "◆ Synergy" cue on a primary-synergy proc. */
+function onSynergyProc(player, affinityKey) {
+  if (!player?.id) return;
+  const now = system.currentTick;
+  if ((synProcAt.get(player.id) ?? 0) > now) return;
+  synProcAt.set(player.id, now + 60);
+  action(player, "§a◆ Synergy§r");
+  playSynergyFeedback(player, affinityKey ?? synAffinity(player));
+}
+
+/** Half-power numeric follow-up ~15 ticks after a primary-synergy hit. */
+function scheduleEcho(player, victim, dealt, affinityKey) {
+  if (!victim?.id || dealt < 1) return;
+  const now = system.currentTick;
+  if ((echoThrottle.get(victim.id) ?? 0) > now) return;
+  const mods = synergyMods("primary");
+  echoThrottle.set(victim.id, now + mods.echoTicks);
+  const half = Math.max(1, Math.round(dealt * mods.echoMult));
+  const aff = affinityKey ?? synAffinity(player);
+  system.runTimeout(() => {
+    try {
+      guardBonusDamage(player, victim, 3);
+      victim.applyDamage(half, { cause: EntityDamageCause.magic, damagingEntity: player });
+    } catch {
+    }
+    playSynergyEchoFeedback(player, aff);
+  }, mods.echoTicks);
+}
+
 function isCooling(player, key) {
+  if (!areCooldownsEnabled(player)) return false;
   return system.currentTick < (cooldowns.get(cooldownKey(player, key)) ?? 0);
 }
 
 function startCooldown(player, key, ticks) {
-  cooldowns.set(cooldownKey(player, key), system.currentTick + Math.max(1, ticks));
+  if (!areCooldownsEnabled(player)) return;
+  // Primary synergy shortens the skill's own cooldown (key === skill key).
+  const tier = state(player).synergyByKey?.[key] ?? "none";
+  cooldowns.set(cooldownKey(player, key), system.currentTick + synCooldown(tier, ticks));
 }
 
 function location(entity, y = 0.7) {
@@ -81,10 +166,29 @@ function sound(player, id, pitch = 1, volume = 0.45) {
   }
 }
 
+/** Splash / potion shatter cue used by all alchemy-style skills. */
+function potionBreak(player, pitch = 1) {
+  sound(player, "random.glass", pitch, 0.9);
+  sound(player, "random.pop", Math.max(0.6, pitch * 0.85), 0.4);
+}
+
 function action(player, text) {
   try {
     player.onScreenDisplay.setActionBar(text);
   } catch {
+  }
+}
+
+function titleHint(player, title, subtitle = "") {
+  try {
+    player.onScreenDisplay.setTitle(title, {
+      fadeInDuration: 0,
+      stayDuration: 40,
+      fadeOutDuration: 10,
+      subtitle,
+    });
+  } catch {
+    action(player, subtitle ? `${title} §8· ${subtitle}` : title);
   }
 }
 
@@ -99,13 +203,15 @@ function health(entity) {
 function heal(player, amount) {
   const hp = health(player);
   if (!hp || amount <= 0) return 0;
+  // Custom heal numbers scale with primary synergy (never vanilla effects).
+  const want = synTier(player) === "primary" ? amount * synergyMods("primary").powerMult : amount;
   const before = hp.currentValue;
   try {
-    hp.setCurrentValue(Math.min(hp.effectiveMax, before + amount));
+    hp.setCurrentValue(Math.min(hp.effectiveMax, before + want));
   } catch {
     return 0;
   }
-  return Math.max(0, Math.min(amount, hp.effectiveMax - before));
+  return Math.max(0, Math.min(want, hp.effectiveMax - before));
 }
 
 function hunger(player) {
@@ -140,25 +246,34 @@ function selfDamage(player, amount) {
 
 function damage(player, victim, amount, cause = EntityDamageCause.override) {
   if (!victim || amount <= 0) return false;
+  // Custom damage numbers scale with primary synergy (never vanilla amplifiers).
+  const tier = synTier(player);
+  const scaled = tier === "primary" ? amount * synergyMods("primary").powerMult : amount;
   // Script damage is more reliable as whole hearts; keep at least 1.
-  const dealt = Math.max(1, Math.round(amount));
+  const dealt = Math.max(1, Math.round(scaled));
   guardBonusDamage(player, victim, 3);
+  let ok = false;
   try {
     victim.applyDamage(dealt, { cause, damagingEntity: player });
-    return true;
+    ok = true;
   } catch {
     try {
       victim.applyDamage(dealt, { cause: EntityDamageCause.entityAttack, damagingEntity: player });
-      return true;
+      ok = true;
     } catch {
       try {
         victim.applyDamage(dealt);
-        return true;
+        ok = true;
       } catch {
-        return false;
+        ok = false;
       }
     }
   }
+  if (ok && tier === "primary") {
+    onSynergyProc(player, synAffinity(player));
+    scheduleEcho(player, victim, dealt, synAffinity(player));
+  }
+  return ok;
 }
 
 function impulse(entity, vector) {
@@ -262,6 +377,16 @@ function isHostileTarget(entity, player) {
   const id = entity.typeId ?? "";
   if (NON_HOSTILE_TYPES.has(id)) return false;
   if (id.startsWith("relics:")) return false;
+  try {
+    if (
+      entity.hasTag?.("relics:thrall") ||
+      entity.hasTag?.("relics:friendly_thrall") ||
+      entity.hasTag?.("relics:siege_ward")
+    ) {
+      return false;
+    }
+  } catch {
+  }
   // Anything with a health bar that isn't on the exclude list counts —
   // cows/sheep are fine collateral for testing; combat focus is hostiles.
   return !!health(entity);
@@ -298,11 +423,16 @@ function playerById(id) {
 }
 
 function attunements(player) {
+  if (!isAttunementEnabled(player)) return [];
   const byConflict = new Map();
   const bySkill = new Map();
   for (const { slot, itemId, stack } of getEquippedAll(player)) {
     for (const effect of resolveAttuneEffects(player, stack)) {
+      const def = getRelicDef(itemId);
       const row = { ...effect, slot, itemId, stack };
+      // Primary synergy only when the stamped group is the relic's home path.
+      row.affinity = relicAffinity(def);
+      row.synergy = synergyTierForRelic(def, effect.group);
       const skillKey = `${effect.group}:${effect.key}`;
       const prior = bySkill.get(skillKey);
       if (!prior || prior.level < row.level) bySkill.set(skillKey, row);
@@ -313,7 +443,14 @@ function attunements(player) {
     const prior = byConflict.get(conflict);
     if (!prior || prior.level < row.level) byConflict.set(conflict, row);
   }
-  return [...byConflict.values()];
+  const rows = [...byConflict.values()];
+  // Map skill key → tier so the generic startCooldown() can discount primaries.
+  const synergyByKey = {};
+  for (const row of rows) {
+    if (row.synergy === "primary") synergyByKey[row.key] = "primary";
+  }
+  state(player).synergyByKey = synergyByKey;
+  return rows;
 }
 
 function findSkill(player, key) {
@@ -339,7 +476,7 @@ function setMark(owner, target, lane, value, duration = 160) {
     ...value,
     ownerId: owner.id,
     targetId: target.id,
-    expire: system.currentTick + duration,
+    expire: system.currentTick + synDuration(synTier(owner), duration),
   });
 }
 
@@ -370,7 +507,7 @@ function addField(player, kind, loc, level, duration, radius = 4, data = {}) {
     loc: { x: loc.x, y: loc.y, z: loc.z },
     level,
     radius,
-    expire: system.currentTick + duration,
+    expire: system.currentTick + synDuration(synTier(player), duration),
     nextTick: system.currentTick,
     ...data,
   });
@@ -423,6 +560,34 @@ function applySlow(entity, amplifier = 1, ticks = 40) {
   }
 }
 
+function applyResistance(entity, amplifier = 3, ticks = 100) {
+  try {
+    entity.addEffect("resistance", ticks, { amplifier, showParticles: true });
+    return true;
+  } catch {
+    try {
+      entity.addEffect("minecraft:resistance", ticks, { amplifier, showParticles: true });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}
+
+function ignite(entity, seconds) {
+  try {
+    entity.setOnFire(Math.max(1, Math.floor(seconds)), true);
+    return true;
+  } catch {
+    try {
+      entity.setOnFire(Math.max(1, Math.floor(seconds)));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}
+
 /** Iron golem ward for Siege Root — attacks hostiles and holds space. */
 function spawnSiegeWard(player, loc, durationTicks) {
   try {
@@ -442,46 +607,114 @@ function spawnSiegeWard(player, loc, durationTicks) {
   }
 }
 
-/** Visible bone thrall for Pale Conscription (tamed wolf, fallback armor stand). */
-function spawnBoneThrall(player) {
+/** Friendly script-driven wither thrall (Bone Thrall / Thanatoic army). */
+function spawnWitherThrall(player, offset = 0) {
+  const angle = offset * 1.25;
   const loc = {
-    x: player.location.x + 1.2,
+    x: player.location.x + Math.cos(angle) * (1.4 + offset * 0.35),
     y: player.location.y,
-    z: player.location.z,
+    z: player.location.z + Math.sin(angle) * (1.4 + offset * 0.35),
   };
   let entity;
   try {
-    entity = player.dimension.spawnEntity("minecraft:wolf", loc);
+    entity = player.dimension.spawnEntity("minecraft:wither_skeleton", loc);
   } catch {
     try {
-      entity = player.dimension.spawnEntity("minecraft:armor_stand", loc);
+      entity = player.dimension.spawnEntity("minecraft:skeleton", loc);
     } catch {
       return undefined;
     }
   }
   try {
-    entity.nameTag = "§5Bone Thrall";
+    entity.nameTag = "§8Bone Thrall";
     entity.addTag("relics:thrall");
+    entity.addTag("relics:friendly_thrall");
   } catch {
   }
   try {
-    const tameable = entity.getComponent("minecraft:tameable");
-    if (tameable && typeof tameable.tame === "function") tameable.tame(player);
+    entity.addEffect("resistance", 400, { amplifier: 1, showParticles: false });
   } catch {
   }
-  sound(player, "mob.wolf.whine", 1.2, 0.5);
   return entity?.id;
 }
 
+function thrallArmyCap(level) {
+  return Math.min(5, Math.max(1, level | 0));
+}
+
+function countBoneHelpers(ownerId) {
+  return helpers.filter((h) => h.ownerId === ownerId && h.kind === "bone").length;
+}
+
+function summonThrallArmy(player, level, duration = 400) {
+  const cap = thrallArmyCap(level);
+  let spawned = 0;
+  while (countBoneHelpers(player.id) < cap && spawned < cap) {
+    const entityId = spawnWitherThrall(player, countBoneHelpers(player.id) + spawned);
+    helpers.push({
+      ownerId: player.id,
+      dimId: player.dimension.id,
+      kind: "bone",
+      level,
+      expire: system.currentTick + duration,
+      nextAttack: system.currentTick,
+      angle: Math.random() * Math.PI * 2,
+      entityId,
+      focusId: state(player).focusTarget,
+    });
+    spawned += 1;
+  }
+  if (spawned > 0) {
+    sound(player, "mob.wither.spawn", 1.4, 0.35);
+    sound(player, "mob.skeleton.death", 0.7, 0.45);
+    titleHint(player, "§8Thanatoic Army", `§7${spawned} thrall${spawned > 1 ? "s" : ""} · 20s`);
+  }
+  return spawned;
+}
+
 function addHelper(player, kind, level, duration) {
-  for (let i = helpers.length - 1; i >= 0; i--) {
-    if (helpers[i].ownerId === player.id) {
-      removeTrackedEntity(helpers[i].entityId, helpers[i].dimId);
-      helpers.splice(i, 1);
+  if (kind !== "bone") {
+    for (let i = helpers.length - 1; i >= 0; i--) {
+      if (helpers[i].ownerId === player.id && helpers[i].kind !== "bone") {
+        removeTrackedEntity(helpers[i].entityId, helpers[i].dimId);
+        helpers.splice(i, 1);
+      }
+    }
+  } else {
+    while (countBoneHelpers(player.id) >= thrallArmyCap(level)) {
+      const idx = helpers.findIndex((h) => h.ownerId === player.id && h.kind === "bone");
+      if (idx < 0) break;
+      removeTrackedEntity(helpers[idx].entityId, helpers[idx].dimId);
+      helpers.splice(idx, 1);
     }
   }
+
   let entityId;
-  if (kind === "bone") entityId = spawnBoneThrall(player);
+  if (kind === "bone") entityId = spawnWitherThrall(player, countBoneHelpers(player.id));
+  if (kind === "phial") {
+    const colors = [
+      { name: "Healing", tint: { red: 0.95, green: 0.2, blue: 0.35, alpha: 1 }, effect: "heal" },
+      { name: "Harming", tint: { red: 0.45, green: 0.05, blue: 0.55, alpha: 1 }, effect: "harm" },
+      { name: "Poison", tint: { red: 0.25, green: 0.85, blue: 0.2, alpha: 1 }, effect: "poison" },
+      { name: "Slowness", tint: { red: 0.35, green: 0.45, blue: 0.95, alpha: 1 }, effect: "slow" },
+    ];
+    const pick = colors[Math.floor(Math.random() * colors.length)];
+    helpers.push({
+      ownerId: player.id,
+      dimId: player.dimension.id,
+      kind,
+      level,
+      expire: system.currentTick + duration,
+      nextAttack: system.currentTick,
+      angle: 0,
+      entityId,
+      phial: pick,
+    });
+    potionBreak(player, 1.1);
+    action(player, `§dPhial Familiar §8· §f${pick.name}`);
+    return;
+  }
+
   helpers.push({
     ownerId: player.id,
     dimId: player.dimension.id,
@@ -491,9 +724,11 @@ function addHelper(player, kind, level, duration) {
     nextAttack: system.currentTick,
     angle: 0,
     entityId,
+    focusId: state(player).focusTarget,
   });
   if (kind === "bone" && entityId) {
-    action(player, "§5Bone Thrall summoned");
+    sound(player, "mob.wither.shoot", 1.2, 0.4);
+    action(player, "§8Bone Thrall — wither skeleton");
   }
 }
 
@@ -589,18 +824,27 @@ function applyRivets(player, victim, row) {
   if (system.currentTick - (st.rivetTick ?? -100) > 30) st.rivets = 0;
   st.rivetTick = system.currentTick;
   st.rivets = (st.rivets ?? 0) + 1;
-  if (st.rivets < 3) {
-    action(player, `§cRivets ${st.rivets}/3`);
+  const count = st.rivets;
+  if (count === 1) {
+    sound(player, "note.pling", 0.9, 0.45);
+    action(player, "§cRivet §fding §8· §c1/3");
+    return;
+  }
+  if (count === 2) {
+    sound(player, "note.pling", 1.35, 0.65);
+    action(player, "§cRivet §eDING §8· §c2/3");
     return;
   }
   st.rivets = 0;
+  sound(player, "note.pling", 1.9, 1);
+  sound(player, "random.anvil_land", 1.15, 0.55);
+  action(player, "§cRivet §6BIGGER DING §8· §c3/3 §f— shockwave!");
   damage(player, victim, 1 + row.level);
-  sound(player, "random.anvil_land", 1.35, 0.35);
   if (row.level >= 2) {
     const dx = victim.location.x - player.location.x;
     const dz = victim.location.z - player.location.z;
     const length = Math.hypot(dx, dz) || 1;
-    impulse(victim, { x: (dx / length) * 0.45, y: 0.15, z: (dz / length) * 0.45 });
+    impulse(victim, { x: (dx / length) * 0.55, y: 0.2, z: (dz / length) * 0.55 });
   }
   if (row.level >= 3) {
     addField(player, "shatter", victim.location, row.level, 60, 3);
@@ -612,29 +856,59 @@ function applyCrosswind(player, victim, row) {
   if (!mark) {
     setMark(player, victim, "movement", { kind: "crosswind", level: row.level }, 120);
     particle(player.dimension, "minecraft:basic_smoke_particle", location(victim));
+    action(player, "§bCrosswind marked");
     return;
   }
   clearMark(player, victim, "movement");
   const view = forward(player);
-  const strength = 0.3 + row.level * 0.08;
-  impulse(victim, { x: -view.z * strength, y: 0.12, z: view.x * strength });
+  const strength = 0.85 + row.level * 0.22;
+  // Knock them the way you punch — along your look.
+  impulse(victim, {
+    x: view.x * strength,
+    y: Math.max(0.18, view.y * 0.35 + 0.12),
+    z: view.z * strength,
+  });
+  sound(player, "mob.enderdragon.flap", 1.55, 0.4);
+  action(player, "§bCrosswind gust!");
 }
 
 function applyVialmark(player, victim, row) {
-  const colors = ["Caustic", "Frost", "Spark"];
+  const palette = [
+    {
+      name: "Caustic",
+      ink: "§a",
+      tint: { red: 0.2, green: 0.85, blue: 0.15, alpha: 1 },
+      sound: "mob.witch.throw",
+    },
+    {
+      name: "Frost",
+      ink: "§b",
+      tint: { red: 0.35, green: 0.65, blue: 1, alpha: 1 },
+      sound: "random.glass",
+    },
+    {
+      name: "Spark",
+      ink: "§e",
+      tint: { red: 1, green: 0.85, blue: 0.2, alpha: 1 },
+      sound: "random.explode",
+    },
+  ];
   const st = state(player);
-  const color = colors[st.vialColor % colors.length];
-  st.vialColor = (st.vialColor + 1) % colors.length;
+  const pick = palette[st.vialColor % palette.length];
+  st.vialColor = (st.vialColor + 1) % palette.length;
   const prior = getMark(player, victim, "alchemy");
-  setMark(player, victim, "alchemy", { kind: "vial", color, level: row.level }, 160);
-  action(player, `§dVialmark: §f${color}`);
-  particle(player.dimension, "minecraft:mobspell_emitter", location(victim));
-  if (!prior || prior.color === color || isCooling(player, "vial_reaction")) return;
+  setMark(player, victim, "alchemy", { kind: "vial", color: pick.name, level: row.level }, 160);
+  action(player, `${pick.ink}Vialmark: ${pick.name}`);
+  particle(player.dimension, "minecraft:mobspell_emitter", location(victim), pick.tint);
+  sound(player, pick.sound, 1.2, 0.45);
+  potionBreak(player, 0.85 + st.vialColor * 0.15);
+  if (!prior || prior.color === pick.name || isCooling(player, "vial_reaction")) return;
   startCooldown(player, "vial_reaction", 40);
   damage(player, victim, 1.5 + row.level);
-  sound(player, "random.orb", 1.7, 0.4);
+  sound(player, "random.orb", 1.7, 0.5);
+  action(player, `§dReaction! §f${prior.color} §8+ ${pick.ink}${pick.name}`);
   if (row.level >= 3) addField(player, "reaction", victim.location, row.level, 60, 3);
-  if (row.level >= 4 && prior.color !== color) burst(player, victim.location, 1.5, 4, 5);
+  if (row.level >= 4 && prior.color !== pick.name) burst(player, victim.location, 1.5, 4, 5);
 }
 
 function fireArrow(player, attacker, level) {
@@ -688,9 +962,18 @@ function clearOneNegative(player) {
 
 export function handleAttuneAttack(player, victim, baseDamage, context = {}) {
   if (!player || !victim || context.isProjectile || isBonusDamageGuarded(player, victim)) return;
+  if (!isAttunementEnabled(player)) return;
+  setSyn(player, "none");
+  const stFocus = state(player);
+  stFocus.focusTarget = victim.id;
+  for (const helper of helpers) {
+    if (helper.ownerId === player.id && helper.kind === "bone") helper.focusId = victim.id;
+  }
+
   const weak = getMark(player, victim, "weak");
   if (weak) damage(player, victim, 0.5 + weak.level * 0.35);
   for (const row of attunements(player)) {
+    setSyn(player, row.synergy, row.affinity);
     switch (row.key) {
       case "scarbrand":
         applyScarbrand(player, victim, row);
@@ -729,7 +1012,7 @@ export function handleAttuneAttack(player, victim, baseDamage, context = {}) {
         }
         break;
       case "coinspin_hex":
-        if (Math.random() < 0.25 && !isCooling(player, row.key)) {
+        if (synRoll(player, 0.25) && !isCooling(player, row.key)) {
           startCooldown(player, row.key, row.def.cooldown);
           const st = state(player);
           if (Math.random() < 0.5) {
@@ -752,19 +1035,30 @@ export function handleAttuneAttack(player, victim, baseDamage, context = {}) {
         break;
       case "mimics_wager": {
         const hp = health(victim);
-        if (
+        // Attack hooks run after damage — treat "was full" as nearly full + this hit.
+        const wasFull =
           hp &&
-          hp.currentValue >= hp.effectiveMax &&
-          !getMark(player, victim, "bounty") &&
-          !isCooling(player, row.key)
-        ) {
+          (hp.currentValue + Math.max(0, baseDamage) >= hp.effectiveMax * 0.92 ||
+            hp.currentValue / Math.max(1, hp.effectiveMax) >= 0.9);
+        const existing = getMark(player, victim, "bounty");
+        if (existing?.kind === "wager" && row.level >= 3 && !existing.doubled) {
+          existing.doubled = true;
+          existing.expire = system.currentTick + 160;
+          action(player, "§6Mimic's Wager — DOUBLE OR NOTHING!");
+          sound(player, "mob.villager.haggle", 1.3, 0.5);
+          break;
+        }
+        if (wasFull && !existing && !isCooling(player, row.key)) {
           startCooldown(player, row.key, row.def.cooldown);
           setMark(player, victim, "bounty", {
             kind: "wager",
             level: row.level,
             failed: false,
+            doubled: false,
           }, 200);
-          action(player, "§6Mimic's Wager: 10 seconds");
+          particle(player.dimension, "minecraft:villager_happy", location(victim));
+          sound(player, "mob.villager.haggle", 0.9, 0.55);
+          titleHint(player, "§6Mimic's Wager", "§7Kill in 10s for a prize");
         }
         break;
       }
@@ -775,24 +1069,16 @@ export function handleAttuneAttack(player, victim, baseDamage, context = {}) {
         if (!getMark(player, victim, "death") && !isCooling(player, row.key)) {
           startCooldown(player, row.key, row.def.cooldown);
           setMark(player, victim, "death", { kind: "dirge", level: row.level }, 200);
-          particle(player.dimension, "minecraft:mobspell_emitter", location(victim));
+          particle(player.dimension, "minecraft:mobspell_emitter", location(victim), {
+            red: 0.15,
+            green: 0.05,
+            blue: 0.2,
+            alpha: 1,
+          });
+          sound(player, "mob.wither.hurt", 1.4, 0.35);
+          action(player, "§5Dirge Mark");
         }
         break;
-      case "thanatoic_ledger": {
-        const st = state(player);
-        const hp = health(victim);
-        if (
-          st.ledger > 0 &&
-          hp &&
-          hp.currentValue / Math.max(1, hp.effectiveMax) <= 0.2
-        ) {
-          st.ledger -= 1;
-          damage(player, victim, 3 + row.level);
-          if (row.level >= 2) heal(player, 2);
-          action(player, "§5Thanatoic Execute");
-        }
-        break;
-      }
       case "thunderbrand": {
         const branded = getMark(player, victim, "thunder");
         if (branded && !isCooling(player, row.key)) {
@@ -812,37 +1098,52 @@ export function handleAttuneAttack(player, victim, baseDamage, context = {}) {
           if (row.level >= 4) addField(player, "storm", victim.location, row.level, 60, 4);
         } else {
           const chance = row.def.chance + (row.level >= 2 ? 0.1 : 0);
-          if (Math.random() < chance) {
+          if (synRoll(player, chance)) {
             setMark(player, victim, "thunder", { kind: "thunder", level: row.level }, 160);
             particle(player.dimension, "minecraft:mobspell_emitter", location(victim));
+            action(player, "§eThunderbrand ready");
           }
         }
         break;
       }
       case "judgment_brand": {
-        const current = getMark(player, victim, "attack_brand");
+        // Separate mark type so Scarbrand / Thunderbrand can't steal the brand.
+        const current = getMark(player, victim, "judgment");
         const count = current?.kind === "judgment" ? current.count + 1 : 1;
         if (count >= 3) {
-          clearMark(player, victim, "attack_brand");
-          damage(player, victim, 1.5 + row.level);
+          clearMark(player, victim, "judgment");
+          damage(player, victim, 2 + row.level);
+          sound(player, "beacon.power", 1.2, 0.7);
+          sound(player, "random.orb", 0.6, 0.55);
+          particle(player.dimension, "minecraft:endrod", location(victim, 1));
+          particle(player.dimension, "minecraft:villager_happy", location(victim));
+          action(player, "§eJudgment Brand — light burst!");
           if (row.level >= 3) {
             const other = nearbyHostiles(player, victim.location, 4, 3).find((mob) => mob.id !== victim.id);
-            if (other) setMark(player, other, "attack_brand", { kind: "judgment", count: 1, level: row.level }, 160);
+            if (other) setMark(player, other, "judgment", { kind: "judgment", count: 1, level: row.level }, 160);
           }
-          particle(player.dimension, "minecraft:villager_happy", location(victim));
         } else {
-          setMark(player, victim, "attack_brand", { kind: "judgment", count, level: row.level }, 160);
+          setMark(player, victim, "judgment", { kind: "judgment", count, level: row.level }, 160);
+          sound(player, "note.pling", 0.8 + count * 0.35, 0.4);
+          action(player, `§eJudgment Brand §f${count}/3`);
         }
         break;
       }
     }
   }
+  setSyn(player, "none");
 
   const st = state(player);
   if (st.bloodTitheUntil >= system.currentTick && baseDamage > 0) {
-    const refund = Math.min(0.75, 0.2 + baseDamage * 0.08);
+    const refund = Math.min(1.25, 0.35 + baseDamage * 0.12);
     const earned = heal(player, refund);
     st.titheRefunded += earned;
+    particle(player.dimension, "minecraft:heart_particle", location(player, 1));
+    sound(player, "random.orb", 1.6, 0.3);
+    action(
+      player,
+      `§cSanguine Pact §8· §a+${(earned / 2).toFixed(1)}❤ §7(${Math.min(2, st.titheRefunded).toFixed(1)}/2)`
+    );
     const tithe = findSkill(player, "blood_tithe");
     if (tithe?.level >= 3 && earned < refund) {
       st.shield = Math.max(st.shield, refund - earned);
@@ -852,6 +1153,7 @@ export function handleAttuneAttack(player, victim, baseDamage, context = {}) {
 }
 
 export function handleAttuneHurtBefore(player, damageSource, incomingDamage = 0) {
+  if (!isAttunementEnabled(player)) return { cancel: false };
   const hp = health(player);
   if (!hp) return { cancel: false };
   const heartforge = findSkill(player, "heartforge");
@@ -874,6 +1176,7 @@ export function handleAttuneHurtBefore(player, damageSource, incomingDamage = 0)
 }
 
 export function handleAttuneHurtAfter(player, damageSource, amount) {
+  if (!isAttunementEnabled(player)) return;
   const attacker = damageSource?.damagingEntity;
   const st = state(player);
   st.lastHurt = system.currentTick;
@@ -884,7 +1187,9 @@ export function handleAttuneHurtAfter(player, damageSource, amount) {
     heal(player, restored);
   }
 
+  setSyn(player, "none");
   for (const row of attunements(player)) {
+    setSyn(player, row.synergy, row.affinity);
     switch (row.key) {
       case "quillguard":
         if (attacker && !isCooling(player, "attune_retaliate")) {
@@ -893,12 +1198,16 @@ export function handleAttuneHurtAfter(player, damageSource, amount) {
         }
         break;
       case "bastion_glyph":
-        if (amount >= 4 && !isCooling(player, row.key)) {
+        if (amount >= 2 && !isCooling(player, row.key)) {
           startCooldown(player, row.key, row.def.cooldown);
-          addField(player, "bastion", player.location, row.level, 120, 4, {
-            buffer: 2 + row.level,
+          // Protection IV-style ward (Resistance IV = amplifier 3).
+          applyResistance(player, 3, 100);
+          addField(player, "bastion", player.location, row.level, 140, 4, {
+            buffer: 3 + row.level,
           });
-          action(player, "§9Bastion Glyph");
+          sound(player, "beacon.activate", 1.1, 0.55);
+          particle(player.dimension, "minecraft:villager_happy", location(player));
+          titleHint(player, "§9Bastion Glyph", "§7Resistance IV · soak rune");
         }
         break;
       case "oathchain":
@@ -917,19 +1226,45 @@ export function handleAttuneHurtAfter(player, damageSource, amount) {
           startCooldown(player, "attune_retaliate", Math.max(RETALIATE_CD, row.def.cooldown));
           const hp = health(player);
           const low = hp && hp.currentValue < hp.effectiveMax / 2;
-          if (row.level === 1 || (row.level >= 3 && low)) {
-            heal(player, 1 + row.level * 0.5);
-            particle(player.dimension, "minecraft:heart_particle", location(player, 1));
-          } else {
-            damage(player, attacker, 1 + row.level);
-            particle(player.dimension, "minecraft:splash_spell_emitter", location(attacker));
-          }
+          // Prefer offensive retort — healing splash only when critically low / Epic both.
           if (row.level >= 4) {
             heal(player, 1);
-            damage(player, attacker, 2);
+            damage(player, attacker, 2 + row.level * 0.5);
+            try {
+              attacker.addEffect("wither", 60, { amplifier: 0, showParticles: true });
+            } catch {
+            }
+            particle(player.dimension, "minecraft:heart_particle", location(player, 1));
+            particle(player.dimension, "minecraft:splash_spell_emitter", location(attacker), {
+              red: 0.55,
+              green: 0.1,
+              blue: 0.65,
+              alpha: 1,
+            });
+          } else if (row.level === 1 || (row.level >= 3 && low)) {
+            heal(player, 1 + row.level * 0.35);
+            particle(player.dimension, "minecraft:heart_particle", location(player, 1));
+            particle(player.dimension, "minecraft:splash_spell_emitter", location(player), {
+              red: 0.95,
+              green: 0.25,
+              blue: 0.35,
+              alpha: 1,
+            });
+          } else {
+            damage(player, attacker, 1.5 + row.level);
+            try {
+              attacker.addEffect("wither", 40, { amplifier: 0, showParticles: true });
+            } catch {
+            }
+            particle(player.dimension, "minecraft:splash_spell_emitter", location(attacker), {
+              red: 0.45,
+              green: 0.05,
+              blue: 0.55,
+              alpha: 1,
+            });
           }
-          sound(player, "random.glass", 1, 0.6);
-          sound(player, "random.bow", 0.7, 0.4);
+          potionBreak(player, 1.05);
+          action(player, "§dWitchglass Retort");
         }
         break;
       case "lumen_chorus":
@@ -940,14 +1275,16 @@ export function handleAttuneHurtAfter(player, damageSource, amount) {
         }
         break;
       case "judgment_brand": {
-        const judgment = attacker && getMark(player, attacker, "attack_brand");
+        const judgment = attacker && getMark(player, attacker, "judgment");
         if (judgment?.kind === "judgment" && row.level >= 2) {
           damage(player, attacker, 0.75 + row.level * 0.25);
+          sound(player, "note.pling", 1.5, 0.35);
         }
         break;
       }
     }
   }
+  setSyn(player, "none");
 
   const bastion = fields.find(
     (field) =>
@@ -974,7 +1311,9 @@ function distance2(a, b) {
 export function handleAttuneKill(player, victim) {
   const st = state(player);
   const victimLoc = { ...victim.location };
+  setSyn(player, "none");
   for (const row of attunements(player)) {
+    setSyn(player, row.synergy, row.affinity);
     switch (row.key) {
       case "warhorn_discord":
         if (!isCooling(player, row.key)) {
@@ -997,14 +1336,17 @@ export function handleAttuneKill(player, victim) {
         if (wager?.kind === "wager") {
           clearMark(player, victim, "bounty");
           spawnFeeder(player, victimLoc);
-          if (wager.level >= 4 && Math.random() < 0.2) spawnFeeder(player, victimLoc);
-          action(player, "§6Wager won!");
+          if (wager.doubled) spawnFeeder(player, victimLoc);
+          if (wager.level >= 4 && Math.random() < 0.25) spawnFeeder(player, victimLoc);
+          sound(player, "random.levelup", 1.2, 0.55);
+          titleHint(player, "§6Wager won!", wager.doubled ? "§eDouble payout" : "§7Prize dropped");
         }
         break;
       }
       case "debt_of_plenty":
-        if (st.debtUntil >= system.currentTick && Math.random() < 0.08 + row.level * 0.03) {
+        if (st.debtUntil >= system.currentTick && synRoll(player, 0.12 + row.level * 0.04)) {
           spawnFeeder(player, victimLoc);
+          action(player, "§6Debt of Plenty §8· §eextra drop");
         }
         break;
       case "gilded_rumor":
@@ -1012,18 +1354,19 @@ export function handleAttuneKill(player, victim) {
         if (st.rumors >= 5) {
           st.rumors = 0;
           pendingDrops.set(player.id, {
-            expire: system.currentTick + 20,
+            expire: system.currentTick + 200,
             dimId: player.dimension.id,
             loc: victimLoc,
             level: row.level,
           });
-          action(player, "§6Gilded Rumor: next drop repeats");
+          sound(player, "random.orb", 1.5, 0.5);
+          titleHint(player, "§6Gilded Rumor", "§7Next mob drop duplicates");
         } else {
           action(player, `§6Rumors ${st.rumors}/5`);
         }
         break;
       case "symbiotic_seed":
-        if (Math.random() < row.def.chance) {
+        if (synRoll(player, row.def.chance)) {
           addField(player, "seed", victimLoc, row.level, 240, 1.4, {
             mature: system.currentTick + 100,
           });
@@ -1036,7 +1379,7 @@ export function handleAttuneKill(player, victim) {
             field.kind === "crucible" &&
             distance2(victimLoc, field.loc) <= field.radius * field.radius
         );
-        if (crucible && row.level >= 2 && Math.random() < 0.15) {
+        if (crucible && row.level >= 2 && synRoll(player, 0.15)) {
           spawnFeeder(player, victimLoc, "relics:arcane_dust");
         }
         break;
@@ -1045,7 +1388,20 @@ export function handleAttuneKill(player, victim) {
         const dirge = getMark(player, victim, "death");
         if (dirge?.kind === "dirge") {
           clearMark(player, victim, "death");
-          burst(player, victimLoc, 1 + row.level, 4, 5);
+          burst(player, victimLoc, 1.5 + row.level, 5, 6);
+          sound(player, "random.explode", 0.85, 0.75);
+          sound(player, "mob.wither.death", 1.3, 0.35);
+          particle(player.dimension, "minecraft:huge_explosion_emitter", {
+            x: victimLoc.x,
+            y: victimLoc.y + 0.5,
+            z: victimLoc.z,
+          });
+          particle(player.dimension, "minecraft:mobspell_emitter", {
+            x: victimLoc.x,
+            y: victimLoc.y + 0.8,
+            z: victimLoc.z,
+          }, { red: 0.2, green: 0.05, blue: 0.25, alpha: 1 });
+          action(player, "§5Dirge — soul burst!");
           if (row.level >= 2) {
             const next = nearbyHostiles(player, victimLoc, 5, 4)[0];
             if (next) setMark(player, next, "death", { kind: "dirge", level: row.level }, 160);
@@ -1065,22 +1421,36 @@ export function handleAttuneKill(player, victim) {
         if (row.level >= 3) addField(player, "grave", victimLoc, row.level, 80, 2.5);
         break;
       case "thanatoic_ledger":
-        st.ledger = Math.min(row.level >= 3 ? 2 : 1, st.ledger + 1);
+        st.ledger = Math.min(3, st.ledger + 1);
+        action(player, `§8Thanatoic Ledger §f${st.ledger}/3`);
+        if (st.ledger >= 3) {
+          st.ledger = 0;
+          summonThrallArmy(player, thrallArmyCap(row.level), 400);
+        }
         break;
-      case "lumen_chorus":
+      case "lumen_chorus": {
         st.notes = Math.min(3, st.notes + 1);
-        action(player, `§eChorus Notes ${st.notes}/3`);
+        const noteIds = ["note.harp", "note.pling", "note.bass", "note.hat", "note.flute"];
+        const noteId = noteIds[Math.floor(Math.random() * noteIds.length)];
+        const pitch = 0.55 + Math.random() * 1.35;
+        sound(player, noteId, pitch, st.notes >= 3 ? 1 : 0.55);
+        if (st.notes < 3) {
+          action(player, `§eChorus Note §f${st.notes}/3`);
+        }
         break;
+      }
       case "judgment_brand": {
-        const judgment = getMark(player, victim, "attack_brand");
+        const judgment = getMark(player, victim, "judgment");
         if (judgment?.kind === "judgment" && row.level >= 4) {
           burst(player, victimLoc, 2, 4, 5);
           heal(player, 1);
+          sound(player, "beacon.power", 1, 0.5);
         }
         break;
       }
     }
   }
+  setSyn(player, "none");
   // Context spends after charge grants this kill.
   tryContextAfterKill(player);
 }
@@ -1105,20 +1475,28 @@ export function handleAttuneItemSpawn(entity) {
       pendingDrops.delete(playerId);
       continue;
     }
-    if (pending.dimId !== entity.dimension.id || distance2(loc, pending.loc) > 16) continue;
+    if (pending.dimId !== entity.dimension.id || distance2(loc, pending.loc) > 100) continue;
     const player = playerById(playerId);
     if (!player) continue;
     try {
       const item = entity.getComponent("minecraft:item")?.itemStack;
       if (!item || item.typeId.startsWith("relics:")) continue;
-      player.dimension.spawnItem(item.clone(), {
-        x: loc.x + 0.2,
-        y: loc.y + 0.2,
-        z: loc.z,
+      const copy = new ItemStack(item.typeId, item.amount);
+      try {
+        if (typeof item.getLore === "function" && typeof copy.setLore === "function") {
+          copy.setLore(item.getLore());
+        }
+      } catch {
+      }
+      player.dimension.spawnItem(copy, {
+        x: loc.x + 0.35,
+        y: loc.y + 0.25,
+        z: loc.z + 0.15,
       });
       pendingDrops.delete(playerId);
-      sound(player, "random.orb", 1.7, 0.5);
-      if (pending.level >= 3 && Math.random() < 0.15) spawnFeeder(player, loc);
+      sound(player, "random.levelup", 1.4, 0.55);
+      action(player, "§6Gilded Rumor — drop duplicated!");
+      if (pending.level >= 3 && Math.random() < 0.2) spawnFeeder(player, loc);
       return;
     } catch {
     }
@@ -1126,7 +1504,7 @@ export function handleAttuneItemSpawn(entity) {
 }
 
 export function handleAttuneFoodUse(player, itemStack) {
-  if (!player || !itemStack) return;
+  if (!player || !itemStack || !isAttunementEnabled(player)) return;
   let isFood = false;
   try {
     isFood = !!itemStack.getComponent("minecraft:food");
@@ -1191,6 +1569,13 @@ function tryContextTick(player) {
     if (tithe) activate(player, tithe);
     const dawn = findSkill(player, "dawnwell");
     if (dawn) activate(player, dawn);
+  } else {
+    const hpNow = health(player);
+    // Marrow Swap also fires earlier so it feels responsive.
+    if (hpNow && hpNow.currentValue <= hpNow.effectiveMax * 0.65) {
+      const marrow = findSkill(player, "marrow_swap");
+      if (marrow) activate(player, marrow);
+    }
   }
 
   if (mobs.length >= 3) {
@@ -1216,6 +1601,7 @@ function tryContextOnHurt(player) {
 export function handleAttuneButton(player, button, stateName) {
   if (!player || String(stateName) !== "Pressed") return;
   if (String(button) !== "Jump") return;
+  if (!isAttunementEnabled(player)) return;
 
   let onGround = true;
   let sprinting = false;
@@ -1261,6 +1647,7 @@ export function handleAttuneButton(player, button, stateName) {
 function activate(player, row) {
   const st = state(player);
   if (isCooling(player, row.key)) return false;
+  setSyn(player, row.synergy, row.affinity);
   switch (row.key) {
     case "cracked_rib_pact":
       if (row.level < 3 || !selfDamage(player, 2)) return false;
@@ -1270,10 +1657,11 @@ function activate(player, row) {
       return true;
     case "siege_root": {
       startCooldown(player, row.key, row.def.cooldown);
-      const wardId = spawnSiegeWard(player, player.location, 140);
-      addField(player, "siege", player.location, row.level, 140, 6, { wardId });
+      const wardTicks = 300;
+      const wardId = spawnSiegeWard(player, player.location, wardTicks);
+      addField(player, "siege", player.location, row.level, wardTicks, 6, { wardId });
       sound(player, "random.anvil_land", 0.7, 0.45);
-      action(player, wardId ? "§9Siege Root — ward golem holds the line" : "§9Siege Root planted");
+      action(player, wardId ? "§9Siege Root — ward holds 15s" : "§9Siege Root planted");
       return true;
     }
     case "tempest_tithe": {
@@ -1318,31 +1706,36 @@ function activate(player, row) {
       startCooldown(player, row.key, row.def.cooldown);
       st.debtUntil = system.currentTick + 600;
       st.debtLevel = row.level;
-      action(player, "§6Debt of Plenty: 30 seconds");
+      st.debtWarned = false;
+      titleHint(player, "§6Debt of Plenty", "§7Fortune debt · 30s");
       return true;
     case "marrow_swap":
       if (!spendHunger(player, 2)) return false;
-      startCooldown(player, row.key, row.def.cooldown);
-      heal(player, row.level >= 2 ? 3 : 2);
+      startCooldown(player, row.key, Math.max(60, Math.floor(row.def.cooldown * 0.35)));
+      heal(player, row.level >= 2 ? 5 : 4);
       particle(player.dimension, "minecraft:heart_particle", location(player, 1));
+      sound(player, "random.orb", 1.35, 0.45);
+      action(player, "§aMarrow Swap — hunger for health");
       return true;
     case "blood_tithe":
       if (!selfDamage(player, 2)) return false;
       startCooldown(player, row.key, row.def.cooldown);
-      st.bloodTitheUntil = system.currentTick + 120;
+      st.bloodTitheUntil = system.currentTick + 160;
       st.titheRefunded = 0;
       if (row.level >= 2) clearOneNegative(player);
-      action(player, "§aBlood Tithe: earn it back");
+      particle(player.dimension, "minecraft:heart_particle", location(player, 1));
+      sound(player, "mob.zombie.unfect", 1.2, 0.5);
+      titleHint(player, "§cSanguine Pact", "§7Strike to reclaim your heart");
       return true;
     case "crucible_bloom":
       startCooldown(player, row.key, row.def.cooldown);
-      addField(player, "crucible", player.location, row.level, 120, 4);
-      action(player, "§dCrucible Bloom");
+      addField(player, "crucible", player.location, row.level, 140, 4);
+      potionBreak(player, 0.9);
+      action(player, "§6Crucible Bloom — foes catch fire");
       return true;
     case "phial_familiar":
       startCooldown(player, row.key, row.def.cooldown);
       addHelper(player, "phial", row.level, 300);
-      action(player, "§dPhial Familiar called");
       return true;
     case "corpse_lantern":
       if (st.souls < 3) {
@@ -1378,18 +1771,26 @@ function activate(player, row) {
       return true;
     case "dawnwell":
       startCooldown(player, row.key, row.def.cooldown);
-      addField(player, "dawnwell", player.location, row.level, 120, 5);
-      action(player, "§eDawnwell");
+      addField(player, "dawnwell", player.location, row.level, 140, 5);
+      sound(player, "beacon.activate", 1.35, 0.55);
+      sound(player, "random.orb", 0.7, 0.5);
+      particle(player.dimension, "minecraft:heart_particle", location(player, 1));
+      titleHint(player, "§cDawnwell", "§7Healing light");
       return true;
     case "lumen_chorus":
       if (st.notes < 3) return false;
       st.notes = 0;
       startCooldown(player, row.key, row.def.cooldown);
-      for (const mob of nearbyHostiles(player, player.location, 7, 8)) {
-        setMark(player, mob, "attack_brand", { kind: "judgment", count: 1, level: row.level }, 160);
+      // Loud third note + humming damage ticks — no flashy spell particles.
+      sound(player, "note.pling", 0.5 + Math.random(), 1);
+      sound(player, "note.bass", 0.4 + Math.random() * 0.6, 1);
+      st.chorusHumUntil = system.currentTick + 100;
+      st.chorusLevel = row.level;
+      for (const mob of nearbyHostiles(player, player.location, 8, 10)) {
+        damage(player, mob, 1.5 + row.level * 0.75);
       }
       if (row.level >= 4) addHelper(player, "seraph", row.level, 120);
-      action(player, "§eLumen Chorus!");
+      action(player, "§eLumen Chorus — the third note!");
       return true;
   }
   return false;
@@ -1452,6 +1853,8 @@ export function debugForceActivate(player) {
 }
 
 function tickField(field, owner) {
+  // Field DoT is not authored synergy power — keep it at baseline.
+  setSyn(owner, "none");
   if (field.kind === "seed") {
     const mature = system.currentTick >= field.mature;
     if (distance2(owner.location, field.loc) <= field.radius * field.radius) {
@@ -1507,12 +1910,21 @@ function tickField(field, owner) {
       }
       break;
     case "crucible":
-      for (const mob of mobs) damage(owner, mob, 0.75 + field.level * 0.35);
+      for (const mob of mobs) {
+        damage(owner, mob, 0.75 + field.level * 0.35);
+        ignite(mob, 2 + field.level);
+      }
+      particle(owner.dimension, "minecraft:basic_flame_particle", {
+        x: field.loc.x,
+        y: field.loc.y + 0.3,
+        z: field.loc.z,
+      });
       break;
     case "dawnwell":
     case "blossom":
       if (distance2(owner.location, field.loc) <= field.radius * field.radius) {
-        heal(owner, 0.5);
+        heal(owner, 0.65);
+        if (system.currentTick % 20 === 0) sound(owner, "random.orb", 1.4, 0.25);
       }
       if (field.level >= 3) {
         try {
@@ -1520,7 +1932,7 @@ function tickField(field, owner) {
             location: field.loc,
             maxDistance: field.radius,
           }).slice(0, 4)) {
-            if (ally.id !== owner.id) heal(ally, 0.25);
+            if (ally.id !== owner.id) heal(ally, 0.3);
           }
         } catch {
         }
@@ -1528,42 +1940,80 @@ function tickField(field, owner) {
       for (const mob of mobs) {
         damage(owner, mob, isUndead(mob) && field.level >= 2 ? 1.5 : 0.5);
       }
+      particle(owner.dimension, "minecraft:heart_particle", {
+        x: field.loc.x,
+        y: field.loc.y + 0.35,
+        z: field.loc.z,
+      });
+      particle(owner.dimension, "minecraft:mobspell_emitter", {
+        x: field.loc.x,
+        y: field.loc.y + 0.2,
+        z: field.loc.z,
+      }, { red: 0.95, green: 0.2, blue: 0.25, alpha: 1 });
       break;
   }
-  particle(owner.dimension, field.kind === "storm" ? "minecraft:basic_smoke_particle" : "minecraft:splash_spell_emitter", {
-    x: field.loc.x,
-    y: field.loc.y + 0.2,
-    z: field.loc.z,
-  });
+  if (field.kind !== "dawnwell" && field.kind !== "blossom" && field.kind !== "crucible") {
+    particle(owner.dimension, field.kind === "storm" ? "minecraft:basic_smoke_particle" : "minecraft:splash_spell_emitter", {
+      x: field.loc.x,
+      y: field.loc.y + 0.2,
+      z: field.loc.z,
+    });
+  }
 }
 
 function tickHelper(helper, owner) {
+  // Helper/thrall damage is not authored synergy power — keep it at baseline.
+  setSyn(owner, "none");
   helper.angle += 0.7;
   const loc = {
     x: owner.location.x + Math.cos(helper.angle) * 1.2,
     y: owner.location.y + 1.2,
     z: owner.location.z + Math.sin(helper.angle) * 1.2,
   };
-  particle(
-    owner.dimension,
-    helper.kind === "bone" ? "minecraft:mobspell_emitter" : "minecraft:splash_spell_emitter",
-    loc
-  );
 
-  // Keep summoned thrall near the owner.
+  if (helper.kind === "phial") {
+    const tint = helper.phial?.tint ?? SPELL_TINT;
+    particle(owner.dimension, "minecraft:splash_spell_emitter", loc, tint);
+    particle(owner.dimension, "minecraft:mobspell_emitter", loc, tint);
+  } else if (helper.kind === "bone") {
+    particle(owner.dimension, "minecraft:basic_smoke_particle", loc);
+  } else {
+    particle(owner.dimension, "minecraft:splash_spell_emitter", loc);
+  }
+
+  // Keep summoned thrall near the owner / focus target.
   if (helper.entityId) {
     const thrall = findEntityById(helper.entityId);
     if (!thrall) {
       helper.entityId = undefined;
     } else {
       try {
-        const dx = owner.location.x - thrall.location.x;
-        const dz = owner.location.z - thrall.location.z;
-        if (dx * dx + dz * dz > 100) {
+        let tx = owner.location.x;
+        let ty = owner.location.y;
+        let tz = owner.location.z;
+        const focus = helper.focusId ? findEntityById(helper.focusId) : undefined;
+        if (focus && focus.isValid !== false) {
+          tx = focus.location.x;
+          ty = focus.location.y;
+          tz = focus.location.z;
+        }
+        const dx = tx - thrall.location.x;
+        const dy = ty - thrall.location.y;
+        const dz = tz - thrall.location.z;
+        const dist2 = dx * dx + dz * dz;
+        if (dist2 > 4) {
+          const len = Math.hypot(dx, dy, dz) || 1;
+          impulse(thrall, {
+            x: (dx / len) * 0.45,
+            y: Math.max(-0.05, (dy / len) * 0.2),
+            z: (dz / len) * 0.45,
+          });
+        }
+        if (dist2 > 220) {
           thrall.teleport({
-            x: owner.location.x + 1,
-            y: owner.location.y,
-            z: owner.location.z,
+            x: tx + (Math.random() - 0.5),
+            y: ty,
+            z: tz + (Math.random() - 0.5),
           });
         }
       } catch {
@@ -1572,23 +2022,79 @@ function tickHelper(helper, owner) {
   }
 
   if (system.currentTick < helper.nextAttack) return;
-  helper.nextAttack = system.currentTick + 20;
-  const mobs = nearbyHostiles(owner, owner.location, 10, 8);
+  helper.nextAttack = system.currentTick + (helper.kind === "bone" ? 12 : 20);
+
+  if (helper.kind === "phial") {
+    const mobs = nearbyHostiles(owner, owner.location, 10, 8);
+    if (!mobs.length) return;
+    const target = mobs[0];
+    const effect = helper.phial?.effect ?? "harm";
+    const name = helper.phial?.name ?? "Phial";
+    if (effect === "heal") {
+      heal(owner, 1 + helper.level * 0.35);
+    } else if (effect === "slow") {
+      applySlow(target, 1 + Math.min(2, helper.level), 60);
+      damage(owner, target, 0.75 + helper.level * 0.35);
+    } else if (effect === "poison") {
+      try {
+        target.addEffect("poison", 60, { amplifier: Math.min(2, helper.level), showParticles: true });
+      } catch {
+      }
+      damage(owner, target, 0.75 + helper.level * 0.35);
+    } else {
+      damage(owner, target, 1.25 + helper.level * 0.5);
+    }
+    particle(owner.dimension, "minecraft:splash_spell_emitter", location(target), helper.phial?.tint);
+    potionBreak(owner, 1.15);
+    action(owner, `§dPhial §8· §f${name}`);
+    // Alternate color next throw at higher levels.
+    if (helper.level >= 2) {
+      const colors = [
+        { name: "Healing", tint: { red: 0.95, green: 0.2, blue: 0.35, alpha: 1 }, effect: "heal" },
+        { name: "Harming", tint: { red: 0.45, green: 0.05, blue: 0.55, alpha: 1 }, effect: "harm" },
+        { name: "Poison", tint: { red: 0.25, green: 0.85, blue: 0.2, alpha: 1 }, effect: "poison" },
+        { name: "Slowness", tint: { red: 0.35, green: 0.45, blue: 0.95, alpha: 1 }, effect: "slow" },
+      ];
+      helper.phial = colors[Math.floor(Math.random() * colors.length)];
+    }
+    return;
+  }
+
+  const mobs = nearbyHostiles(owner, owner.location, 12, 8);
   if (!mobs.length) return;
-  const target = helper.kind === "seraph"
-    ? mobs.sort((a, b) => (health(b)?.currentValue ?? 0) - (health(a)?.currentValue ?? 0))[0]
-    : mobs[0];
-  damage(owner, target, 1 + helper.level * 0.5);
-  particle(owner.dimension, "minecraft:mobspell_emitter", location(target));
+  let target = mobs[0];
+  if (helper.focusId) {
+    const focused = mobs.find((m) => m.id === helper.focusId) ?? findEntityById(helper.focusId);
+    if (focused) target = focused;
+  }
+  if (helper.kind === "seraph") {
+    target = mobs.sort((a, b) => (health(b)?.currentValue ?? 0) - (health(a)?.currentValue ?? 0))[0];
+  }
+  damage(owner, target, 1.25 + helper.level * 0.55);
+  if (helper.kind === "bone") {
+    particle(owner.dimension, "minecraft:critical_hit_emitter", location(target));
+  } else {
+    particle(owner.dimension, "minecraft:mobspell_emitter", location(target));
+  }
 }
 
-export function tickAttunementRuntime() {
+/**
+ * @param {(player: import("@minecraft/server").Player) => boolean} [isUiOpen]
+ *        When true for a player, skip their expensive field/helper/status ticks.
+ */
+export function tickAttunementRuntime(isUiOpen) {
   const now = system.currentTick;
+  const uiClosed = (player) => !(typeof isUiOpen === "function" && player && isUiOpen(player));
+
+  if (now % 200 === 0) {
+    for (const [id, until] of echoThrottle) if (until < now) echoThrottle.delete(id);
+  }
+
   for (const [key, row] of marks) {
     if (row.expire >= now) continue;
     if (row.kind === "wager" && !row.failed) {
       const owner = playerById(row.ownerId);
-      if (owner) {
+      if (owner && uiClosed(owner)) {
         spendHunger(owner, 2);
         action(owner, "§7Mimic's Wager lost");
       }
@@ -1611,6 +2117,7 @@ export function tickAttunementRuntime() {
       fields.splice(i, 1);
       continue;
     }
+    if (!uiClosed(owner)) continue;
     tickField(field, owner);
   }
 
@@ -1627,22 +2134,43 @@ export function tickAttunementRuntime() {
       helpers.splice(i, 1);
       continue;
     }
+    if (!uiClosed(owner)) continue;
     tickHelper(helper, owner);
   }
 
   for (const player of world.getPlayers()) {
+    if (!uiClosed(player)) continue;
+    setSyn(player, "none");
     const st = state(player);
-    if (
-      st.debtUntil >= now &&
-      now % 40 === 0 &&
-      !spendHunger(player, 1)
-    ) {
-      st.debtUntil = now - 1;
+    if (st.debtUntil >= now) {
+      const secs = Math.ceil((st.debtUntil - now) / 20);
+      if (now % 20 === 0) {
+        action(player, `§6Debt of Plenty §8· §e${secs}s §7fortune debt`);
+        particle(player.dimension, "minecraft:villager_happy", location(player, 1.2));
+      }
+      if (now % 40 === 0 && !spendHunger(player, 1)) {
+        st.debtUntil = now - 1;
+      }
     }
     if (st.debtUntil && st.debtUntil < now) {
       st.debtUntil = 0;
       if (st.debtLevel >= 3) selfDamage(player, 2);
       action(player, "§6Debt of Plenty came due");
+    }
+    if (st.chorusHumUntil >= now) {
+      if (now % 8 === 0) {
+        const noteIds = ["note.harp", "note.bass", "note.pling"];
+        sound(player, noteIds[Math.floor(Math.random() * noteIds.length)], 0.5 + Math.random(), 0.35);
+        for (const mob of nearbyHostiles(player, player.location, 7, 6)) {
+          damage(player, mob, 0.35 + (st.chorusLevel ?? 1) * 0.15);
+        }
+      }
+    } else if (st.chorusHumUntil && st.chorusHumUntil < now) {
+      st.chorusHumUntil = 0;
+    }
+    if (st.bloodTitheUntil >= now && now % 20 === 0) {
+      const left = Math.ceil((st.bloodTitheUntil - now) / 20);
+      action(player, `§cSanguine Pact §8· §7${left}s to reclaim`);
     }
     if (st.tempestLanding && (player.isOnGround || st.tempestLanding.expire < now)) {
       const landing = st.tempestLanding;
@@ -1664,6 +2192,7 @@ export function tickAttunementRuntime() {
 export function clearAttunementRuntime(playerId) {
   players.delete(playerId);
   pendingDrops.delete(playerId);
+  synProcAt.delete(playerId);
   for (const [key, row] of marks) {
     if (row.ownerId === playerId) marks.delete(key);
   }

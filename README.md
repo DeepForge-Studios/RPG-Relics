@@ -2,7 +2,7 @@
 
 **DeepForge Studios** · Minecraft Bedrock Edition add-on
 
-Equip magical relics in a portable **Reliquary** wardrobe, lean into Boost playstyles, and deepen power at the **Attunement Forge**.
+Equip magical relics in a portable **Reliquary** wardrobe, lean into **Affinity** class playstyles, and deepen power at the **Attunement Forge**.
 
 **Wiki:** [deepforge-studios.github.io/RPG-Relics](https://deepforge-studios.github.io/RPG-Relics/)
 
@@ -14,10 +14,10 @@ Equip magical relics in a portable **Reliquary** wardrobe, lean into Boost plays
 ## Features
 
 - **Reliquary wardrobe** — equip relics across face, head, necklace, ring, charm, back, body, belt, hands, and feet
-- **Boost Codex** — Might, Ward, Gale, Fortune, Vitality, Alchemy from your loadout
+- **Affinity Codex** — Might, Ward, Gale, Fortune, Vitality, Alchemy from your loadout
 - **Attunement Forge** — bind skills to relics, wear them to grow, unlock deeper ranks
 - **World finds** — towers, witch homes, underground camps, mimics, archaeology, and rare drops
-- **Relic Forge** — crafts, shards, materials, and ascended fusions
+- **Relic Forge** — crafts, Arcane Dust, materials, and ascended fusions
 - **Achievement-friendly** — stable Script API only; no Beta APIs / Experiments required
 
 ---
@@ -33,7 +33,7 @@ Equip magical relics in a portable **Reliquary** wardrobe, lean into Boost plays
 
 ## Getting started
 
-On first join you receive a **Relic Tome**, **Relic Crate**, **Attunement Codex**, starter relics (**Nightwatch Goggles**, **Heartward Ring**), shards, and craft materials.
+On first join you receive a **Relic Tome**, **Relic Crate**, **Attunement Codex**, starter relics (**Nightwatch Goggles**, **Heartward Ring**), Arcane Dust, and craft materials.
 
 | Action | How |
 |--------|-----|
@@ -42,12 +42,12 @@ On first join you receive a **Relic Tome**, **Relic Crate**, **Attunement Codex*
 | Perform rituals | Place an **Attunement Forge** and tap it |
 | Guide & settings | Use the **Relic Tome** |
 
-### Boosts
+### Affinity
 
-Equipped relics add Boost power by rarity (common 1 · uncommon 2 · rare/ascended 3). Your strongest style becomes active:
+Equipped relics add Affinity power by rarity (common 1 · uncommon 2 · rare/ascended 3). Your strongest class becomes active:
 
-| Boost | Effect |
-|-------|--------|
+| Affinity | Effect |
+|----------|--------|
 | Might | Bonus damage on repeated attacks |
 | Ward | Chance to deflect melee hits |
 | Gale | Sprint bursts of speed |
@@ -62,6 +62,7 @@ Chests, towers, underground camps, mimics, archaeology, and rare mob drops.
 ### Craft
 
 - **Relic Forge** — crafting table + book + 2 amethyst shards + deepslate bricks
+- **Attunement Forge** — 3 iron / 2 amethyst + iron / 3 deepslate bricks
 - Materials drop from hostiles: Monster Heart, Beast Fang, Arcane Gem, Mystic Herb, Silver Fragment, Crimson Crystal
 - Ascended fusions combine two relics + a catalyst at the Relic Forge
 
@@ -91,12 +92,12 @@ Cheats required. Prefer the in-game items above for normal play.
 ./build_mcaddon.ps1
 ```
 
-Creates `curio_relics.mcaddon` (behavior + resource packs).
+Creates `rpg_relics.mcaddon` (behavior + resource packs). Each run stamps a visible test label (`v.NN`) into the pack name so you know when to reimport.
 
 ```
 BP/     Behavior pack (scripts, items, loot, structures)
 RP/     Resource pack (textures, UI, models)
-docs/   Credits
+docs/   Credits, CurseForge draft, theme notes
 ```
 
 ---
@@ -106,6 +107,7 @@ docs/   Credits
 | Doc | Contents |
 |-----|----------|
 | [Credits](docs/CREDITS.md) | Third-party art attribution |
+| [CurseForge description](docs/CURSEFORGE_DESCRIPTION.md) | Paste-ready store listing |
 
 ---
 

@@ -23,7 +23,12 @@ import {
   rollRitualAttunement,
   describeAttunement,
   eligibleAttunements,
+  allowedAttuneGroups,
+  relicAffinity,
+  affinityClassLabel,
+  primaryAttuneGroup,
 } from "./attune_pool.js";
+import { playSynergyForgeFeedback } from "./attune_synergy.js";
 import {
   SECOND_SLOT_LEVEL,
   MAX_SLOTS,
@@ -36,6 +41,7 @@ import {
 } from "./attune_data.js";
 import {
   Ink,
+  BoostInk,
   paint,
   uiAccentTitle,
   uiBack,
@@ -43,6 +49,7 @@ import {
   uiDim,
   uiMuted,
 } from "./theme.js";
+import { isAttunementEnabled } from "./settings.js";
 
 /** Player-facing name — change this string to rebrand the menu. */
 export const ATTUNEMENT_NAME = "Attunement Forge";
@@ -51,12 +58,34 @@ export const ATTUNEMENT_NAME = "Attunement Forge";
 export const ATTUNEMENT_EVENT = "relics:attune";
 
 const openForms = new Set();
+/** Players who requested a forge open this tick — pauses heavy runtime without blocking the form. */
+const pendingOpen = new Set();
+
+/** Pause heavy ticks as soon as a forge/codex open is requested. */
+export function markAttunementPending(player) {
+  if (player?.id) pendingOpen.add(player.id);
+}
+
+function show(form, player) {
+  pendingOpen.delete(player.id);
+  openForms.add(player.id);
+  return form.show(player).then(
+    (result) => {
+      openForms.delete(player.id);
+      return result;
+    },
+    () => {
+      openForms.delete(player.id);
+      return { canceled: true };
+    }
+  );
+}
 
 const MATERIAL_NAMES = Object.freeze({
-  "relics:relic_shard": "Relic Shard",
+  "relics:relic_shard": "Arcane Dust",
   "relics:monster_heart": "Monster Heart",
   "relics:beast_fang": "Beast Fang",
-  "relics:arcane_dust": "Arcane Dust",
+  "relics:arcane_dust": "Arcane Gem",
   "relics:mystic_herb": "Mystic Herb",
   "relics:silver_fragment": "Silver Fragment",
   "relics:crimson_crystal": "Crimson Crystal",
@@ -134,20 +163,6 @@ function inventoryRelics(player) {
     }
   }
   return relics;
-}
-
-function show(form, player) {
-  openForms.add(player.id);
-  return form.show(player).then(
-    (result) => {
-      openForms.delete(player.id);
-      return result;
-    },
-    () => {
-      openForms.delete(player.id);
-      return { canceled: true };
-    }
-  );
 }
 
 function currentRelic(player, slot, expectedTypeId) {
@@ -258,10 +273,10 @@ function showMaterialGuide(player, back) {
     (id) => `${paint(Ink.highlight, materialName(id))}: ${MATERIAL_SOURCES[id]}`
   );
   const form = new ActionFormData()
-    .title(uiAccentTitle("Affinity & Drop Guide"))
+    .title(uiAccentTitle("Attunement Paths & Drops"))
     .body(
       [
-        "A focus material has no affinity by itself. Its pair chooses the group.",
+        "A focus material has no attune path by itself. Its pair chooses the path.",
         "",
         ...recipeLines,
         "",
@@ -282,7 +297,7 @@ function showRelicPicker(player, back) {
         "Choose the exact relic you want to attune.",
         uiMuted("Each copy keeps its own level and gifts."),
         "",
-        uiDim("Next: choose an affinity. Every affinity shows its exact two-material recipe."),
+        uiDim("Next: choose an attune path. Every path shows its exact two-material recipe."),
       ].join("\n")
     : [
         paint(Ink.bad, "No relics found in your inventory."),
@@ -310,7 +325,7 @@ function showRelicPicker(player, back) {
       relicIconPath(row.stack.typeId)
     );
   }
-  form.button(paint(Ink.highlight, "Affinity & Drop Guide"), materialIcon(SHARD_ID));
+  form.button(paint(Ink.highlight, "Attunement Paths & Drops"), materialIcon(SHARD_ID));
   form.button(back ? uiBack() : uiClose());
 
   show(form, player).then((res) => {
@@ -349,20 +364,31 @@ function showAffinityPicker(player, relicSlot, relicTypeId, back) {
   const def = getRelicDef(relicTypeId);
   const prog = getAttuneProgress(player, stack);
   const shards = countItem(player, SHARD_ID);
+  const groups = allowedAttuneGroups(relicTypeId);
+  const affinityKey = relicAffinity(def);
+  const primary = primaryAttuneGroup(affinityKey);
+  // Class path first, then Synergy (primary) — matches tooltip order.
+  const pathOrder = [...groups].sort((a, b) => Number(a === primary) - Number(b === primary));
   const form = new ActionFormData()
     .title(uiAccentTitle(def?.displayName ?? ATTUNEMENT_NAME))
     .body(
       [
         slotStatus(prog),
         "",
-        `${paint(Ink.highlight, "Relic Shards:")} ${shards}`,
-        uiMuted("Choose an affinity. Materials and costs show on the next screen."),
+        `${paint(BoostInk[affinityKey] ?? Ink.purple, `Class: ${affinityClassLabel(affinityKey)}`)}`,
+        `${paint(Ink.highlight, "Arcane Dust:")} ${shards}`,
+        uiMuted("Pick a path to Forge."),
+        uiMuted("Class = Affinity. ◆ Synergy = primary path (stronger effects, −1 dust)."),
       ].join("\n")
     );
 
-  for (const group of GROUP_ORDER) {
+  for (const group of pathOrder) {
+    const tag =
+      group === primary
+        ? paint(Ink.good, "(◆ Synergy — primary)")
+        : paint(Ink.muted, "(Class path)");
     form.button(
-      `${paint(groupInk(group), GROUP_LABELS[group])}\n§7${GROUP_TAGLINE[group]}§r`,
+      `${paint(groupInk(group), GROUP_LABELS[group])} ${tag}\n§7${GROUP_TAGLINE[group]}§r`,
       materialIcon(FOCUS_RECIPES[group][0])
     );
   }
@@ -370,11 +396,11 @@ function showAffinityPicker(player, relicSlot, relicTypeId, back) {
 
   show(form, player).then((res) => {
     if (res.canceled || res.selection === undefined) return;
-    if (res.selection >= GROUP_ORDER.length) {
+    if (res.selection >= pathOrder.length) {
       showRelicPicker(player, back);
       return;
     }
-    showRarityPicker(player, relicSlot, relicTypeId, GROUP_ORDER[res.selection], back);
+    showRarityPicker(player, relicSlot, relicTypeId, pathOrder[res.selection], back);
   });
 }
 
@@ -394,7 +420,7 @@ function rollChanceText(eligibleCount) {
 const GLOSSARY = [
   ["sneak + jump", "Movement skills use Jump: sprint-jump for Tempest Tithe, midair jump for Gale Anchor."],
   ["wager", "Wager: a timed bet — kill the target before the timer ends to win the prize."],
-  ["catalyst", "Catalyst: a monster drop used at the Forge (Hearts, Fangs, Dust, Herbs, Silver, Crystals)."],
+  ["catalyst", "Catalyst: a monster drop used at the Forge (Hearts, Fangs, Gems, Herbs, Silver, Crystals)."],
   ["marked weak", "Marked Weak: that enemy briefly takes extra damage from your hits."],
   ["brand", "Brand: a glowing mark on an enemy. Hitting them again \"breaks\" it and triggers the effect."],
   ["soul charge", "Soul Charge: banked from kills. Three charges fire Corpse Lantern or Pale Conscription."],
@@ -502,7 +528,7 @@ function showRarityPicker(player, relicSlot, relicTypeId, group, back) {
         paint(Ink.gold, "Your materials"),
         `${materialName(focusA)}: ${counts.a}`,
         `${materialName(focusB)}: ${counts.b}`,
-        `Relic Shards: ${counts.shards}`,
+        `Arcane Dust: ${counts.shards}`,
         "",
         uiMuted("Pick a tier. Higher tiers unlock more of the skill."),
       ].join("\n")
@@ -512,16 +538,18 @@ function showRarityPicker(player, relicSlot, relicTypeId, group, back) {
     `${paint(Ink.highlight, `View ${GROUP_LABELS[group]} Skills`)}\n§7What you can roll & the odds§r`,
     relicIconPath("relics:relic_guidebook")
   );
+  const primaryPath = isPrimaryPath(relicTypeId, group);
   for (const rarity of RARITY_ORDER) {
     const cost = RITUAL_COSTS[rarity];
+    const shards = shardCostFor(relicTypeId, group, rarity);
     const cap = RARITY[rarity].cap;
     const ready =
-      counts.shards >= cost.shards && counts.a >= cost.focus && counts.b >= cost.focus;
+      counts.shards >= shards && counts.a >= cost.focus && counts.b >= cost.focus;
     form.button(
       `${RARITY[rarity].ink}${RARITY[rarity].label} · Powers ${
         cap === 1 ? "I" : `I-${TIER_NUMERALS[cap - 1]}`
       }${Ink.reset}\n` +
-        `${ready ? "§a" : "§c"}${cost.shards} shards + ${cost.focus} each focus§r`,
+        `${ready ? "§a" : "§c"}${shards} Arcane Dust${primaryPath ? " §a◆§r" : ""} + ${cost.focus} each focus§r`,
       materialIcon(SHARD_ID)
     );
   }
@@ -539,8 +567,9 @@ function showRarityPicker(player, relicSlot, relicTypeId, group, back) {
     }
     const rarity = RARITY_ORDER[res.selection - 1];
     const cost = RITUAL_COSTS[rarity];
+    const shards = shardCostFor(relicTypeId, group, rarity);
     if (
-      countItem(player, SHARD_ID) < cost.shards ||
+      countItem(player, SHARD_ID) < shards ||
       countItem(player, focusA) < cost.focus ||
       countItem(player, focusB) < cost.focus
     ) {
@@ -555,6 +584,17 @@ function showRarityPicker(player, relicSlot, relicTypeId, group, back) {
   });
 }
 
+/** True when `group` is this relic's primary (Synergy) forge path. */
+function isPrimaryPath(relicTypeId, group) {
+  return primaryAttuneGroup(relicAffinity(getRelicDef(relicTypeId))) === group;
+}
+
+/** Arcane Dust cost after the primary-path Synergy discount (−1, min 1). */
+function shardCostFor(relicTypeId, group, rarity) {
+  const base = RITUAL_COSTS[rarity].shards;
+  return isPrimaryPath(relicTypeId, group) ? Math.max(1, base - 1) : base;
+}
+
 function showConfirmation(player, relicSlot, relicTypeId, group, rarity, back) {
   const stack = currentRelic(player, relicSlot, relicTypeId);
   if (!stack) {
@@ -565,16 +605,27 @@ function showConfirmation(player, relicSlot, relicTypeId, group, rarity, back) {
   const prog = getAttuneProgress(player, stack);
   const [focusA, focusB] = FOCUS_RECIPES[group];
   const cost = RITUAL_COSTS[rarity];
+  const primaryPath = isPrimaryPath(relicTypeId, group);
+  const baseShards = cost.shards;
+  const shards = shardCostFor(relicTypeId, group, rarity);
+  const affinityKey = relicAffinity(def);
   const replacing = prog.slots.length >= prog.slotCap;
+  const dustLine = primaryPath
+    ? `${shards} Arcane Dust ${paint(Ink.good, `(−1 Synergy discount · was ${baseShards})`)}`
+    : `${shards} Arcane Dust`;
+  const pathLine = primaryPath
+    ? `${paint(groupInk(group), "Attune path:")} ${GROUP_LABELS[group]} ${paint(Ink.good, "(◆ Synergy)")}`
+    : `${paint(groupInk(group), "Attune path:")} ${GROUP_LABELS[group]} ${paint(Ink.muted, "(Class path)")}`;
   const form = new ActionFormData()
     .title(uiAccentTitle("Confirm Ritual"))
     .body(
       [
         `${paint(Ink.gold, "Relic:")} ${def?.displayName ?? relicTypeId}`,
-        `${paint(groupInk(group), "Affinity:")} ${GROUP_LABELS[group]}`,
+        `${paint(BoostInk[affinityKey] ?? Ink.purple, "Class:")} ${affinityClassLabel(affinityKey)}`,
+        pathLine,
         `${RARITY[rarity].ink}Tier: ${RARITY[rarity].label}${Ink.reset}`,
         "",
-        `${cost.shards} Relic Shards`,
+        dustLine,
         `${cost.focus} ${materialName(focusA)} + ${cost.focus} ${materialName(focusB)}`,
         "",
         replacing
@@ -614,7 +665,7 @@ function performRitual(player, relicSlot, relicTypeId, group, rarity, back) {
   const rolled = rollRitualAttunement(relicTypeId, group, rarity, conflictSlots(prog));
   if (!rolled) {
     try {
-      player.sendMessage("§cForge: no compatible gift exists for that relic and affinity.");
+      player.sendMessage("§cForge: no compatible gift exists for that relic and attune path.");
     } catch {
     }
     showAffinityPicker(player, relicSlot, relicTypeId, back);
@@ -623,8 +674,9 @@ function performRitual(player, relicSlot, relicTypeId, group, rarity, back) {
 
   const [focusA, focusB] = FOCUS_RECIPES[group];
   const cost = RITUAL_COSTS[rarity];
+  // Primary-path (Synergy) rituals cost 1 less Arcane Dust (min 1).
   const costs = [
-    [SHARD_ID, cost.shards],
+    [SHARD_ID, shardCostFor(relicTypeId, group, rarity)],
     [focusA, cost.focus],
     [focusB, cost.focus],
   ];
@@ -671,6 +723,9 @@ function performRitual(player, relicSlot, relicTypeId, group, rarity, back) {
     return;
   }
   announceRoll(player, relicTypeId, result);
+  if (isPrimaryPath(relicTypeId, group)) {
+    playSynergyForgeFeedback(player, relicAffinity(getRelicDef(relicTypeId)));
+  }
   const attuneDef = POOL[group]?.[result.slot.key];
   const form = new ActionFormData()
     .title(uiAccentTitle("Ritual Complete"))
@@ -694,27 +749,45 @@ function performRitual(player, relicSlot, relicTypeId, group, rarity, back) {
 }
 
 export function isAttunementOpen(player) {
-  return !!player && openForms.has(player.id);
+  return !!player && (openForms.has(player.id) || pendingOpen.has(player.id));
 }
 
 /** Open directly from one block/item tap. */
 export function openAttunement(player, back) {
   if (!player || openForms.has(player.id)) return;
+  if (!isAttunementEnabled(player)) {
+    try {
+      player.sendMessage(
+        "§8Attunement is disabled in Relic Tome settings (Relics-only mode)."
+      );
+    } catch {
+    }
+    return;
+  }
+  pendingOpen.delete(player.id);
   showRelicPicker(player, back);
 }
 
 export function openAttunementFor(player, itemId, back) {
   if (!player || openForms.has(player.id)) return false;
+  if (!isAttunementEnabled(player)) {
+    openAttunement(player, back);
+    return false;
+  }
   const match = inventoryRelics(player).find((row) => row.stack.typeId === itemId);
   if (!match) {
     openAttunement(player, back);
     return false;
   }
+  pendingOpen.delete(player.id);
   showAffinityPicker(player, match.slot, match.stack.typeId, back);
   return true;
 }
 
 /** Clear open-form tracking when the player leaves mid-menu. */
 export function clearAttunementForms(player) {
-  if (player?.id) openForms.delete(player.id);
+  if (player?.id) {
+    openForms.delete(player.id);
+    pendingOpen.delete(player.id);
+  }
 }

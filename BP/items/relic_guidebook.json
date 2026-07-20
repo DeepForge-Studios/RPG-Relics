@@ -4,11 +4,13 @@
     "description": {
       "identifier": "relics:relic_guidebook",
       "menu_category": {
-        "category": "equipment"
+        "category": "equipment",
+        "group": "relics:itemGroup.name.craftables"
       }
     },
     "components": {
       "minecraft:max_stack_size": 1,
+      "minecraft:glint": false,
       "minecraft:icon": "relics_relic_guidebook",
       "minecraft:display_name": {
         "value": "item.relics:relic_guidebook"

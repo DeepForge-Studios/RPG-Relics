@@ -6,7 +6,7 @@
  * bay helpers remain in reliquary.js for cleanup only.
  */
 import { getRelicDef } from "./registry.js";
-import { shortBlurb } from "./descriptions.js";
+import { loreLinesForItem, loreOptsForPlayer } from "./descriptions.js";
 import { Ink, paint, AttuneInk } from "./theme.js";
 import {
   POOL,
@@ -16,7 +16,9 @@ import {
   rarityCap,
   attuneMagnitude,
   groupInk,
+  relicAffinity,
 } from "./attune_pool.js";
+import { synergyTier } from "./attune_synergy.js";
 
 export const FOCUS_A_SLOT = 25;
 export const FOCUS_B_SLOT = 26;
@@ -233,7 +235,11 @@ export function attuneAddXp(player, itemOrId, amount = 1) {
   if (prog.slots.length === 0) return { ...prog, leveled: false, unlockedSlot: false };
   let leveled = false;
   let unlockedSlot = false;
-  prog.xp += amount;
+  // Primary Affinity↔Attunement synergy earns attune XP 1.5× faster while worn.
+  const affinity = relicAffinity(getRelicDef(itemOrId?.typeId ?? itemOrId));
+  const primarySynergy = prog.slots.some((s) => synergyTier(affinity, s.group) === "primary");
+  const gain = primarySynergy ? Math.max(1, Math.round(amount * 1.5)) : amount;
+  prog.xp += gain;
   while (prog.level < MAX_LEVEL && prog.xp >= xpNeeded(prog.level)) {
     prog.xp -= xpNeeded(prog.level);
     prog.level += 1;
@@ -373,58 +379,62 @@ export function stripGaugeFromPlayer(player) {
   }
 }
 
-/** Build nameTag + lore for the bay relic (color-coded chips). */
+/**
+ * Stable item tooltip = registry lore only (gated by player Affinity/Attunement settings).
+ * Attune Lv / skills stay in Forge forms + action bar — never rewrite the hover.
+ */
+function applyStableRelicTooltip(stack, player) {
+  if (!stack?.typeId) return false;
+  const def = getRelicDef(stack.typeId);
+  if (!def) return false;
+  const lines = loreLinesForItem(stack.typeId, def, loreOptsForPlayer(player));
+  let changed = false;
+  try {
+    if (stack.nameTag) {
+      stack.nameTag = undefined;
+      changed = true;
+    }
+  } catch {
+    try {
+      if (stack.nameTag) {
+        stack.nameTag = "";
+        changed = true;
+      }
+    } catch {
+    }
+  }
+  try {
+    const cur = typeof stack.getLore === "function" ? stack.getLore() : [];
+    const same = cur.length === lines.length && cur.every((l, i) => l === lines[i]);
+    if (!same) {
+      stack.setLore(lines);
+      changed = true;
+    }
+  } catch {
+  }
+  return changed;
+}
+
+/** @deprecated Kept for callers; returns stable tooltip data (no attune rewrite). */
 export function buildAttuneStamp(player, itemOrId) {
   const itemId = itemOrId?.typeId ?? itemOrId;
   const def = getRelicDef(itemId);
   if (!def) return undefined;
   const name = def.displayName || itemId.replace("relics:", "").replace(/_/g, " ");
   const prog = getAttuneProgress(player, itemOrId);
-  const blurb = shortBlurb(def);
-  // Re-apply gold after the gauge's trailing §r so the UI label keeps its tint.
-  const tagged =
-    gaugePrefix(prog) +
-    (prog.slots.length === 0
-      ? `§6${name}  ·  §7unattuned`
-      : `§6${name}  ·  Lv ${prog.level}  ·  ${prog.slots.length}/${prog.slotCap}`);
-  const lines = [];
-  lines.push(paint(Ink.muted, blurb));
-  if (prog.slots.length === 0) {
-    lines.push(paint(Ink.dim, "Add two focuses to attune (shards from your bag)"));
-  } else {
-    lines.push(paint(Ink.highlight, `Attune Lv ${prog.level}  ·  XP ${prog.xp}/${xpNeeded(prog.level)}`));
-    for (const slot of prog.slots) lines.push(slotChip(prog, slot));
-    if (prog.slotCap < MAX_SLOTS) {
-      lines.push(paint(Ink.dim, `2nd slot at Lv ${SECOND_SLOT_LEVEL}`));
-    } else if (prog.slots.length < MAX_SLOTS) {
-      lines.push(paint(Ink.good, "2nd slot open — perform another ritual"));
-    }
-  }
-  return { name, prog, tagged, lines };
+  return {
+    name,
+    prog,
+    tagged: "",
+    lines: loreLinesForItem(itemId, def, loreOptsForPlayer(player)),
+  };
 }
 
 export function syncExamineRelic(player, stack) {
   if (!stack?.typeId) return false;
-  const stamp = buildAttuneStamp(player, stack);
-  if (!stamp) return false;
-  let changed = false;
-  try {
-    if (stack.nameTag !== stamp.tagged) {
-      stack.nameTag = stamp.tagged;
-      changed = true;
-    }
-  } catch {
-  }
-  try {
-    const cur = typeof stack.getLore === "function" ? stack.getLore() : [];
-    const same = cur.length === stamp.lines.length && cur.every((l, i) => l === stamp.lines[i]);
-    if (!same) {
-      stack.setLore(stamp.lines);
-      changed = true;
-    }
-  } catch {
-  }
-  return changed;
+  if (!getRelicDef(stack.typeId)) return false;
+  ensureAttuneIdentity(player, stack);
+  return applyStableRelicTooltip(stack, player);
 }
 
 export function restampExamineStack(player, stack) {
@@ -433,10 +443,7 @@ export function restampExamineStack(player, stack) {
     const next = stack.clone();
     next.amount = 1;
     ensureAttuneIdentity(player, next);
-    const stamp = buildAttuneStamp(player, next);
-    if (!stamp) return undefined;
-    next.nameTag = stamp.tagged;
-    next.setLore(stamp.lines);
+    applyStableRelicTooltip(next, player);
     return next;
   } catch {
     syncExamineRelic(player, stack);

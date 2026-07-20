@@ -32,7 +32,7 @@ export const Ink = Object.freeze({
   blue: "§9",
 });
 
-/** Boost affinity colors — keep in sync with Boost Codex. */
+/** Affinity (class) colors — Boost lean / Berserker·Guardian·… — keep in sync with Boost Codex. */
 export const BoostInk = Object.freeze({
   might: Ink.bad,
   ward: Ink.blue,
@@ -59,6 +59,20 @@ export const AttuneInk = Object.freeze({
   alchemy: Ink.purple,
   necromancy: Ink.violet,
   radiance: Ink.highlight,
+});
+
+/**
+ * Synergy Affinity class particle tint reference — RGB 0–1 floats baked into
+ * `RP/particles/synergy_<class>_proc.json` / `_echo.json`. Mirrors the
+ * BoostInk/AttuneInk family each class leans on (red/blue/aqua/gold/green/purple).
+ */
+export const AffinityRgb = Object.freeze({
+  berserker: { red: 0.85, green: 0.12, blue: 0.08 }, // might — red
+  guardian: { red: 0.25, green: 0.55, blue: 0.95 }, // ward — blue
+  scout: { red: 0.15, green: 0.85, blue: 0.8 }, // gale — aqua
+  trickster: { red: 0.95, green: 0.78, blue: 0.25 }, // fortune — gold
+  healer: { red: 0.25, green: 0.85, blue: 0.35 }, // vitality — green
+  arcanist: { red: 0.62, green: 0.28, blue: 0.85 }, // alchemy — purple
 });
 
 /** Attunement rarity → lore tint + level cap. */

@@ -17,12 +17,12 @@ import {
   tickRelicHud,
   statusLines,
 } from "./hooks.js";
-import { isGuidebookOpen, openGuidebook, openBoostCodex } from "./guidebook.js";
-import { isAttunementOpen, openAttunement, clearAttunementForms } from "./attunement.js";
+import { isGuidebookOpen, openGuidebook, openBoostCodex, openAttuneCodex, markGuidebookPending } from "./guidebook.js";
+import { isAttunementOpen, openAttunement, clearAttunementForms, markAttunementPending } from "./attunement.js";
 import { TEST_BUILD } from "./build_info.js";
-import { refreshInventoryLore, syncCurioContainers, makeRelicStack } from "./relics.js";
+import { refreshPlayerRelicLore, syncCurioContainers, makeRelicStack } from "./relics.js";
 import { clearCurioTitleLeak } from "./ui_sync.js";
-import { registerReliquary, spawnReliquary, scrubOrphanReliquaries, RELIQUARY_ITEM } from "./reliquary.js";
+import { registerReliquary, spawnReliquary, scrubOrphanReliquaries, flushReliquarySession, isReliquarySessionOpen, RELIQUARY_ITEM } from "./reliquary.js";
 import {
   registerAcquisition,
   handleCampCommand,
@@ -32,7 +32,7 @@ import {
   tickTowerDefenders,
 } from "./acquisition.js";
 import { openRelicForge } from "./relic_forge.js";
-import { openTestBench } from "./test_bench.js";
+import { openTestBench, TEST_BENCH_EVENT } from "./test_bench.js";
 import { handleApiScriptEvent } from "./api.js";
 import { handleMaterialBlockDrop, handleMaterialMobDrop } from "./materials.js";
 import {
@@ -42,6 +42,7 @@ import {
   tickAttunementRuntime,
   clearAttunementRuntime,
 } from "./attune_runtime.js";
+import { isAttunementEnabled } from "./settings.js";
 
 const MENU = "relics:menu";
 const GUIDE = "relics:relic_guidebook";
@@ -52,11 +53,14 @@ const GOT_RELIQUARY_PROP = "relics:got_reliquary";
 const GOT_ATTUNE_TOME_PROP = "relics:got_attunement_tome";
 const GOT_STARTER_GEAR_PROP = "relics:got_starter_gear";
 
-/** Starter relics + materials (once per player). */
-const STARTER_GEAR = [
+/** Starter relics + shards (once per player). Focus materials only if attunement is on. */
+const STARTER_RELICS = [
   { id: "relics:lumen_visor", count: 1 },
   { id: "relics:vital_band", count: 1 },
   { id: "relics:relic_shard", count: 5 },
+];
+
+const STARTER_ATTUNE_MATERIALS = [
   { id: "relics:arcane_dust", count: 4 },
   { id: "relics:beast_fang", count: 2 },
   { id: "relics:monster_heart", count: 1 },
@@ -67,7 +71,7 @@ const USE_HANDLERS = {
   [MENU]: (player) => spawnReliquary(player),
   [GUIDE]: (player) => openGuidebook(player),
   [RELIQUARY_ITEM]: (player) => spawnReliquary(player),
-  [ATTUNE_TOME]: (player) => openAttunement(player),
+  [ATTUNE_TOME]: (player) => openAttuneCodex(player),
 };
 
 const useGuard = new Map();
@@ -126,7 +130,9 @@ function giveStarterGear(player) {
   } catch {
     return;
   }
-  for (const { id, count } of STARTER_GEAR) {
+  const kit = [...STARTER_RELICS];
+  if (isAttunementEnabled(player)) kit.push(...STARTER_ATTUNE_MATERIALS);
+  for (const { id, count } of kit) {
     giveOrDropStack(player, id, count);
   }
   try {
@@ -135,7 +141,9 @@ function giveStarterGear(player) {
   }
   try {
     player.sendMessage(
-      "§7Starter kit: §eNightwatch Goggles§7 + §eHeartward Ring§7, plus shards & craft materials. Equip them in the Reliquary!"
+      isAttunementEnabled(player)
+        ? "§7Starter kit: §eNightwatch Goggles§7 + §eHeartward Ring§7, plus shards & craft materials. Equip them in the Reliquary!"
+        : "§7Starter kit: §eNightwatch Goggles§7 + §eHeartward Ring§7, plus Arcane Dust. Equip them in the Reliquary!"
     );
   } catch {
   }
@@ -154,12 +162,14 @@ function giveStarterKit(player) {
     RELIQUARY_ITEM,
     "§7You received a §eRelic Crate§r. Use it to open your Reliquary."
   );
-  giveStarterItem(
-    player,
-    GOT_ATTUNE_TOME_PROP,
-    ATTUNE_TOME,
-    "§7You received an §dAttunement Forge§r. Use it to attune your relics."
-  );
+  if (isAttunementEnabled(player)) {
+    giveStarterItem(
+      player,
+      GOT_ATTUNE_TOME_PROP,
+      ATTUNE_TOME,
+      "§7You received an §dAttunement Codex§r. Use it to study skills — place an §dAttunement Forge§r to perform rituals."
+    );
+  }
   giveStarterGear(player);
 }
 
@@ -181,15 +191,12 @@ function handleUsableItem(player, itemId) {
   if (tick - lastUse < 10) return;
   useGuard.set(key, tick);
 
-  // Defer Guide open so item-use settles; longer delay reduces hitch + weird look while looking around.
-  const delay = itemId === GUIDE ? 8 : 1;
-  if (itemId === GUIDE) {
-    try {
-      clearCurioTitleLeak(player);
-    } catch {
-    }
-  }
-  system.runTimeout(() => handler(player), delay);
+  // Pause heavy per-player ticks immediately so look/LT doesn't fight the form.
+  const opensUi = itemId === GUIDE || itemId === ATTUNE_TOME;
+  if (opensUi) markGuidebookPending(player);
+
+  // One tick is enough for item-use to settle; long delays feel like free-look then snap.
+  system.runTimeout(() => handler(player), opensUi ? 2 : 1);
 }
 
 safeSubscribe(
@@ -203,10 +210,20 @@ safeSubscribe(
 
 function openAttunementForge(player) {
   if (!player || player.typeId !== "minecraft:player") return;
+  if (!isAttunementEnabled(player)) {
+    try {
+      player.sendMessage(
+        "§8Attunement is disabled in Relic Tome settings (Relics-only mode)."
+      );
+    } catch {
+    }
+    return;
+  }
   const key = `${player.id}:forge_block`;
   const tick = system.currentTick;
   if (tick - (useGuard.get(key) ?? -100) < 10) return;
   useGuard.set(key, tick);
+  markAttunementPending(player);
   // Scripted forms can open directly; native/container screens cannot.
   system.run(() => openAttunement(player));
 }
@@ -288,14 +305,28 @@ safeSubscribe(
       startRelicSense(ev.sourceEntity);
     } else if (ev.id === "relics:status" && ev.sourceEntity?.typeId === "minecraft:player") {
       for (const line of statusLines(ev.sourceEntity)) ev.sourceEntity.sendMessage(line);
-    } else if (ev.id === "relics:boosts" && ev.sourceEntity?.typeId === "minecraft:player") {
+    } else if (
+      (ev.id === "relics:boosts" || ev.id === "relics:affinity") &&
+      ev.sourceEntity?.typeId === "minecraft:player"
+    ) {
       openBoostCodex(ev.sourceEntity);
     } else if (ev.id === "relics:attune" && ev.sourceEntity?.typeId === "minecraft:player") {
-      openAttunement(ev.sourceEntity);
+      if (isAttunementEnabled(ev.sourceEntity)) openAttunement(ev.sourceEntity);
+      else {
+        try {
+          ev.sourceEntity.sendMessage(
+            "§8Attunement is disabled in Relic Tome settings (Relics-only mode)."
+          );
+        } catch {
+        }
+      }
     } else if (ev.id === "relics:open_forge" && ev.sourceEntity?.typeId === "minecraft:player") {
       openRelicForge(ev.sourceEntity);
-    } else if (ev.id === "relics:test" && ev.sourceEntity?.typeId === "minecraft:player") {
-      openTestBench(ev.sourceEntity);
+    } else if (ev.id === TEST_BENCH_EVENT && ev.sourceEntity?.typeId === "minecraft:player") {
+      // Dev QA only — requires secret message; fails silently otherwise.
+      openTestBench(ev.sourceEntity, ev.message ?? "");
+    } else if (ev.id === "relics:test") {
+      // Old public id — intentionally dead (no hint).
     } else if (ev.id.startsWith("relics:open_slot_") && ev.sourceEntity?.typeId === "minecraft:player") {
       spawnReliquary(ev.sourceEntity);
     }
@@ -359,6 +390,14 @@ safeSubscribe(
 safeSubscribe(
   world.afterEvents?.entityDie,
   (ev) => {
+    // Player death with Reliquary open — save crate loadout before the UI entity is scrubbed.
+    if (ev.deadEntity?.typeId === "minecraft:player") {
+      try {
+        flushReliquarySession(ev.deadEntity);
+      } catch {
+      }
+    }
+
     let killer = ev.damageSource.damagingEntity;
     if (killer?.typeId !== "minecraft:player") {
       try {
@@ -399,7 +438,7 @@ safeSubscribe(
       scrubOrphanReliquaries();
       syncCurioContainers(ev.player);
       clearCurioTitleLeak(ev.player);
-      refreshInventoryLore(ev.player);
+      refreshPlayerRelicLore(ev.player);
       if (ev.initialSpawn) giveStarterKit(ev.player);
     }, 20);
     system.runTimeout(() => clearCurioTitleLeak(ev.player), 40);
@@ -415,16 +454,22 @@ system.runTimeout(() => {
 }, 40);
 
 function isModalUiOpen(player) {
-  return isGuidebookOpen(player) || isAttunementOpen(player);
+  return (
+    isGuidebookOpen(player) ||
+    isAttunementOpen(player) ||
+    isReliquarySessionOpen(player)
+  );
 }
 
 system.runInterval(() => {
-  tickAttunementRuntime();
+  tickAttunementRuntime((player) => isModalUiOpen(player));
 }, 5);
 
 system.runInterval(() => {
   for (const player of world.getAllPlayers()) {
+    // Passives always refresh (smart applyEffect skips HUD flicker).
     tickPassiveRelics(player);
+    if (isModalUiOpen(player)) continue;
     tickHeldItems(player);
   }
 }, 20);
@@ -435,29 +480,30 @@ system.runInterval(() => {
     tickTidewalkers(player);
     tickMovementRelics(player);
   }
-}, 1);
+}, 2);
 
 system.runInterval(() => {
   for (const player of world.getAllPlayers()) {
     if (isModalUiOpen(player)) continue;
     tickMagnet(player);
   }
-}, 2);
+}, 4);
 
 system.runInterval(() => {
   for (const player of world.getAllPlayers()) {
     if (isModalUiOpen(player)) continue;
-    refreshInventoryLore(player);
+    refreshPlayerRelicLore(player);
   }
-}, 40);
+}, 80);
 
 system.runInterval(() => {
   for (const player of world.getAllPlayers()) {
+    if (isModalUiOpen(player)) continue;
     tickRelicHud(player);
     tickRelicSense(player);
     tickTowerDefenders(player);
   }
-}, 30);
+}, 40);
 
 registerReliquary();
 registerAcquisition();

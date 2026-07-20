@@ -1,4 +1,4 @@
-const SLOT_LABELS = {
+﻿const SLOT_LABELS = {
   face: "Face",
   head: "Head",
   necklace: "Necklace",
@@ -45,7 +45,7 @@ const CHAPTERS = {
   "ch-1": "Chapter 1 · Start",
   "ch-2": "Chapter 2 · Find",
   "ch-3": "Chapter 3 · Equip",
-  "ch-4": "Chapter 4 · Boosts",
+  "ch-4": "Chapter 4 · Affinity",
   "ch-5": "Chapter 5 · Attune",
   "ch-6": "Chapter 6 · Relics",
   "ch-7": "Chapter 7 · Ascended",
@@ -62,6 +62,16 @@ const GROUP_COLORS = {
   alchemy: "var(--alchemy)",
   necromancy: "var(--necromancy)",
   radiance: "var(--radiance)",
+};
+
+/** Affinity class label → internal key (for keyword coloring). */
+const AFFINITY_CLASS_KEYS = {
+  berserker: "might",
+  guardian: "ward",
+  scout: "gale",
+  trickster: "fortune",
+  healer: "vitality",
+  arcanist: "alchemy",
 };
 
 /** Fallback boosts when catalog.boosts is absent. */
@@ -126,17 +136,17 @@ const FALLBACK_BOOSTS = [
 const FALLBACK_MATERIALS = [
   {
     id: "relics:relic_shard",
-    name: "Relic Dust",
+    name: "Arcane Dust",
     blurb: "Ritual fuel — spent at the Forge and in ascended crafts.",
     sources: "Mimics, relic chests, archaeology, hostile kills",
-    icon: "textures/items/relic_shard.png",
+    icon: "textures/items/arcane_dust.png",
   },
   {
     id: "relics:arcane_dust",
     name: "Arcane Gem",
     blurb: "Glowing focus for Gale, Alchemy, and Radiance — also used in many crafts.",
     sources: "Witches, endermen, evokers, shulkers",
-    icon: "textures/items/arcane_dust.png",
+    icon: "textures/items/relic_shard.png",
   },
   {
     id: "relics:monster_heart",
@@ -176,12 +186,12 @@ const FALLBACK_MATERIALS = [
 ];
 
 const FALLBACK_MIMICS = [
-  { id: "mimic_forest", name: "Forest Mimic", blurb: "A woodland chest that bites back. Hits apply poison and slowness.", where: "Forests, plains, meadows, and similar.", biome: "Forest", icon: "textures/entity/mimic_forest.png", media: "site/media/mimics/forest.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
-  { id: "mimic_desert", name: "Desert Mimic", blurb: "A sunbaked chest mimic. Hits drain you with hunger and weakness.", where: "Deserts, beaches, and warm oceans.", biome: "Desert", icon: "textures/entity/mimic_desert.png", media: "site/media/mimics/desert.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
-  { id: "mimic_jungle", name: "Jungle Mimic", blurb: "A canopy chest mimic. Hits blind and poison you.", where: "Jungles and bamboo groves.", biome: "Jungle", icon: "textures/entity/mimic_jungle.png", media: "site/media/mimics/jungle.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
-  { id: "mimic_swamp", name: "Swamp Mimic", blurb: "A boggy chest mimic. Hits soak you in poison and nausea.", where: "Swamps and mangrove marshes.", biome: "Swamp", icon: "textures/entity/mimic_swamp.png", media: "site/media/mimics/swamp.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
-  { id: "mimic_snow", name: "Snow Mimic", blurb: "A frosted chest mimic. Hits numb you with slowness and mining fatigue.", where: "Snow, ice, and cold biomes.", biome: "Snow", icon: "textures/entity/mimic_snow.png", media: "site/media/mimics/snow.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
-  { id: "mimic_badlands", name: "Badlands Mimic", blurb: "Clay-banded mesa mimic. Hits weaken you and set you on fire briefly.", where: "Badlands and savanna lands.", biome: "Badlands", icon: "textures/entity/mimic_badlands.png", media: "site/media/mimics/badlands.png", loot: "Defeat for Relic Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_forest", name: "Forest Mimic", blurb: "A woodland chest that bites back. Hits apply poison and slowness.", where: "Forests, plains, meadows, and similar.", biome: "Forest", icon: "textures/entity/mimic_forest.png", media: "site/media/mimics/forest.png", loot: "Defeat for Arcane Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_desert", name: "Desert Mimic", blurb: "A sunbaked chest mimic. Hits drain you with hunger and weakness.", where: "Deserts, beaches, and warm oceans.", biome: "Desert", icon: "textures/entity/mimic_desert.png", media: "site/media/mimics/desert.png", loot: "Defeat for Arcane Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_jungle", name: "Jungle Mimic", blurb: "A canopy chest mimic. Hits blind and poison you.", where: "Jungles and bamboo groves.", biome: "Jungle", icon: "textures/entity/mimic_jungle.png", media: "site/media/mimics/jungle.png", loot: "Defeat for Arcane Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_swamp", name: "Swamp Mimic", blurb: "A boggy chest mimic. Hits soak you in poison and nausea.", where: "Swamps and mangrove marshes.", biome: "Swamp", icon: "textures/entity/mimic_swamp.png", media: "site/media/mimics/swamp.png", loot: "Defeat for Arcane Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_snow", name: "Snow Mimic", blurb: "A frosted chest mimic. Hits numb you with slowness and mining fatigue.", where: "Snow, ice, and cold biomes.", biome: "Snow", icon: "textures/entity/mimic_snow.png", media: "site/media/mimics/snow.png", loot: "Defeat for Arcane Dust (~65%) and nearby structure relic loot." },
+  { id: "mimic_badlands", name: "Badlands Mimic", blurb: "Clay-banded mesa mimic. Hits weaken you and set you on fire briefly.", where: "Badlands and savanna lands.", biome: "Badlands", icon: "textures/entity/mimic_badlands.png", media: "site/media/mimics/badlands.png", loot: "Defeat for Arcane Dust (~65%) and nearby structure relic loot." },
 ];
 
 const FALLBACK_SKILL_GROUPS = [
@@ -260,33 +270,120 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;");
 }
 
-/** Color-code affinities and key phrases. Numbers stay gold — not accent rainbow. */
-function colorizeText(raw, accentCssVar) {
+const GROUP_LABELS = [
+  "Might",
+  "Ward",
+  "Gale",
+  "Fortune",
+  "Vitality",
+  "Alchemy",
+  "Necromancy",
+  "Radiance",
+];
+const GROUP_LABEL_RE = new RegExp(`\\b(${GROUP_LABELS.join("|")})\\b`, "g");
+
+/** Replace only in text outside `<span>…</span>` (avoids nested kw wraps). */
+function replaceOutsideTags(html, regex, replacer) {
+  let depth = 0;
+  return String(html).replace(/(<\/?span\b[^>]*>)|([^<]+)|(<[^>]+>)/gi, (all, span, text, other) => {
+    if (span) {
+      if (/^<\//.test(span)) depth = Math.max(0, depth - 1);
+      else depth += 1;
+      return span;
+    }
+    if (other) return other;
+    if (depth > 0) return text;
+    // Fresh regex each call — global lastIndex must not leak across passes.
+    const re = regex.global ? new RegExp(regex.source, regex.flags) : regex;
+    return text.replace(re, replacer);
+  });
+}
+
+/**
+ * Color-code keywords by *role*:
+ * - Boost leans → per-boost colors (kw-alchemy, kw-gale, …)
+ * - Attune paths → soft lavender (kw-attune)
+ * - Relics / materials → forge gold (kw-item)
+ * - Numbers / % → muted (kw-num)
+ *
+ * @param {string} raw
+ * @param {string} [accentCssVar]
+ * @param {{ groupRole?: "boost" | "attune" | "auto" }} [opts]
+ *   auto (default): "Boost lean: X" → boost colors; "Can attune with: …" → attune;
+ *   leftover bare names follow groupRole when set, else boost.
+ */
+function colorizeText(raw, accentCssVar, opts = {}) {
   let t = escapeHtml(raw);
   const accent = accentCssVar || "var(--gold)";
-  const groups = [
-    ["might", "Might"],
-    ["ward", "Ward"],
-    ["gale", "Gale"],
-    ["fortune", "Fortune"],
-    ["vitality", "Vitality"],
-    ["alchemy", "Alchemy"],
-    ["necromancy", "Necromancy"],
-    ["radiance", "Radiance"],
-  ];
-  for (const [cls, label] of groups) {
-    t = t.replace(new RegExp(`\\b${label}\\b`, "g"), `<span class="kw kw-${cls}">${label}</span>`);
-  }
-  t = t.replace(
-    /\b(Relic Dust|Arcane Gems?|Arcane Dust|Monster Heart|Beast Fang|Mystic Herb|Silver Fragment|Crimson Crystal)\b/g,
-    (m) => `<span class="kw kw-gold">${m}</span>`
+  const role = opts.groupRole || "auto";
+
+  const wrapBoost = (label) =>
+    `<span class="kw kw-${String(label).toLowerCase()}">${label}</span>`;
+  const wrapAttune = (label) => `<span class="kw kw-attune">${label}</span>`;
+  const wrapClass = (label) =>
+    `<span class="kw kw-${AFFINITY_CLASS_KEYS[String(label).toLowerCase()] || "might"}">${label}</span>`;
+
+  // Prefixed lines first so Alchemy/Radiance don't share one treatment.
+  t = replaceOutsideTags(
+    t,
+    /(Can\s+attune\s+with:\s*|Attunement\s+paths?:\s*|Attune\s+paths?:\s*|Attune\s+groups?:\s*)([^<\n]+)/gi,
+    (_, prefix, list) =>
+      prefix + list.replace(new RegExp(GROUP_LABEL_RE.source, "g"), wrapAttune)
   );
-  t = t.replace(/\bshards?\b/gi, () => `<span class="kw kw-gold">Relic Dust</span>`);
-  t = t.replace(
+  t = replaceOutsideTags(
+    t,
+    /(Affinity:\s*)(Berserker|Guardian|Scout|Trickster|Healer|Arcanist)\b/gi,
+    (_, prefix, label) => prefix + wrapClass(label)
+  );
+  t = replaceOutsideTags(
+    t,
+    /(Boost\s+lean:\s*|Boost\s+affinity:\s*)(Might|Ward|Gale|Fortune|Vitality|Alchemy|Necromancy|Radiance)\b/gi,
+    (_, prefix, label) => prefix + wrapBoost(label)
+  );
+
+  // Bare Affinity class names (values split from their "Affinity:" label).
+  t = replaceOutsideTags(
+    t,
+    /\b(Berserker|Guardian|Scout|Trickster|Healer|Arcanist)\b/g,
+    wrapClass
+  );
+
+  // Leftover bare affinity names (prose / boost cards / attune cards).
+  const bareWrap =
+    role === "attune" ? wrapAttune : wrapBoost; /* boost + auto leftovers */
+  t = replaceOutsideTags(t, GROUP_LABEL_RE, bareWrap);
+
+  t = replaceOutsideTags(
+    t,
+    /\b(Arcane Dust|Arcane Gems?|Monster Heart|Beast Fang|Mystic Herb|Silver Fragment|Crimson Crystal)\b/g,
+    (m) => `<span class="kw kw-item">${m}</span>`
+  );
+  t = replaceOutsideTags(t, /\bshards?\b/gi, () => `<span class="kw kw-item">Arcane Dust</span>`);
+
+  // Upgrade / ascended relic names → item gold (skip segments already wrapped).
+  t = replaceOutsideTags(
+    t,
+    /(Upgrades?\s+into:\s*|Ascended\s+from:\s*)([^<\n]+)/gi,
+    (_, prefix, rest) => {
+      const colored = rest
+        .split(/(\s*\+\s*)/)
+        .map((seg) => {
+          if (/^\s*\+\s*$/.test(seg) || !seg.trim() || seg.includes("<span")) return seg;
+          const name = seg.trim();
+          return seg.replace(name, `<span class="kw kw-item">${name}</span>`);
+        })
+        .join("");
+      return prefix + colored;
+    }
+  );
+
+  t = replaceOutsideTags(
+    t,
     /\b(Execute Pulse|Execute|Tailwind|Sanguine Pact|Judgment Brand|Thunderbrand|Lumen Chorus|Dirge Mark|Vialmark|Bastion Glyph|Siege Root|Soul Charges?|Chorus Notes?|Scarbrand|Rivets?|Marked Weak|Pact Slam)\b/g,
     (m) => `<span class="kw-em" style="--accent:${accent}">${m}</span>`
   );
-  t = t.replace(
+  t = replaceOutsideTags(
+    t,
     /(\+?\d+(?:\.\d+)?%?|\d+\s*hearts?)/gi,
     (m) => `<span class="kw-num">${m}</span>`
   );
@@ -294,7 +391,7 @@ function colorizeText(raw, accentCssVar) {
 }
 
 /** Split "Label: value" catalog notes into a wiki-style stats table. */
-function factListHtml(notes, accent) {
+function factListHtml(notes, accent, colorOpts) {
   if (!Array.isArray(notes) || !notes.length) return "";
   const rows = [];
   const loose = [];
@@ -302,11 +399,24 @@ function factListHtml(notes, accent) {
     const raw = String(n ?? "");
     const i = raw.indexOf(":");
     if (i > 0 && i < 48) {
-      rows.push(
-        `<tr><th scope="row">${escapeHtml(raw.slice(0, i).trim())}</th><td>${colorizeText(raw.slice(i + 1).trim(), accent)}</td></tr>`
-      );
+      const label = raw.slice(0, i).trim();
+      const value = raw.slice(i + 1).trim();
+      let opts = { ...(colorOpts || {}) };
+      if (/^attune/i.test(label) || /^can\s+attune/i.test(label))
+        opts = { ...opts, groupRole: "attune" };
+      else if (/^boost/i.test(label)) opts = { ...opts, groupRole: "boost" };
+      // Keep label in the colorize string so "Upgrades into: …" / "Ascended from: …" match.
+      let cell;
+      if (/^upgrades?\s+into/i.test(label) || /^ascended\s+from/i.test(label)) {
+        const full = colorizeText(`${label}: ${value}`, accent, opts);
+        const c = full.indexOf(":");
+        cell = c >= 0 ? full.slice(c + 1).trim() : colorizeText(value, accent, opts);
+      } else {
+        cell = colorizeText(value, accent, opts);
+      }
+      rows.push(`<tr><th scope="row">${escapeHtml(label)}</th><td>${cell}</td></tr>`);
     } else if (raw.trim()) {
-      loose.push(`<p class="fact-loose">${colorizeText(raw, accent)}</p>`);
+      loose.push(`<p class="fact-loose">${colorizeText(raw, accent, colorOpts)}</p>`);
     }
   }
   const table = rows.length
@@ -678,14 +788,14 @@ function renderBoosts() {
       return `
       <article class="boost" style="--boost:${color}; --accent:${color}" data-boost-id="${escapeHtml(id)}">
         <h2>${escapeHtml(b.name || titleCase(id))}</h2>
-        <p class="boost-summary">${colorizeText(b.summary || b.blurb || "", color)}</p>
+        <p class="boost-summary">${colorizeText(b.summary || b.blurb || "", color, { groupRole: "boost" })}</p>
         <div class="boost-tiers" role="group" aria-label="${escapeHtml(b.name || id)} tiers">
           ${TIER_ROMAN.map(
             (label, i) =>
               `<button type="button" class="tier-btn ${selected === i ? "active" : ""}" data-tier-idx="${i}" aria-pressed="${selected === i}">${label}</button>`
           ).join("")}
         </div>
-        <p class="boost-value" data-boost-value>${colorizeText(tiers[selected], color)}</p>
+        <p class="boost-value" data-boost-value>${colorizeText(tiers[selected], color, { groupRole: "boost" })}</p>
       </article>`;
     })
     .join("");
@@ -706,7 +816,7 @@ function renderAttuneSkills() {
       return `
       <article class="skill-group" style="--group:${color}; --accent:${color}">
         <h2>${escapeHtml(g.name || titleCase(g.id))}</h2>
-        <p class="group-blurb">${colorizeText(g.tagline || g.blurb || g.summary || "", color)}</p>
+        <p class="group-blurb">${colorizeText(g.tagline || g.blurb || g.summary || "", color, { groupRole: "attune" })}</p>
         <div class="skill-list">
           ${
             skills.length
@@ -804,10 +914,10 @@ function renderDetail() {
       backLabel: "Materials",
       icon: src,
       title: m?.name || titleCase(bareId(id)),
-      metaHtml: `<span class="kw kw-gold">Material</span>`,
+      metaHtml: `<span class="kw kw-item">Material</span>`,
       bodyHtml: m
-        ? `<p class="entry-lead">${colorizeText(m.blurb || m.summary || "—", "var(--gold)")}</p>
-           ${m.sources ? `<h2 class="wiki-h2">Sources</h2>${factListHtml([`Sources: ${m.sources}`], "var(--gold)")}` : ""}`
+        ? `<p class="entry-lead">${colorizeText(m.blurb || m.summary || "—", "var(--item)")}</p>
+           ${m.sources ? `<h2 class="wiki-h2">Sources</h2>${factListHtml([`Sources: ${m.sources}`], "var(--item)")}` : ""}`
         : `<p>Material <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
     });
     return;
@@ -825,16 +935,16 @@ function renderDetail() {
       title: m?.name || titleCase(bareId(id)),
       metaHtml: m?.biome ? escapeHtml(m.biome) : "Mimic",
       bodyHtml: m
-        ? `<p class="entry-lead">${colorizeText(m.blurb || m.summary || "Defeat for relic loot and Relic Dust.", "var(--gold)")}</p>
+        ? `<p class="entry-lead">${colorizeText(m.blurb || m.summary || "Defeat for relic loot and Arcane Dust.", "var(--item)")}</p>
            ${factListHtml(
              [
                m.where ? `Where: ${m.where}` : null,
                m.loot ? `Loot: ${m.loot}` : null,
              ].filter(Boolean),
-             "var(--gold)"
+             "var(--item)"
            )}
            <h2 class="wiki-h2">Notes</h2>
-           <p class="entry-para">Deep and camp chests can awaken as mimics. Relic Dust is the usual drop; relics often sit in nearby structure loot.</p>`
+           <p class="entry-para">Deep and camp chests can awaken as mimics. Arcane Dust is the usual drop; relics often sit in nearby structure loot.</p>`
         : `<p>Mimic <code>${escapeHtml(id)}</code> is not in the catalog yet.</p>`,
     });
     return;
@@ -844,13 +954,13 @@ function renderDetail() {
     const found = findSkill(group, key);
     const g = found?.group;
     const s = found?.skill;
-    const accent = GROUP_COLORS[g?.id] || "var(--gold)";
+    const accent = GROUP_COLORS[g?.id] || "var(--attune)";
     const ranks = Array.isArray(s?.tiers) ? s.tiers : [];
     const ranksHtml = ranks.length
       ? `<ol class="ranks">${ranks
           .map((t, i) => {
             const text = typeof t === "string" ? t : t.text || t;
-            return `<li><span class="ranks-n">${rankLabel(i)}</span> ${colorizeText(text, accent)}</li>`;
+            return `<li><span class="ranks-n">${rankLabel(i)}</span> ${colorizeText(text, accent, { groupRole: "attune" })}</li>`;
           })
           .join("")}</ol>`
       : "";
@@ -861,19 +971,20 @@ function renderDetail() {
       title: s?.name || titleCase(key),
       accent,
       metaHtml: [
-        g?.name ? `<span class="kw kw-${escapeHtml(g.id || "")}">${escapeHtml(g.name)}</span>` : escapeHtml(group || "Skill"),
+        g?.name ? `<span class="kw kw-attune">${escapeHtml(g.name)}</span>` : escapeHtml(group || "Skill"),
         s?.kind ? escapeHtml(String(s.kind).replace(/_/g, " ")) : "",
       ]
         .filter(Boolean)
         .join(" · "),
       bodyHtml: s
-        ? `<p class="entry-lead">${colorizeText(s.summary || s.blurb || "—", accent)}</p>
+        ? `<p class="entry-lead">${colorizeText(s.summary || s.blurb || "—", accent, { groupRole: "attune" })}</p>
            ${(s.when || s.cost) ? `<h2 class="wiki-h2">Details</h2>${factListHtml(
              [
                s.when ? `When: ${s.when}` : null,
                s.cost ? `Cost: ${s.cost}` : null,
              ].filter(Boolean),
-             accent
+             accent,
+             { groupRole: "attune" }
            )}` : ""}
            ${ranksHtml ? `<h2 class="wiki-h2">Ranks</h2>${ranksHtml}` : ""}`
         : `<p>Skill <code>${escapeHtml(group)}/${escapeHtml(key)}</code> is not in the catalog yet.</p>`,
@@ -1164,7 +1275,7 @@ function setupBoosts() {
       b.setAttribute("aria-pressed", i === idx ? "true" : "false");
     });
     const val = card.querySelector("[data-boost-value]");
-    if (val) val.innerHTML = colorizeText(tiers[idx] || "—", color);
+    if (val) val.innerHTML = colorizeText(tiers[idx] || "—", color, { groupRole: "boost" });
   });
 }
 

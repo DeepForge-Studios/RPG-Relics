@@ -64,6 +64,8 @@ const TIERS = {
   rare: LOOT_RARE,
 };
 
+const TIER_RANK = { none: 0, common: 1, uncommon: 2, rare: 3 };
+
 function pickFrom(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
@@ -76,4 +78,38 @@ export function pickRelicId(tier = "any") {
   if (roll < 0.72) return pickFrom(LOOT_COMMON);
   if (roll < 0.95) return pickFrom(LOOT_UNCOMMON);
   return pickFrom(LOOT_RARE);
+}
+
+/** Resolve loot-pool rarity for a relic type id (common / uncommon / rare / none). */
+export function relicLootTier(typeId) {
+  if (!typeId || typeof typeId !== "string") return "none";
+  if (LOOT_RARE.includes(typeId)) return "rare";
+  if (LOOT_UNCOMMON.includes(typeId)) return "uncommon";
+  if (LOOT_COMMON.includes(typeId)) return "common";
+  if (typeId.startsWith("relics:") && !typeId.includes("shard") && !typeId.includes("dust") && !typeId.includes("fragment") && !typeId.includes("herb") && typeId !== "relics:dummy_chest" && !typeId.startsWith("relics:mimic")) {
+    return "common";
+  }
+  return "none";
+}
+
+export function maxRelicTier(...tiers) {
+  let best = "none";
+  for (const t of tiers) {
+    if ((TIER_RANK[t] ?? 0) > (TIER_RANK[best] ?? 0)) best = t;
+  }
+  return best;
+}
+
+/** How many structure defenders to spawn for a given loot tier. */
+export function defenderCountForTier(tier) {
+  switch (tier) {
+    case "rare":
+      return 7 + Math.floor(Math.random() * 2); // 7–8
+    case "uncommon":
+      return 5 + Math.floor(Math.random() * 2); // 5–6
+    case "common":
+      return 4 + Math.floor(Math.random() * 2); // 4–5
+    default:
+      return 3 + Math.floor(Math.random() * 2); // 3–4 — no relic, still a fight
+  }
 }

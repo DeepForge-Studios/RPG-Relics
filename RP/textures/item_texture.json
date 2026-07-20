@@ -1,42 +1,42 @@
 {
-  "resource_pack_name": "curio_relics",
+  "resource_pack_name": "rpg_relics",
   "texture_name": "atlas.items",
   "texture_data": {
     "relics_phantom_veil": {
       "textures": "textures/items/tiered/phantom_veil"
     },
     "relics_featherpad_boots": {
-      "textures": "textures/items/tiered/featherpad_boots"
+      "textures": "textures/items/featherpad_boots"
     },
     "relics_excavator_gauntlets": {
-      "textures": "textures/items/tiered/excavator_gauntlets"
+      "textures": "textures/items/excavator_gauntlets"
     },
     "relics_marathoners_treads": {
-      "textures": "textures/items/tiered/marathoners_treads"
+      "textures": "textures/items/marathoners_treads"
     },
     "relics_tidewalkers": {
       "textures": "textures/items/tiered/tidewalkers"
     },
     "relics_lumen_visor": {
-      "textures": "textures/items/tiered/lumen_visor"
+      "textures": "textures/items/lumen_visor"
     },
     "relics_bramble_charm": {
-      "textures": "textures/items/tiered/bramble_charm"
+      "textures": "textures/items/bramble_charm"
     },
     "relics_fortune_tellers_cap": {
       "textures": "textures/items/tiered/fortune_tellers_cap"
     },
     "relics_impact_knuckles": {
-      "textures": "textures/items/tiered/impact_knuckles"
+      "textures": "textures/items/impact_knuckles"
     },
     "relics_crusher_gauntlet": {
       "textures": "textures/items/tiered/crusher_gauntlet"
     },
     "relics_skybound_charm": {
-      "textures": "textures/items/tiered/skybound_charm"
+      "textures": "textures/items/skybound_charm"
     },
     "relics_zephyr_flask": {
-      "textures": "textures/items/tiered/zephyr_flask"
+      "textures": "textures/items/zephyr_flask"
     },
     "relics_heartstone": {
       "textures": "textures/items/tiered/heartstone"
@@ -48,25 +48,25 @@
       "textures": "textures/items/tiered/reapers_hook"
     },
     "relics_fleetstrike_gloves": {
-      "textures": "textures/items/tiered/fleetstrike_gloves"
+      "textures": "textures/items/fleetstrike_gloves"
     },
     "relics_storm_locket": {
       "textures": "textures/items/tiered/storm_locket"
     },
     "relics_merchants_fedora": {
-      "textures": "textures/items/tiered/merchants_fedora"
+      "textures": "textures/items/merchants_fedora"
     },
     "relics_springheel_boots": {
-      "textures": "textures/items/tiered/springheel_boots"
+      "textures": "textures/items/springheel_boots"
     },
     "relics_quaffers_cap": {
-      "textures": "textures/items/tiered/quaffers_cap"
+      "textures": "textures/items/quaffers_cap"
     },
     "relics_cinder_ward": {
       "textures": "textures/items/tiered/cinder_ward"
     },
     "relics_adrenaline_charm": {
-      "textures": "textures/items/tiered/adrenaline_charm"
+      "textures": "textures/items/adrenaline_charm"
     },
     "relics_cinderfist": {
       "textures": "textures/items/tiered/cinderfist"
@@ -81,7 +81,7 @@
       "textures": "textures/items/tiered/magnetic_sash"
     },
     "relics_ward_pendant": {
-      "textures": "textures/items/tiered/ward_pendant"
+      "textures": "textures/items/ward_pendant"
     },
     "relics_storm_parasol": {
       "textures": "textures/items/tiered/storm_parasol"
@@ -114,13 +114,13 @@
       "textures": "textures/items/tiered/leeching_glove"
     },
     "relics_gillmask": {
-      "textures": "textures/items/tiered/gillmask"
+      "textures": "textures/items/gillmask"
     },
     "relics_jesters_cushion": {
-      "textures": "textures/items/tiered/jesters_cushion"
+      "textures": "textures/items/jesters_cushion"
     },
     "relics_prospectors_scarf": {
-      "textures": "textures/items/tiered/prospectors_scarf"
+      "textures": "textures/items/prospectors_scarf"
     },
     "relics_anchor_charm": {
       "textures": "textures/items/tiered/anchor_charm"
@@ -159,10 +159,10 @@
       "textures": "textures/items/tiered/blight_vessel"
     },
     "relics_cloud_vial": {
-      "textures": "textures/items/tiered/cloud_vial"
+      "textures": "textures/items/cloud_vial"
     },
     "relics_bloom_band": {
-      "textures": "textures/items/tiered/bloom_band"
+      "textures": "textures/items/bloom_band"
     },
     "relics_draught_band": {
       "textures": "textures/items/tiered/draught_band"
@@ -174,7 +174,7 @@
       "textures": "textures/items/tiered/gilt_hook"
     },
     "relics_relic_shard": {
-      "textures": "textures/items/relic_shard"
+      "textures": "textures/items/arcane_dust"
     },
     "relics_venom_ward": {
       "textures": "textures/items/tiered/venom_ward"
@@ -213,7 +213,7 @@
       "textures": "textures/items/beast_fang"
     },
     "relics_arcane_dust": {
-      "textures": "textures/items/arcane_dust"
+      "textures": "textures/items/relic_shard"
     },
     "relics_mystic_herb": {
       "textures": "textures/items/mystic_herb"

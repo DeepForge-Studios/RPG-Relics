@@ -1,4 +1,5 @@
 import { ItemStack } from "@minecraft/server";
+import { isAttunementEnabled } from "./settings.js";
 
 const FANG_MOBS = new Set([
   "minecraft:spider",
@@ -63,6 +64,7 @@ function drop(dimension, location, typeId, count = 1) {
 
 export function handleMaterialMobDrop(entity, killer) {
   if (!entity || killer?.typeId !== "minecraft:player") return;
+  if (!isAttunementEnabled(killer)) return;
   const luck = entity.typeId === "minecraft:warden" || entity.typeId === "minecraft:ravager" ? 0.5 : 0;
   if (HEART_MOBS.has(entity.typeId) && Math.random() < 0.08 + luck) {
     drop(entity.dimension, entity.location, "relics:monster_heart");
@@ -82,7 +84,7 @@ export function handleMaterialMobDrop(entity, killer) {
 }
 
 export function handleMaterialBlockDrop(player, blockId, location) {
-  if (!player || !location) return;
+  if (!player || !location || !isAttunementEnabled(player)) return;
   if (HERB_BLOCKS.has(blockId) && Math.random() < 0.12) {
     drop(player.dimension, location, "relics:mystic_herb");
   }

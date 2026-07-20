@@ -1,31 +1,7 @@
-# Build artifacts / local only
+# Build outputs
+*.mcaddon
 _mcaddon_build/
 _zip_test/
-*.mcaddon
-examples/trinket-addon/*.mcaddon
-LAST_TEST_BUILD.txt
-test_build_counter.txt
-
-# Local Obsidian vault (private)
-Vault/
-
-# Cursor / agent workspace (private)
-.cursor/
-.cursorrules
-TASKS.md
-BUGS.md
-GOALS.md
-
-# Local authoring only (not for GitHub)
-tools/
-examples/
-design/
-generate_items.ps1
-publish-github.ps1
-docs/ADDING_TRINKETS.md
-docs/TOWERS.md
-docs/UI_THEME.md
-docs/CURSEFORGE_DESCRIPTION.md
 
 # OS / editor
 .DS_Store

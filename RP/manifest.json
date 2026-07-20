@@ -2,7 +2,7 @@
   "format_version": 2,
   "header": {
     "name": "RPG Relics (Resources)",
-    "description": "Textures and UI for RPG Relics — DeepForge Studios",
+    "description": "Textures and UI for RPG Relics - DeepForge Studios",
     "uuid": "34c21ce9-51c4-4a47-9320-1249e1b94677",
     "version": [0, 2, 3],
     "min_engine_version": [1, 21, 70]

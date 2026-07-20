@@ -2,6 +2,7 @@
  * Attunement V3 catalog and Forge ritual rules.
  * Rarity unlocks behavior clauses; it is not a scalar potion-effect tier.
  */
+import { getRelicDef } from "./registry.js";
 import { AttuneInk, RarityInk } from "./theme.js";
 
 export const GROUP_ORDER = [
@@ -25,6 +26,24 @@ export const GROUP_LABELS = {
   necromancy: "Necromancy",
   radiance: "Radiance",
 };
+
+/**
+ * Player-facing class name for a relic's Affinity (Boost lean).
+ * Display only — internal keys stay might|ward|gale|fortune|vitality|alchemy.
+ */
+export const AFFINITY_CLASS_LABELS = Object.freeze({
+  might: "Berserker",
+  ward: "Guardian",
+  gale: "Scout",
+  fortune: "Trickster",
+  vitality: "Healer",
+  alchemy: "Arcanist",
+});
+
+/** Class label for an affinity key (falls back to Arcanist). */
+export function affinityClassLabel(key) {
+  return AFFINITY_CLASS_LABELS[key] ?? AFFINITY_CLASS_LABELS.alchemy;
+}
 
 export const RARITY = {
   common: { cap: 1, ink: RarityInk.common, label: "Common" },
@@ -145,14 +164,14 @@ export const POOL = {
       "Bastion Glyph",
       "defenseField",
       "defense_field",
-      "A heavy hit stamps a protective rune under your feet.",
+      "A heavy hit stamps a Protection-style rune and Resistance IV under your feet.",
       [
-        "The rune soaks some damage while you stand inside.",
+        "Grants Resistance IV and soaks damage while you stand inside.",
         "Hostiles crossing the rune are slowed.",
         "The rune knocks enemies outward when it expires.",
         "It also sends a counter-wave at hostiles still inside.",
       ],
-      { cooldown: 240, when: "Take 4 or more damage in a single hit.", cost: "12-second cooldown; one rune at a time." }
+      { cooldown: 200, when: "Take 2 or more damage in a single hit.", cost: "10-second cooldown; one rune at a time." }
     ),
     oathchain: skill(
       "Oathchain",
@@ -178,7 +197,7 @@ export const POOL = {
         "A Siege Ward golem joins the defense.",
         "Its edge pushes back every hostile once.",
       ],
-      { cooldown: 400, when: "Three or more hostiles within 6 blocks.", cost: "20-second cooldown; the field lasts about 7 seconds." }
+      { cooldown: 400, when: "Three or more hostiles within 6 blocks.", cost: "20-second cooldown; the field lasts about 15 seconds." }
     ),
   },
   gale: {
@@ -186,9 +205,9 @@ export const POOL = {
       "Crosswind Mark",
       "movementMark",
       "movement_mark",
-      "Melee hits mark a hostile with wind, redirecting its next knockback sideways.",
+      "Melee hits mark a hostile with wind; the next hit blasts them the way you punch.",
       [
-        "Knockback on the marked enemy swings sideways.",
+        "Knockback on the marked enemy follows your look.",
         "The redirect is stronger.",
         "A marked death releases a gust ring.",
         "Death passes the mark to the nearest hostile.",
@@ -298,20 +317,20 @@ export const POOL = {
       "Marrow Swap",
       "resourceHeal",
       "resource_heal",
-      "When you drop low, hunger automatically trades into health.",
+      "When you drop low, hunger quickly trades into a chunk of health.",
       [
-        "Trade 2 hunger for 1 heart.",
+        "Trade 2 hunger for 2 hearts.",
         "The exchange rate improves.",
         "Overdraw into empty hunger for one extra heart.",
         "Leaves a short trade rune nearby allies can also touch.",
       ],
-      { cooldown: 240, when: "Your health falls below half.", cost: "12-second cooldown; costs 2 hunger." }
+      { cooldown: 80, when: "Your health falls below about 65%.", cost: "Short cooldown; costs 2 hunger." }
     ),
     blood_tithe: skill(
-      "Blood Tithe",
+      "Sanguine Pact",
       "bloodTithe",
       "heal_on_hit",
-      "When you drop low, you spend one heart to open a refund window — melee hits earn it back.",
+      "Spend a heart to open a crimson pact — melee hits reclaim it with clear feedback.",
       [
         "Hits during the window refund your heart.",
         "Opening the window also clears one negative effect.",
@@ -381,7 +400,7 @@ export const POOL = {
       "When you are surrounded, a crucible zone blooms underfoot and burns hostiles inside.",
       [
         "The zone chips hostiles inside.",
-        "Kills inside the zone can drop Arcane Dust.",
+        "Kills inside the zone can drop Arcane Gems.",
         "The zone lasts longer and hits harder.",
         "When it ends, it pulls marked hostiles inward once.",
       ],
@@ -432,20 +451,20 @@ export const POOL = {
       "Thanatoic Ledger",
       "execute",
       "execute",
-      "Nearby deaths fill your Ledger. When full, your next hit can finish off a weakened hostile.",
+      "Nearby deaths fill your Ledger. At three, summon a wither-skeleton thrall army that hunts whoever you strike.",
       [
-        "Execute one low-health hostile.",
-        "Executions grant a fixed heal.",
-        "Bank two executions.",
-        "Overfilling risks a skeleton ambush, then opens a graveyard field.",
+        "Summon 1 thrall for 20 seconds.",
+        "Summon 2 thralls.",
+        "Summon 3 thralls.",
+        "Summon up to 5 thralls that chase your current target.",
       ],
-      { when: "Deaths within 12 blocks, then hit a low-health target.", cost: "Holds one execution (two at Rare). Bosses are immune." }
+      { when: "Deaths within range fill the Ledger; at 3 it summons the army.", cost: "Army lasts about 20 seconds. Max thralls = skill level (capped at 5)." }
     ),
     pale_conscription: skill(
       "Pale Conscription",
       "temporaryHelper",
       "temporary_familiar",
-      "At three Soul Charges, a Bone Thrall is conscripted automatically.",
+      "At three Soul Charges, a wither-skeleton Bone Thrall is conscripted automatically.",
       [
         "A Bone Thrall fights beside you.",
         "It lives longer.",
@@ -499,10 +518,10 @@ export const POOL = {
       "Lumen Chorus",
       "chorus",
       "note_shield",
-      "Kills collect Notes. At three, a Chorus ring brands nearby hostiles automatically.",
+      "Kills collect random Notes. At three, a loud Chorus hum damages nearby hostiles.",
       [
-        "A Note softens your next hit taken.",
-        "Three Notes may heal you instead.",
+        "Each Note plays a random noteblock tone.",
+        "The third Note is loud and starts a short damage hum.",
         "Three Notes brand a ring of hostiles.",
         "A full Chorus calls a Seraph Spark that divebombs the strongest hostile.",
       ],
@@ -540,6 +559,97 @@ const BLOCKED_BY_RELIC = {
   "relics:thornroot_ward": ["oathchain", "quillguard"],
   "relics:windsprint_greaves": ["tempest_tithe", "gale_anchor"],
 };
+
+/** Affinity → attune paths that relic may Forge into. */
+export const AFFINITY_ATTUNE_GROUPS = Object.freeze({
+  might: ["might", "necromancy"],
+  ward: ["ward", "radiance"],
+  gale: ["gale", "fortune"],
+  fortune: ["fortune", "alchemy"],
+  vitality: ["vitality", "ward"],
+  alchemy: ["alchemy", "radiance"],
+});
+
+/** Primary (Synergy) attune path for an affinity — the first forged path. */
+export function primaryAttuneGroup(affinityKey) {
+  return (AFFINITY_ATTUNE_GROUPS[affinityKey] ?? AFFINITY_ATTUNE_GROUPS.alchemy)[0];
+}
+
+const AFFINITY_GALE = new Set([
+  "fluid_movement",
+  "swim_boost",
+  "liquid_sprint",
+  "double_jump",
+  "triple_jump",
+  "gale_glide",
+  "no_fall_damage",
+  "leviathan_striders",
+  "windsprint_greaves",
+]);
+const AFFINITY_WARD = new Set([
+  "phase_dodge",
+  "knockback_resist",
+  "fire_res_on_burn",
+  "repel_creepers",
+  "crystal_shards",
+]);
+const AFFINITY_FORTUNE = new Set([
+  "double_ore",
+  "item_magnet",
+  "fishing_haul",
+  "reveal_hostiles",
+]);
+const AFFINITY_VITALITY = new Set(["second_wind", "sustaining_cap"]);
+const AFFINITY_ALCHEMY = new Set([
+  "purify_effects",
+  "grand_alchemy",
+  "potion_linger",
+  "toxin_filter",
+  "wither_cleanse",
+  "full_toxin_ward",
+]);
+
+/** Boost lean key for a relic def (shared with Boost scoring). */
+export function relicAffinity(def) {
+  if (!def) return "alchemy";
+  const eff = def.passive?.effect;
+  if (def.onAttack?.lifesteal) return "vitality";
+  if (def.onAttack || def.custom === "execute_low_hp") return "might";
+  if (
+    def.onHurt ||
+    AFFINITY_WARD.has(def.custom) ||
+    eff === "resistance" ||
+    eff === "fire_resistance"
+  ) {
+    return "ward";
+  }
+  if (
+    AFFINITY_GALE.has(def.custom) ||
+    ["speed", "jump_boost", "slow_falling", "dolphins_grace"].includes(eff)
+  ) {
+    return "gale";
+  }
+  if (
+    AFFINITY_FORTUNE.has(def.custom) ||
+    def.onKill ||
+    ["luck", "village_hero", "haste"].includes(eff)
+  ) {
+    return "fortune";
+  }
+  if (
+    AFFINITY_VITALITY.has(def.custom) ||
+    ["regeneration", "health_boost", "saturation"].includes(eff)
+  ) {
+    return "vitality";
+  }
+  if (AFFINITY_ALCHEMY.has(def.custom)) return "alchemy";
+  return "alchemy";
+}
+
+export function allowedAttuneGroups(relicId) {
+  const affinity = relicAffinity(getRelicDef(relicId));
+  return AFFINITY_ATTUNE_GROUPS[affinity] ?? AFFINITY_ATTUNE_GROUPS.alchemy;
+}
 
 export function groupInk(group) {
   return AttuneInk[group] ?? AttuneInk.might;
@@ -588,6 +698,7 @@ export function ritualRarity(shardCount, focusACount, focusBCount) {
 
 export function isAttunementAllowed(relicId, group, key, existingSlots = []) {
   if (!POOL[group]?.[key]) return false;
+  if (relicId && !allowedAttuneGroups(relicId).includes(group)) return false;
   if ((BLOCKED_BY_RELIC[relicId] ?? []).includes(key)) return false;
   const def = POOL[group][key];
   for (const slot of existingSlots) {

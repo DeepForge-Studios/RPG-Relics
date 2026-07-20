@@ -5,7 +5,7 @@
       "identifier": "relics:attunement_forge",
       "menu_category": {
         "category": "equipment",
-        "group": "relics:itemGroup.name.relics"
+        "group": "relics:itemGroup.name.craftables"
       },
       "traits": {
         "minecraft:placement_direction": {

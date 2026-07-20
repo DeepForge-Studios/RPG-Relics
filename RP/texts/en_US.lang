@@ -1,6 +1,6 @@
 item.relics:menu=Relic Crate
 item.relics:reliquary=Relic Crate
-item.relics:attunement_tome=Attunement Forge
+item.relics:attunement_tome=Attunement Codex
 item.relics:ui_plus=+ Train XP
 item.relics:ui_minus=− Undo XP
 entity.relics:reliquary.name=Reliquary
@@ -20,6 +20,7 @@ item.spawn_egg.entity.relics:mimic_badlands.name=Badlands Mimic Spawn Egg
 relics:itemGroup.name.mimics=Mimics
 tile.relics:dummy_chest.name=Dormant Chest
 relics:itemGroup.name.relics=RPG Relics
+relics:itemGroup.name.craftables=Craftables
 relics:itemGroup.name.materials=RPG Materials
 item.relics:relic_guidebook=Relic Tome
 item.relics:lumen_visor=Nightwatch Goggles
@@ -73,7 +74,7 @@ item.relics:bloom_band=Bloom Band
 item.relics:draught_band=Alchemist's Loop
 item.relics:marrow_choker=Marrow Choker
 item.relics:gilt_hook=Gilded Angler
-item.relics:relic_shard=Relic Shard
+item.relics:relic_shard=Arcane Dust
 item.relics:venom_ward=Venom Ward
 item.relics:nimbus_mantle=Nimbus Mantle
 item.relics:inferno_brand=Inferno Brand
@@ -86,7 +87,7 @@ item.relics:bulwark_plate=Bulwark Plate
 item.relics:treasure_lure=Treasure Lure
 item.relics:monster_heart=Monster Heart
 item.relics:beast_fang=Beast Fang
-item.relics:arcane_dust=Arcane Dust
+item.relics:arcane_dust=Arcane Gem
 item.relics:mystic_herb=Mystic Herb
 item.relics:silver_fragment=Silver Fragment
 item.relics:crimson_crystal=Crimson Crystal
@@ -94,7 +95,11 @@ tile.relics:relic_forge.name=Relic Forge
 tile.relics:attunement_forge.name=Attunement Forge
 
 pack.name=RPG Relics
-pack.description=Equipable relics and Reliquary wardrobe
+pack.description=Equipable relics, Reliquary wardrobe, and Attunement - DeepForge Studios
+
+## Hide engine footer shown when items have lore / dynamic properties / custom_components
+## Empty value falls back to vanilla English — use ZWSP so the line renders invisible
+item.customProperties=​
 
 item.relics:spawn_mimic_forest=Forest Mimic Spawn Egg
 item.relics:spawn_mimic_desert=Desert Mimic Spawn Egg

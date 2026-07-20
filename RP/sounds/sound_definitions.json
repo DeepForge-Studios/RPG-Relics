@@ -1,0 +1,41 @@
+{
+  "format_version": "1.14.0",
+  "sound_definitions": {
+    "relics.synergy.proc": {
+      "category": "player",
+      "sounds": ["sounds/synergy/proc"]
+    },
+    "relics.synergy.echo": {
+      "category": "player",
+      "sounds": ["sounds/synergy/echo"]
+    },
+    "relics.synergy.forge": {
+      "category": "player",
+      "sounds": ["sounds/synergy/forge"]
+    },
+    "relics.synergy.berserker": {
+      "category": "player",
+      "sounds": ["sounds/synergy/berserker"]
+    },
+    "relics.synergy.guardian": {
+      "category": "player",
+      "sounds": ["sounds/synergy/guardian"]
+    },
+    "relics.synergy.scout": {
+      "category": "player",
+      "sounds": ["sounds/synergy/scout"]
+    },
+    "relics.synergy.trickster": {
+      "category": "player",
+      "sounds": ["sounds/synergy/trickster"]
+    },
+    "relics.synergy.healer": {
+      "category": "player",
+      "sounds": ["sounds/synergy/healer"]
+    },
+    "relics.synergy.arcanist": {
+      "category": "player",
+      "sounds": ["sounds/synergy/arcanist"]
+    }
+  }
+}

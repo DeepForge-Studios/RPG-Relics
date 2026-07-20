@@ -9,6 +9,7 @@
     },
     "components": {
       "minecraft:max_stack_size": 1,
+      "minecraft:glint": false,
       "minecraft:icon": "relics_obsidian_plate",
       "minecraft:display_name": {
         "value": "item.relics:obsidian_plate"

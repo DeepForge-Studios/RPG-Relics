@@ -2,7 +2,7 @@
   "format_version": 2,
   "header": {
     "name": "RPG Relics (Behavior)",
-    "description": "Equipable relics, Reliquary wardrobe, and Attunement — DeepForge Studios",
+    "description": "Equipable relics, Reliquary wardrobe, and Attunement - DeepForge Studios",
     "uuid": "f23f85fe-28fa-46cb-b470-b0f0e6f0e01f",
     "version": [0, 2, 3],
     "min_engine_version": [1, 21, 70]

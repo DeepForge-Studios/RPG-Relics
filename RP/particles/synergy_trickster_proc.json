@@ -1,0 +1,45 @@
+{
+  "format_version": "1.10.0",
+  "particle_effect": {
+    "description": {
+      "identifier": "relics:synergy_trickster_proc",
+      "basic_render_parameters": {
+        "material": "particles_alpha",
+        "texture": "textures/particle/particles"
+      }
+    },
+    "components": {
+      "minecraft:emitter_rate_instant": { "num_particles": 14 },
+      "minecraft:emitter_lifetime_once": { "active_time": 0.05 },
+      "minecraft:emitter_shape_sphere": {
+        "offset": [0, 1, 0],
+        "radius": 0.5,
+        "direction": [0, 0, 0]
+      },
+      "minecraft:particle_initial_speed": "Math.random(0.2, 0.6)",
+      "minecraft:particle_lifetime_expression": { "max_lifetime": "Math.random(0.3, 0.55)" },
+      "minecraft:particle_initial_spin": {
+        "rotation": "Math.random(0, 360)",
+        "rotation_rate": "Math.random(-180, 180)"
+      },
+      "minecraft:particle_motion_dynamic": {
+        "linear_acceleration": [0, 0.15, 0],
+        "linear_drag_coefficient": 0.3
+      },
+      "minecraft:particle_appearance_billboard": {
+        "size": [0.08, 0.08],
+        "facing_camera_mode": "lookat_xyz",
+        "uv": {
+          "texture_width": 128,
+          "texture_height": 128,
+          "uv": [16, 40],
+          "uv_size": [8, 8]
+        }
+      },
+      "minecraft:particle_appearance_tinting": {
+        "color": [0.95, 0.78, 0.25, 1]
+      },
+      "minecraft:particle_appearance_lighting": {}
+    }
+  }
+}

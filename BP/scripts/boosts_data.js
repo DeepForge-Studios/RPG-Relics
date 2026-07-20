@@ -1,17 +1,23 @@
-/** Shared Boost Codex copy + labels (kept out of hooks.js to keep UI opens light). */
+/** Shared Affinity Codex copy + labels (kept out of hooks.js to keep UI opens light). */
+
 import { BoostInk } from "./theme.js";
 
 export const BOOST_ORDER = ["might", "ward", "gale", "fortune", "vitality", "alchemy"];
 
+/** Affinity class display names ("Berserker Affinity II"). */
 export const BOOST_LABELS = {
-  might: "Might",
-  ward: "Ward",
-  gale: "Gale",
-  fortune: "Fortune",
-  vitality: "Vitality",
-  alchemy: "Alchemy",
+  might: "Berserker",
+  ward: "Guardian",
+  gale: "Scout",
+  fortune: "Trickster",
+  vitality: "Healer",
+  alchemy: "Arcanist",
 };
 
+/**
+ * Affinity I–III — kept in sync with BP/scripts/hooks.js resonance numbers.
+ * Tuned so rank I feels useful, II is a clear step, III is a payoff (not OP).
+ */
 export const BOOST_ABILITIES = {
   might: {
     color: BoostInk.might,
@@ -19,34 +25,34 @@ export const BOOST_ABILITIES = {
     tiers: [
       "I — Every 5 hits, +2 bonus damage",
       "II — Every 4 hits, +3 bonus damage",
-      "III — Every 3 hits, +4 bonus damage",
+      "III — Every 3 hits, +5 bonus damage",
     ],
   },
   ward: {
     color: BoostInk.ward,
     summary: "Chance to deflect incoming attacks.",
     tiers: [
-      "I — 8% deflect chance",
-      "II — 14% deflect chance",
-      "III — 20% deflect chance",
+      "I — 10% deflect chance",
+      "II — 16% deflect chance",
+      "III — 24% deflect chance",
     ],
   },
   gale: {
     color: BoostInk.gale,
     summary: "Sprinting grants short Tailwind speed bursts.",
     tiers: [
-      "I — Speed burst while sprinting",
-      "II — Longer / stronger Tailwind",
-      "III — Tailwind + Jump Boost",
+      "I — Speed I burst while sprinting (~3s)",
+      "II — Longer Speed II Tailwind (~4s)",
+      "III — Tailwind + Jump Boost II (~5s)",
     ],
   },
   fortune: {
     color: BoostInk.fortune,
     summary: "Chance for extra ore when mining.",
     tiers: [
-      "I — 6% bonus ore chance",
-      "II — 12% bonus ore chance",
-      "III — 20% bonus ore chance",
+      "I — 10% bonus ore chance",
+      "II — 16% bonus ore chance",
+      "III — 24% bonus ore chance",
     ],
   },
   vitality: {
@@ -60,11 +66,11 @@ export const BOOST_ABILITIES = {
   },
   alchemy: {
     color: BoostInk.alchemy,
-    summary: "Drunk potions last longer.",
+    summary: "Drunk potions last longer — that is the whole Affinity.",
     tiers: [
-      "I — Potions last 15% longer",
-      "II — Potions last 30% longer",
-      "III — Potions last 50% longer",
+      "I — Potions last 20% longer",
+      "II — Potions last 35% longer",
+      "III — Potions last 50% longer (duration only; no extra effects)",
     ],
   },
 };

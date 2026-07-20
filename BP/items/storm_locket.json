@@ -9,6 +9,7 @@
     },
     "components": {
       "minecraft:max_stack_size": 1,
+      "minecraft:glint": false,
       "minecraft:icon": "relics_storm_locket",
       "minecraft:display_name": {
         "value": "item.relics:storm_locket"

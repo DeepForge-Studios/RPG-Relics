@@ -1,9 +1,10 @@
 /**
- * Attunement / Relic Test Bench — creative-only QA tools.
- * Open with: /scriptevent relics:test
+ * Dev-only Relic Test Bench. Not for public players.
  *
- * Use this to stamp any skill onto a held relic, equip it, fire actives,
- * spawn hostiles, and hand out relic samples without grinding rituals.
+ * Unlock (Creative + operator + secret message):
+ *   /scriptevent relics:__qa curio-forge
+ *
+ * Wrong/missing secret → silent no-op (no chat hint).
  */
 import { ItemStack, GameMode } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
@@ -33,6 +34,11 @@ import {
 import { equipCarriedRelic } from "./relics.js";
 import { Ink, paint, uiAccentTitle, uiBack, uiClose, uiMuted } from "./theme.js";
 
+/** Obscure scriptevent id — not listed in player-facing docs. */
+export const TEST_BENCH_EVENT = "relics:__qa";
+/** Required message body. Change this anytime before a public build. */
+export const TEST_BENCH_SECRET = "curio-forge";
+
 /** Base relics safe to duplicate as one-skill test copies. */
 const KIT_RELIC_IDS = Object.keys(RELIC_REGISTRY);
 
@@ -42,6 +48,39 @@ function isCreative(player) {
   } catch {
     return false;
   }
+}
+
+function isOperator(player) {
+  try {
+    if (typeof player.isOp === "function") return !!player.isOp();
+  } catch {
+  }
+  // Older builds may lack isOp — secret + creative still required.
+  return true;
+}
+
+/**
+ * Silent gate: secret message + Creative + operator.
+ * Returns false without messaging (so the command stays undiscoverable).
+ */
+export function canAccessTestBench(player, message = "") {
+  if (!player) return false;
+  if (String(message).trim() !== TEST_BENCH_SECRET) return false;
+  if (!isCreative(player)) return false;
+  if (!isOperator(player)) return false;
+  return true;
+}
+
+/** Session unlock after a successful secret open (form reopens skip the message). */
+const unlocked = new Set();
+
+function stillAllowed(player) {
+  if (!player || !unlocked.has(player.id)) return false;
+  if (!isCreative(player) || !isOperator(player)) {
+    unlocked.delete(player.id);
+    return false;
+  }
+  return true;
 }
 
 function inventory(player) {
@@ -212,11 +251,6 @@ function giveFullSkillKit(player) {
       const stamped = debugStampAttune(player, stack, group, key, "epic");
       if (!stamped) continue;
       try {
-        // Readable in creative invent: skill name first.
-        stamped.nameTag = `${groupInk(group)}${def.name}§r §7· Epic IV`;
-      } catch {
-      }
-      try {
         inv.addItem(stamped);
         n += 1;
       } catch {
@@ -327,7 +361,7 @@ function showAffinityPicker(player) {
   }
   const form = new ActionFormData()
     .title(uiAccentTitle("Stamp Skill"))
-    .body(uiMuted("Choose an affinity, then a skill and rarity. It equips automatically."));
+    .body(uiMuted("Choose an attune path, then a skill and rarity. It equips automatically."));
   for (const group of GROUP_ORDER) {
     const count = Object.keys(POOL[group] ?? {}).length;
     form.button(
@@ -348,10 +382,13 @@ function showAffinityPicker(player) {
     .catch(() => {});
 }
 
-export function openTestBench(player) {
+export function openTestBench(player, message) {
   if (!player) return;
-  if (!isCreative(player)) {
-    player.sendMessage(paint(Ink.bad, "The Test Bench only works in Creative mode."));
+  // First open must pass secret; later form reopens use the session unlock.
+  if (typeof message === "string") {
+    if (!canAccessTestBench(player, message)) return;
+    unlocked.add(player.id);
+  } else if (!stillAllowed(player)) {
     return;
   }
   const held = heldRelic(player);
@@ -369,7 +406,7 @@ export function openTestBench(player) {
         paint(Ink.muted, "Movement: sprint-jump = Tempest · midair jump = Gale Anchor."),
       ].join("\n")
     )
-    .button(`${paint(Ink.gold, "Stamp Skill on Held Relic")}\n§7Pick affinity → skill → rarity, then auto-equip§r`)
+    .button(`${paint(Ink.gold, "Stamp Skill on Held Relic")}\n§7Pick attune path → skill → rarity, then auto-equip§r`)
     .button(`${paint(Ink.gold, "Give Full Skill Kit (32)")}\n§7One Epic IV relic per skill — named for testing§r`)
     .button(`${paint(Ink.gold, "Fire Active Now")}\n§7Skip crouch+jump — fires equipped active§r`)
     .button(`${paint(Ink.gold, "Fill All Resources")}\n§7Souls 3 · Notes 3 · Rumors 5§r`)

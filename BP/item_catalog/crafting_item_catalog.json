@@ -7,14 +7,23 @@
         "groups": [
           {
             "group_identifier": {
+              "icon": "relics:relic_guidebook",
+              "name": "relics:itemGroup.name.craftables"
+            },
+            "items": [
+              "relics:relic_guidebook",
+              "relics:reliquary",
+              "relics:attunement_tome",
+              "relics:attunement_forge"
+            ]
+          },
+          {
+            "group_identifier": {
               "icon": "relics:heartstone",
               "name": "relics:itemGroup.name.relics"
             },
             "items": [
-              "relics:reliquary",
-              "relics:relic_guidebook",
               "relics:relic_forge",
-              "relics:attunement_forge",
               "relics:endless_ration",
               "relics:storm_parasol",
               "relics:lumen_visor",

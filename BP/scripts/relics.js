@@ -1,10 +1,9 @@
 import { ItemStack } from "@minecraft/server";
 import { SLOTS, getRelicDef, matchesSlot } from "./registry.js";
-import { loreLinesForItem } from "./descriptions.js";
+import { loreLinesForItem, loreOptsForPlayer } from "./descriptions.js";
 import { syncCurioUi } from "./ui_sync.js";
 
 const PROP = "relics:slot_";
-const ITEM_ATTUNE_PROP = "relics:attune_v3";
 
 const LEGACY_CURIO = {
   head: 27,
@@ -100,15 +99,20 @@ function readEquippedData(player, slot) {
   }
 }
 
-export function stampLore(stack) {
+export function stampLore(stack, opts) {
   if (!stack?.typeId?.startsWith("relics:")) return stack;
-  try {
-    if (stack.getDynamicProperty?.(ITEM_ATTUNE_PROP)) return stack;
-  } catch {
-  }
   const def = getRelicDef(stack.typeId);
-  const lines = loreLinesForItem(stack.typeId, def);
+  const lines = loreLinesForItem(stack.typeId, def, opts);
   if (!lines.length) return stack;
+  try {
+    // Keep display name stable — attune status lives in Forge UI / action bar.
+    if (stack.nameTag) stack.nameTag = undefined;
+  } catch {
+    try {
+      if (stack.nameTag) stack.nameTag = "";
+    } catch {
+    }
+  }
   try {
     const current = typeof stack.getLore === "function" ? stack.getLore() : [];
     if (current.length === lines.length && current.every((l, i) => l === lines[i])) {
@@ -144,17 +148,18 @@ export function stampContainerRelics(block) {
   return n;
 }
 
-export function makeRelicStack(typeId) {
-  return stampLore(new ItemStack(typeId, 1));
+export function makeRelicStack(typeId, opts) {
+  return stampLore(new ItemStack(typeId, 1), opts);
 }
 
 function giveOrDrop(player, itemIdOrStack) {
   const inv = getInv(player);
   if (!inv) return;
+  const opts = loreOptsForPlayer(player);
   const stack =
     typeof itemIdOrStack === "string"
-      ? stampLore(new ItemStack(itemIdOrStack, 1))
-      : stampLore(itemIdOrStack);
+      ? stampLore(new ItemStack(itemIdOrStack, 1), opts)
+      : stampLore(itemIdOrStack, opts);
   const leftover = inv.addItem(stack);
   if (leftover) {
     player.dimension.spawnItem(leftover, player.location);
@@ -169,7 +174,7 @@ export function setEquipped(player, slot, itemId) {
   if (!itemId) {
     player.setDynamicProperty(PROP + slot, undefined);
   } else {
-    const stack = makeRelicStack(itemId);
+    const stack = makeRelicStack(itemId, loreOptsForPlayer(player));
     const data = serializeRelicStack(stack);
     player.setDynamicProperty(PROP + slot, JSON.stringify(data));
   }
@@ -247,15 +252,43 @@ export function listCarriedRelics(player) {
 export function refreshInventoryLore(player) {
   const inv = getInv(player);
   if (!inv) return;
+  const opts = loreOptsForPlayer(player);
   for (let i = 0; i < inv.size; i++) {
     const stack = inv.getItem(i);
     if (!stack?.typeId?.startsWith("relics:")) continue;
-    const stamped = stampLore(stack);
+    const stamped = stampLore(stack, opts);
     try {
       inv.setItem(i, stamped);
     } catch {
     }
   }
+}
+
+/** Re-stamp lore on equipped Reliquary slots (DP storage) for current settings. */
+export function refreshEquippedLore(player) {
+  if (!player) return;
+  const opts = loreOptsForPlayer(player);
+  let changed = false;
+  for (const slot of SLOTS) {
+    const stack = getEquippedStack(player, slot);
+    if (!stack?.typeId?.startsWith("relics:")) continue;
+    const before = typeof stack.getLore === "function" ? stack.getLore() : [];
+    stampLore(stack, opts);
+    const after = typeof stack.getLore === "function" ? stack.getLore() : [];
+    const same =
+      before.length === after.length && before.every((l, i) => l === after[i]);
+    if (!same) {
+      setEquippedStack(player, slot, stack, { sync: false });
+      changed = true;
+    }
+  }
+  if (changed) syncCurioUi(player);
+}
+
+/** Inventory + equipped relics — call after Affinity/Attunement settings toggle. */
+export function refreshPlayerRelicLore(player) {
+  refreshInventoryLore(player);
+  refreshEquippedLore(player);
 }
 
 export function migrateLegacyCurioSlots(player) {

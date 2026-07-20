@@ -5,20 +5,26 @@ import { clearRelicSense, startRelicSense } from "./acquisition.js";
 import {
   areBoostsEnabled,
   areEffectNotificationsEnabled,
+  BALANCE_OP,
+  cycleBalanceMode,
+  getBalanceMode,
+  isAttunementEnabled,
   isRelicSenseEnabled,
+  toggleAttunement,
   toggleBoosts,
   toggleEffectNotifications,
   toggleRelicSense,
 } from "./settings.js";
 import {
+  affinityAndAttuneLines,
   describeRelic,
   shortBlurb,
   relicIconPath,
   labeledButton,
+  loreOptsForPlayer,
 } from "./descriptions.js";
 import { BOOST_ABILITIES } from "./boosts_data.js";
 import { boostLoadout } from "./hooks.js";
-import { openAttunement } from "./attunement.js";
 import {
   GROUP_ORDER,
   GROUP_LABELS,
@@ -26,9 +32,11 @@ import {
   RARITY,
   RARITY_ORDER,
   RITUAL_COSTS,
+  affinityClassLabel,
   groupInk,
 } from "./attune_pool.js";
 import { TEST_BUILD } from "./build_info.js";
+import { refreshPlayerRelicLore } from "./relics.js";
 import {
   Ink,
   uiTitle,
@@ -38,6 +46,7 @@ import {
   uiDim,
   uiHighlight,
   uiBack,
+  uiClose,
   paint,
 } from "./theme.js";
 
@@ -57,6 +66,11 @@ const GUIDE_LABELS = {
 };
 
 const openGuidebooks = new Set();
+
+/** Call as soon as the player uses the tome so heavy ticks pause before the form paints. */
+export function markGuidebookPending(player) {
+  if (player?.id) openGuidebooks.add(player.id);
+}
 
 function showGuideForm(form, player) {
   openGuidebooks.add(player.id);
@@ -110,6 +124,7 @@ function showRelicDetail(player, relic, back) {
       : GUIDE_LABELS[relic.def.slot] ?? SLOT_LABELS[relic.def.slot] ?? relic.def.slot;
   const body = [
     `${uiMuted("Slot:")} ${slotLabel}`,
+    ...affinityAndAttuneLines(relic.id, relic.def, loreOptsForPlayer(player)),
     "",
     describeRelic(relic.def),
     "",
@@ -152,12 +167,12 @@ function showSlotCatalog(player, slotKey) {
 const BOOST_KEYS = ["might", "ward", "gale", "fortune", "vitality", "alchemy"];
 
 function boostActiveLine(loadout) {
-  if (!loadout.enabled) return "§8Boosts are disabled in Settings.§r";
-  if (!loadout.equipped) return "§7Equip relics in the Reliquary to activate a boost.§r";
+  if (!loadout.enabled) return "§8Affinity is disabled in Settings.§r";
+  if (!loadout.equipped) return "§7Equip relics in the Reliquary to activate an Affinity.§r";
   const a = loadout.active;
-  if (!a) return "§7No active boost.§r";
+  if (!a) return "§7No active Affinity.§r";
   const roman = "I".repeat(a.level);
-  return `§fActive: ${BOOST_ABILITIES[a.affinity].color}${a.label} Boost ${roman}§r §8(${a.score} power)§r`;
+  return `§fActive: ${BOOST_ABILITIES[a.affinity].color}${a.label} Affinity ${roman}§r §8(${a.score} power)§r`;
 }
 
 function showBoostDetail(player, key) {
@@ -169,20 +184,18 @@ function showBoostDetail(player, key) {
   const body = [
     `${info.color}${info.summary}§r`,
     "",
-    "§eAbilities§r",
+    "§eRank bonuses§r",
     ...info.tiers.map((line, i) => {
       const unlocked = level >= i + 1;
       const mark = unlocked ? "§a●§r" : "§8○§r";
       return `${mark} ${unlocked ? "§f" : "§8"}${line}§r`;
     }),
     "",
-    `§7Your power in this style:§r §f${power}§r`,
+    `§7Your power in this class:§r §f${power}§r`,
     level > 0
-      ? `§7Highest tier relic contributing:§r §f${"I".repeat(level)}§r`
-      : "§8No equipped relics lean this way yet.§r",
-    isActive ? "§aThis is your active boost.§r" : "§8Specialize your loadout to make this active.§r",
-    "",
-    "§8Common = 1 power · Uncommon = 2 · Rare/Ascended = 3§r",
+      ? `§7Your rank:§r §f${"I".repeat(level)}§r §8(from best relic)§r`
+      : "§8Equip relics of this class to unlock ranks.§r",
+    isActive ? "§aActive Affinity.§r" : "§8Not active — another class has more power.§r",
   ].join("\n");
 
   const form = new ActionFormData()
@@ -196,31 +209,23 @@ function showBoostDetail(player, key) {
 }
 
 function RESONANCE_TITLE(key) {
-  return (
-    {
-      might: "Might",
-      ward: "Ward",
-      gale: "Gale",
-      fortune: "Fortune",
-      vitality: "Vitality",
-      alchemy: "Alchemy",
-    }[key] ?? key
-  );
+  return affinityClassLabel(key);
 }
 
-/** Simple Bedrock Boost Codex — view I/II/III abilities + live loadout. */
+/** Affinity Codex — loadout class bonuses I–III + live power. */
 export function openBoostCodex(player) {
   const loadout = boostLoadout(player);
   const form = new ActionFormData()
-    .title(uiAccentTitle("Boost Codex"))
+    .title(uiAccentTitle("Affinity Codex"))
     .body(
       [
-        uiBody("Loadout bonuses from equipped relics."),
-        "Your strongest playstyle becomes Boost I–III.",
+        uiBody("Equip relics. Your strongest class becomes the active Affinity."),
+        uiMuted("Rank I–III = best relic of that class (Common / Uncommon / Rare·Ascended)."),
+        uiMuted("Power picks the winner (Common +1 · Uncommon +2 · Rare/Ascended +3)."),
         "",
         boostActiveLine(loadout),
         "",
-        uiDim("Tap a boost to see its abilities."),
+        uiDim("Tap a class for its bonus."),
       ].join("\n")
     );
 
@@ -232,7 +237,7 @@ export function openBoostCodex(player) {
     form.button(
       labeledButton(
         `${info.color}${RESONANCE_TITLE(key)}${tag}§r`,
-        power > 0 ? `${power} power` : "no power yet"
+        power > 0 ? `${power} power · rank ${"I".repeat(Math.min(3, loadout.levels[key] || 1))}` : "0 power · unequipped"
       )
     );
   }
@@ -241,7 +246,7 @@ export function openBoostCodex(player) {
   showGuideForm(form, player).then((res) => {
     if (res.canceled || res.selection === undefined) return;
     if (res.selection >= BOOST_KEYS.length) {
-      openGuidebook(player);
+      openSystemsChapter(player);
       return;
     }
     showBoostDetail(player, BOOST_KEYS[res.selection]);
@@ -251,12 +256,12 @@ export function openBoostCodex(player) {
 const ATTUNE_GROUP_INFO = {
   might: ["Monster Heart + Beast Fang", "build pressure, then burst"],
   ward: ["Silver Fragment + Monster Heart", "counter attacks and hold ground"],
-  gale: ["Beast Fang + Arcane Dust", "reposition through combat"],
+  gale: ["Beast Fang + Arcane Gem", "reposition through combat"],
   fortune: ["Silver Fragment + Beast Fang", "make visible wagers"],
   vitality: ["Mystic Herb + Monster Heart", "perform healing rituals"],
-  alchemy: ["Arcane Dust + Mystic Herb", "mix colors into reactions"],
+  alchemy: ["Arcane Gem + Mystic Herb", "mix colors into reactions"],
   necromancy: ["Crimson Crystal + Monster Heart", "harvest and spend souls"],
-  radiance: ["Silver Fragment + Arcane Dust", "brand and consecrate"],
+  radiance: ["Silver Fragment + Arcane Gem", "brand and consecrate"],
 };
 
 const ATTUNE_ACTIVE_SKILLS = new Set([
@@ -268,7 +273,7 @@ const ATTUNE_ACTIVE_SKILLS = new Set([
 const ATTUNE_TERMS = [
   ["soul charge", "Soul Charge: energy banked from kills. Three charges fire Corpse Lantern or Pale Conscription."],
   ["wager", "Wager: a timed bet. Kill the marked target before time runs out to win."],
-  ["catalyst", "Catalyst: a Forge material such as a Heart, Fang, Dust, Herb, Silver, or Crystal."],
+  ["catalyst", "Catalyst: a Forge material such as a Heart, Fang, Gem, Herb, Silver, or Crystal."],
   ["marked weak", "Marked Weak: the hostile temporarily takes extra damage from your attacks."],
   ["brand", "Brand: a temporary mark. Strike the marked hostile again to trigger its effect."],
   ["damage buffer", "Damage buffer: protection that absorbs damage before it reaches your hearts."],
@@ -286,10 +291,10 @@ function attuneTermLines(skill) {
   );
 }
 
-function showAttuneSkill(player, group, key) {
+function showAttuneSkill(player, group, key, back) {
   const skill = POOL[group]?.[key];
   if (!skill) {
-    showAttuneGroup(player, group);
+    showAttuneGroup(player, group, back);
     return;
   }
   const numerals = ["I", "II", "III", "IV"];
@@ -318,11 +323,11 @@ function showAttuneSkill(player, group, key) {
     .body(lines.join("\n"))
     .button(uiBack());
   showGuideForm(form, player).then((res) => {
-    if (!res.canceled) showAttuneGroup(player, group);
+    if (!res.canceled) showAttuneGroup(player, group, back);
   });
 }
 
-function showAttuneGroup(player, key) {
+function showAttuneGroup(player, key, back) {
   const label = GROUP_LABELS[key] ?? key;
   const [focus, identity] = ATTUNE_GROUP_INFO[key] ?? ["two focus materials", "special abilities"];
   const skills = Object.entries(POOL[key] ?? {});
@@ -345,14 +350,25 @@ function showAttuneGroup(player, key) {
   showGuideForm(form, player).then((res) => {
     if (res.canceled || res.selection === undefined) return;
     if (res.selection >= skills.length) {
-      openAttuneCodex(player);
+      openAttuneCodex(player, back);
       return;
     }
-    showAttuneSkill(player, key, skills[res.selection][0]);
+    showAttuneSkill(player, key, skills[res.selection][0], back);
   });
 }
 
-function openAttuneCodex(player) {
+/** Skills / info browser. Rituals stay on the placed Attunement Forge. */
+export function openAttuneCodex(player, back) {
+  if (!isAttunementEnabled(player)) {
+    try {
+      player.sendMessage(
+        "§8Attunement is disabled in Relic Tome settings (Relics-only mode)."
+      );
+    } catch {
+    }
+    if (back) back(player);
+    return;
+  }
   const rarityLine = [
     `${RARITY.common.ink}Common§r ${RITUAL_COSTS.common.shards}+${RITUAL_COSTS.common.focus}/${RITUAL_COSTS.common.focus} (I)`,
     `${RARITY.uncommon.ink}Uncommon§r ${RITUAL_COSTS.uncommon.shards}+${RITUAL_COSTS.uncommon.focus}/${RITUAL_COSTS.uncommon.focus} (II)`,
@@ -360,17 +376,19 @@ function openAttuneCodex(player) {
     `${RARITY.epic.ink}Epic§r ${RITUAL_COSTS.epic.shards}+${RITUAL_COSTS.epic.focus}/${RITUAL_COSTS.epic.focus} (IV)`,
   ].join(" · ");
   const form = new ActionFormData()
-    .title(uiAccentTitle("Attunement Skillbook"))
+    .title(uiAccentTitle("Attunement Codex"))
     .body(
       [
-        uiBody("Read every attunement skill before using the Forge."),
-        "Choose an affinity, then choose a skill.",
+        uiBody("Browse every attunement skill — triggers, costs, and tiers."),
+        "Choose an attune path, then choose a skill.",
+        uiMuted("Class (Affinity) = the relic's class, e.g. Healer."),
+        uiMuted("◆ Synergy = forging its primary path (stronger effects, −1 Arcane Dust)."),
         "Relics keep their base passive; attunements stack on top.",
         "Wear an attuned relic to level it. Relic level 5 opens slot two.",
         "",
-        rarityLine,
+        paint(Ink.purple, "Rituals: place an Attunement Forge and tap it."),
         "",
-        uiDim("Numbers mean Relic Shards (from your bag) + focus A / focus B. The pair guarantees the group."),
+        rarityLine,
       ].join("\n")
     );
 
@@ -383,20 +401,15 @@ function openAttuneCodex(player) {
       )
     );
   }
-  form.button(paint(Ink.purple, "Open Attunement Forge"));
-  form.button(uiBack());
+  form.button(back ? uiBack() : uiClose());
 
   showGuideForm(form, player).then((res) => {
     if (res.canceled || res.selection === undefined) return;
     if (res.selection < GROUP_ORDER.length) {
-      showAttuneGroup(player, GROUP_ORDER[res.selection]);
+      showAttuneGroup(player, GROUP_ORDER[res.selection], back);
       return;
     }
-    if (res.selection === GROUP_ORDER.length) {
-      openAttunement(player, openAttuneCodex);
-      return;
-    }
-    openGuidebook(player);
+    if (back) back(player);
   });
 }
 
@@ -409,7 +422,7 @@ function showWhatsNew(player) {
       "",
       `${paint(Ink.purple, "Attunement Forge")}`,
       "Tap the placed Forge once to open its ritual menu directly.",
-      "Choose a relic, affinity recipe, and rarity; the menu shows",
+      "Choose a relic, attune path, and rarity; the menu shows",
       "both required focus materials and your current inventory counts.",
       "",
       `${paint(Ink.highlight, "32 behavior-evolving attunements")}`,
@@ -476,6 +489,9 @@ function openSettings(player) {
   const sense = isRelicSenseEnabled(player);
   const boosts = areBoostsEnabled(player);
   const notifications = areEffectNotificationsEnabled(player);
+  const attunement = isAttunementEnabled(player);
+  const balance = getBalanceMode(player);
+  const balanceOp = balance === BALANCE_OP;
   const form = new ActionFormData()
     .title(uiTitle("RPG Relics Settings"))
     .body(
@@ -486,21 +502,42 @@ function openSettings(player) {
         "tower, home, or underground camp.",
         `Status: ${sense ? paint(Ink.good, "Enabled") : paint(Ink.bad, "Disabled")}`,
         "",
-        `${uiHighlight("Boosts")} — loadout playstyle bonuses`,
-        "(Might, Ward, Gale, Fortune, Vitality, Alchemy).",
+        `${uiHighlight("Affinity")} — loadout class bonuses`,
+        "(Berserker, Guardian, Scout, Trickster, Healer, Arcanist).",
         `Status: ${boosts ? paint(Ink.good, "Enabled") : paint(Ink.bad, "Disabled")}`,
         "",
         `${uiHighlight("Effect notifications")} — short action-bar`,
         "messages when relic effects trigger.",
         `Status: ${notifications ? paint(Ink.good, "Enabled") : paint(Ink.bad, "Disabled")}`,
         "",
-        uiDim("Equipped relic effects still work when Boosts are off."),
+        `${uiHighlight("Attunement")} — Codex, Forge rituals, skills,`,
+        "and focus material drops (hearts, fangs, herbs…).",
+        "Off = relics-only: base relics & Arcane Dust stay.",
+        `Status: ${attunement ? paint(Ink.good, "Enabled") : paint(Ink.bad, "Disabled")}`,
+        "",
+        `${uiHighlight("Balance")} — Standard keeps normal cooldowns.`,
+        "OP removes relic, Affinity, and attunement cooldowns.",
+        `Status: ${
+          balanceOp
+            ? paint(Ink.highlight, "OP (no cooldowns)")
+            : paint(Ink.good, "Standard")
+        }`,
+        "",
+        uiDim("Equipped relic effects still work when Affinity is off."),
       ].join("\n")
     )
     .button(`${sense ? paint(Ink.good, "ON") : paint(Ink.bad, "OFF")} ${uiBody("Relic Sense")}`)
-    .button(`${boosts ? paint(Ink.good, "ON") : paint(Ink.bad, "OFF")} ${uiBody("Boosts")}`)
+    .button(`${boosts ? paint(Ink.good, "ON") : paint(Ink.bad, "OFF")} ${uiBody("Affinity")}`)
     .button(
       `${notifications ? paint(Ink.good, "ON") : paint(Ink.bad, "OFF")} ${uiBody("Effect notifications")}`
+    )
+    .button(
+      `${attunement ? paint(Ink.good, "ON") : paint(Ink.bad, "OFF")} ${uiBody("Attunement")}`
+    )
+    .button(
+      `${
+        balanceOp ? paint(Ink.highlight, "OP") : paint(Ink.good, "Standard")
+      } ${uiBody("Balance")}`
     )
     .button(uiBack());
 
@@ -514,6 +551,7 @@ function openSettings(player) {
     }
     if (res.selection === 1) {
       toggleBoosts(player);
+      refreshPlayerRelicLore(player);
       openSettings(player);
       return;
     }
@@ -522,232 +560,313 @@ function openSettings(player) {
       openSettings(player);
       return;
     }
+    if (res.selection === 3) {
+      toggleAttunement(player);
+      refreshPlayerRelicLore(player);
+      openSettings(player);
+      return;
+    }
+    if (res.selection === 4) {
+      cycleBalanceMode(player);
+      openSettings(player);
+      return;
+    }
     openGuidebook(player);
   });
 }
 
 export function openGuidebook(player) {
+  refreshPlayerRelicLore(player);
+  const loadout = boostLoadout(player);
   const form = new ActionFormData()
     .title(uiTitle("RPG Relics Guide"))
     .body(
       [
-        uiBody("Tap a page for a short guide."),
+        uiBody("Pick a chapter — shorter lists inside."),
         "",
-        `${paint(Ink.gold, "What's New")} — latest features and changes`,
-        `${paint(Ink.good, "Getting Started")} — open & use the Reliquary`,
-        `${paint(Ink.aqua, "Find Relics")} — loot, towers, homes, camps`,
-        `${paint(Ink.purple, "Relic Sense")} — track the nearest relic site`,
-        `${paint(Ink.purple, "Craft & Upgrade")} — shards, forge, fusions`,
-        `${paint(Ink.violet, "Boosts")} — playstyle abilities (Might, Ward, Gale…)`,
-        `${paint(Ink.purple, "Attunement Skillbook")} — every skill, trigger, and level`,
-        `${paint(Ink.bad, "Mimics")} — living chests that ambush & drop loot`,
-        `${paint(Ink.highlight, "Relic Catalog")} — every relic, icon & exact effect`,
-        `${paint(Ink.white, "Settings")} — Sense, Boosts, and notifications`,
+        boostActiveLine(loadout),
+        "",
+        uiMuted("Active Affinity also flashes on the action bar when it procs."),
       ].join("\n")
     );
 
-  const pages = [
-    "whatsnew",
-    "start",
-    "loot",
-    "sense",
-    "craft",
-    "resonance",
-    "attune",
-    "mimics",
-    "catalog",
-    "settings",
-  ];
-  form.button(paint(Ink.gold, "What's New"));
-  form.button(paint(Ink.good, "Getting Started"));
-  form.button(paint(Ink.aqua, "Find Relics"));
-  form.button(paint(Ink.purple, "Relic Sense"));
-  form.button(paint(Ink.purple, "Craft & Upgrade"));
-  form.button(paint(Ink.violet, "Boosts"));
-  form.button(paint(Ink.purple, "Attunement Skillbook"));
-  form.button(paint(Ink.bad, "Mimics"));
-  form.button(paint(Ink.highlight, "Relic Catalog"));
-  form.button(paint(Ink.white, "Settings"));
+  form.button(labeledButton(paint(Ink.gold, "Start Here"), "basics & crate"));
+  form.button(labeledButton(paint(Ink.aqua, "Adventure"), "find relics"));
+  form.button(labeledButton(paint(Ink.violet, "Systems"), "Affinity & Forge"));
+  form.button(labeledButton(paint(Ink.highlight, "Relic Catalog"), "browse relics"));
+  form.button(labeledButton(paint(Ink.white, "Settings"), "toggles & balance"));
   form.button(uiDim("Close"));
 
+  const chapters = ["start_hub", "adventure", "systems", "catalog", "settings"];
   showGuideForm(form, player).then((res) => {
-    if (res.canceled || res.selection === undefined || res.selection >= pages.length) return;
-    const page = pages[res.selection];
-    if (page === "settings") {
+    if (res.canceled || res.selection === undefined || res.selection >= chapters.length) return;
+    const ch = chapters[res.selection];
+    if (ch === "settings") {
       openSettings(player);
       return;
     }
-    if (page === "whatsnew") {
-      showWhatsNew(player);
-      return;
-    }
-    if (page === "sense") {
-      startRelicSense(player);
-      return;
-    }
-    if (page === "catalog") {
+    if (ch === "catalog") {
       openRelicCatalog(player);
       return;
     }
-    if (page === "attune") {
-      openAttuneCodex(player);
+    if (ch === "start_hub") {
+      openStartChapter(player);
       return;
     }
-    if (page === "resonance") {
-      openBoostCodex(player);
+    if (ch === "adventure") {
+      openAdventureChapter(player);
       return;
     }
-    if (page === "start") {
-      showTextPage(
-        player,
-        "Getting Started",
-        [
-          "§61. Open the Reliquary§r",
-          "Use your §eRelic Crate§r or §e/scriptevent relics:open_menu§r.",
-          "",
-          "§62. Interact§r",
-          "A wardrobe appears at your feet — interact to open it.",
-          "",
-          "§63. Drag relics in§r",
-          "Drop relics into slots. Effects apply while equipped.",
-          "",
-          "§64. Close when done§r",
-          "Closing the menu despawns it. Idle sessions last ~10s.",
-          "",
-          "§65. Attunement Forge§r",
-          "Use your §dAttunement Forge§r item — or place the",
-          "§dAttunement Forge§r anvil block and tap it.",
-          "Choose a relic, then an affinity. Every affinity",
-          "shows its exact two-material recipe and your counts.",
-          "Choose rarity and confirm; all costs come from your bag.",
-          "Arcane Dust must pair with Fang, Herb, or Silver.",
-          "Wear attuned relics to level them up.",
-          "Most skills fire automatically while you fight, heal, or get surrounded.",
-          "Sprint-jump for Tempest Tithe. Midair jump for Gale Anchor.",
-          "",
-          "Craft a §eReliquary§r: §echest + book + iron ingot§r.",
-          "Guidebook: §ebook + gold nugget§r.",
-          "",
-          "§aFirst join gives Relic Tome, Relic Crate, and Attunement Forge.§r",
-        ].join("\n"),
-        openGuidebook
-      );
-      return;
-    }
-    if (page === "loot") {
-      showTextPage(
-        player,
-        "Find Relics",
-        [
-          "§6Exploration loot§r",
-          "Relics drop from chests, camps, mimics, archaeology, and mobs.",
-          "§eRelic Shards§r also drop — used for crafting.",
-          "",
-          "§eDungeon & mine chests§r",
-          "§714%§r surface · §e22%§r shallow · §632%§r deep, first open.",
-          "",
-          "§eRelic towers & homes§r",
-          "Two surface structures in new chunks.",
-          "§7~1/80§r normal · §7~1/110§r mimic variants.",
-          "Spruce pillager tower or sandstone-roof witch house.",
-          "Interior loot chests; witches, pillagers, and mimics.",
-          "Find: §e/scriptevent relics:tower§r",
-          "TP: §e/scriptevent relics:tower_tp§r",
-          "",
-          "§eMimics§r",
-          "§718%§r chance when opening deep chests — defeat for relics + shards.",
-          "",
-          "§eArchaeology§r",
-          "Brush suspicious sand/gravel — §e22%§r chance to uncover a relic.",
-          "",
-          "§eHostile mobs§r",
-          "§75%§r relic drop; §725%§r bonus shard chance.",
-          "",
-          "§eUnderground camps§r",
-          "Frequent campsites around §bY -50..0§r.",
-          "Camp chests/barrels use §erelics:§r loot tables (60% scripted bonus).",
-          "Find: §e/scriptevent relics:camp§r",
-          "TP: §e/scriptevent relics:camp_tp§r",
-        ].join("\n"),
-        openGuidebook
-      );
-      return;
-    }
-    if (page === "craft") {
-      showTextPage(
-        player,
-        "Craft & Upgrade",
-        [
-          "§6Relic Shards§r",
-          "Found in loot tables, mimics, mobs, and archaeology.",
-          "",
-          "§6Relic Forge§r",
-          "Craft with amethyst, book, deepslate bricks + crafting table.",
-          "Looks like a purple/gold crafting table.",
-          "Open it for the §ereal Bedrock crafting UI§r — Relic recipes only.",
-          "Test: §e/give @s relics:relic_forge§r",
-          "",
-          "§eRPG materials§r",
-          "Monster Hearts: zombies, husks, drowned, brutes, ravagers, wardens.",
-          "Beast Fangs: spiders, hoglins, ravagers, wardens.",
-          "Arcane Dust: witches, endermen, evokers, shulkers.",
-          "Mystic Herbs: grass/flowers, plus relic tower & home chests.",
-          "Silver Fragments: skeletons, strays, illagers, zombie villagers, relic chests.",
-          "Crimson Crystals: creepers, blazes, magma cubes, wither skeletons.",
-          "§8Custom ore blocks are planned for a future update/add-on.§r",
-          "",
-          "§eStarter crafts§r",
-          "Bloom Band, Miner's Ring, Plague Mask, Puff Bottle,",
-          "Excavator Gauntlets, Ashen Vessel — forge only.",
-          "",
-          "§6Ascended relics (tier 3)§r",
-          "Fuse two similar relics + a §ethemed RPG material§r at the Relic Forge.",
-          "Catalysts include hearts, dust, herbs, silver, crystals, and shards.",
-          "Example: Plague Mask + Ashen Vessel → §eVenom Ward§r.",
-          "",
-          "§eAll 10 fusions§r",
-          "Venom Ward · Nimbus Mantle · Inferno Brand",
-          "Veinheart Gauntlets · Vital Bloom · Alchemist's Focus",
-          "Tempest Choker · Gale Aegis · Bulwark Plate · Treasure Lure",
-          "",
-          "Browse §eAscended§r in the Relic Catalog for exact effects.",
-        ].join("\n"),
-        openGuidebook
-      );
-      return;
-    }
-    if (page === "mimics") {
-      showTextPage(
-        player,
-        "Mimics",
-        [
-          "§cWhat is a Mimic?§r",
-          "A living chest — looks like loot until you get close,",
-          "then it wakes and bites (toothy chest monster).",
-          "",
-          "§6Where they spawn§r",
-          "§7•§r Mimic camps underground (§bdormant chests§r)",
-          "§7•§r Deep real chests (§bY ≤ 24§r) — rare ambush",
-          "§7•§r Biome-themed skins: forest, desert, swamp,",
-          "    snow, jungle, badlands",
-          "",
-          "§6How to fight§r",
-          "Sleeps until you approach. Jaw snaps open when it attacks.",
-          "Each biome bite carries a different status effect:",
-          "§7• Forest§r poison + slow   §7• Desert§r hunger + weak",
-          "§7• Badlands§r fire            §7• Snow§r frost + fatigue",
-          "§7• Swamp§r strong poison    §7• Jungle§r blind + poison",
-          "Test: §e/give @s relics:spawn_mimic_forest§r",
-          "Creative: §eMimics§r item group",
-          "",
-          "§6Rewards§r",
-          "Drops relic loot + §eRelic Shards§r on defeat.",
-          "",
-          "§8Craft a Reliquary (chest + book + iron) before caving.",
-        ].join("\n"),
-        openGuidebook
-      );
+    if (ch === "systems") {
+      openSystemsChapter(player);
       return;
     }
   });
 }
+
+function openStartChapter(player) {
+  const form = new ActionFormData()
+    .title(uiTitle("Start Here"))
+    .body(
+      [
+        uiBody("New to RPG Relics?"),
+        `${paint(Ink.gold, "What's New")} — latest pack notes`,
+        `${paint(Ink.good, "Getting Started")} — Reliquary, Affinity, Attunement`,
+      ].join("\n")
+    )
+    .button(paint(Ink.gold, "What's New"))
+    .button(paint(Ink.good, "Getting Started"))
+    .button(uiBack());
+
+  showGuideForm(form, player).then((res) => {
+    if (res.canceled || res.selection === undefined || res.selection >= 2) {
+      openGuidebook(player);
+      return;
+    }
+    if (res.selection === 0) {
+      showWhatsNew(player);
+      return;
+    }
+    showGettingStarted(player);
+  });
+}
+
+function openAdventureChapter(player) {
+  const form = new ActionFormData()
+    .title(uiTitle("Adventure"))
+    .body(
+      [
+        uiBody("Find relics in the world."),
+        `${paint(Ink.aqua, "Find Relics")} — loot, towers, homes, camps`,
+        `${paint(Ink.bad, "Mimics")} — living chests`,
+        `${paint(Ink.purple, "Relic Sense")} — track the nearest site`,
+      ].join("\n")
+    )
+    .button(paint(Ink.aqua, "Find Relics"))
+    .button(paint(Ink.bad, "Mimics"))
+    .button(paint(Ink.purple, "Relic Sense"))
+    .button(uiBack());
+
+  showGuideForm(form, player).then((res) => {
+    if (res.canceled || res.selection === undefined || res.selection >= 3) {
+      openGuidebook(player);
+      return;
+    }
+    if (res.selection === 0) {
+      showFindRelics(player);
+      return;
+    }
+    if (res.selection === 1) {
+      showMimicsPage(player);
+      return;
+    }
+    startRelicSense(player);
+  });
+}
+
+function openSystemsChapter(player) {
+  const attunementOn = isAttunementEnabled(player);
+  const loadout = boostLoadout(player);
+  const form = new ActionFormData()
+    .title(uiAccentTitle("Systems"))
+    .body(
+      [
+        uiBody("Your loadout class and Forge skills."),
+        boostActiveLine(loadout),
+        "",
+        `${paint(Ink.violet, "Affinity Codex")} — classes, ranks I–III, live power`,
+        attunementOn
+          ? `${paint(Ink.purple, "Attunement Codex")} — skills, triggers, levels`
+          : `${paint(Ink.dim, "Attunement Codex")} — disabled in Settings`,
+        `${paint(Ink.purple, "Craft & Upgrade")} — Dust, Forge, Ascended fusions`,
+      ].join("\n")
+    )
+    .button(paint(Ink.violet, "Affinity Codex"))
+    .button(
+      attunementOn
+        ? paint(Ink.purple, "Attunement Codex")
+        : paint(Ink.dim, "Attunement Codex (off)")
+    )
+    .button(paint(Ink.purple, "Craft & Upgrade"))
+    .button(uiBack());
+
+  showGuideForm(form, player).then((res) => {
+    if (res.canceled || res.selection === undefined || res.selection >= 3) {
+      openGuidebook(player);
+      return;
+    }
+    if (res.selection === 0) {
+      openBoostCodex(player);
+      return;
+    }
+    if (res.selection === 1) {
+      openAttuneCodex(player, () => openSystemsChapter(player));
+      return;
+    }
+    showCraftUpgrade(player);
+  });
+}
+
+function showGettingStarted(player) {
+  showTextPage(
+    player,
+    "Getting Started",
+    [
+      "§61. Open the Reliquary§r",
+      "Use your §eRelic Crate§r.",
+      "A wardrobe appears — interact, then drop relics into slots.",
+      "",
+      "§62. Equipped relics§r",
+      "Effects apply while equipped. They stay on you when you die or log out.",
+      "",
+      "§63. Affinity (Class)§r",
+      "Each relic has one §dAffinity class§r (e.g. Healer, Berserker).",
+      "Your strongest equipped class is active (rank I–III).",
+      "See: Tome → Systems → Affinity Codex.",
+      "",
+      "§64. Attunement & Synergy§r",
+      "Study skills in the §dAttunement Codex§r.",
+      "Place an §dAttunement Forge§r, pick a relic and path, then forge.",
+      "◆ Synergy = the relic's §aprimary§r path — stronger effects and −1 Arcane Dust.",
+      "Wear attuned relics to level them.",
+      "",
+      "Craft §eReliquary§r: chest + book + iron. Guidebook: book + gold nugget.",
+      "§aFirst join gives Relic Tome, Relic Crate, and Attunement Codex.§r",
+    ].join("\n"),
+    () => openStartChapter(player)
+  );
+}
+
+function showFindRelics(player) {
+  showTextPage(
+    player,
+    "Find Relics",
+    [
+      "§6Exploration loot§r",
+      "Relics drop from chests, camps, mimics, archaeology, and mobs.",
+      "§eArcane Dust§r also drops — used for crafting and Forge rituals.",
+      "",
+      "§eDungeon & mine chests§r",
+      "§714%§r surface · §e22%§r shallow · §632%§r deep, first open.",
+      "",
+      "§eRelic towers & homes§r",
+      "Two surface structures in new chunks.",
+      "§7~1/20§r normal · §7~1/28§r mimic variants.",
+      "Spruce tower or sandstone-roof witch house (50/50).",
+      "Interior loot chests; undead hostiles and mimics.",
+      "§8Dev: /scriptevent relics:tower · relics:tower_tp§r",
+      "",
+      "§eMimics§r",
+      "§724%§r deep chests · §728%§r camp chests — defeat for relics + shards.",
+      "",
+      "§eArchaeology§r",
+      "Brush suspicious sand/gravel — §e22%§r chance to uncover a relic.",
+      "",
+      "§eHostile mobs§r",
+      "§75%§r relic drop; §725%§r bonus shard chance.",
+      "",
+      "§eUnderground camps§r",
+      "Frequent campsites around §bY -50..0§r.",
+      "Camp chests/barrels use §erelics:§r loot tables (60% scripted bonus).",
+      "§8Dev: /scriptevent relics:camp · relics:camp_tp§r",
+    ].join("\n"),
+    () => openAdventureChapter(player)
+  );
+}
+
+function showCraftUpgrade(player) {
+  showTextPage(
+    player,
+    "Craft & Upgrade",
+    [
+      "§6Arcane Dust§r",
+      "Found in loot tables, mimics, mobs, and archaeology.",
+      "Spend it at the Attunement Forge and Relic Forge.",
+      "",
+      "§6Relic Forge§r",
+      "Craft with amethyst, book, deepslate bricks + crafting table.",
+      "Looks like a purple/gold crafting table.",
+      "Open it for the §ereal Bedrock crafting UI§r — Relic recipes only.",
+      "",
+      "§eRPG materials§r",
+      "Monster Hearts: zombies, husks, drowned, brutes, ravagers, wardens.",
+      "Beast Fangs: spiders, hoglins, ravagers, wardens.",
+      "Arcane Gem: witches, endermen, evokers, shulkers.",
+      "Mystic Herbs: grass/flowers, plus relic tower & home chests.",
+      "Silver Fragments: skeletons, strays, illagers, zombie villagers, relic chests.",
+      "Crimson Crystals: creepers, blazes, magma cubes, wither skeletons.",
+      "§8Custom ore blocks are planned for a future update/add-on.§r",
+      "",
+      "§eStarter crafts§r",
+      "Bloom Band, Miner's Ring, Plague Mask, Puff Bottle,",
+      "Excavator Gauntlets, Ashen Vessel — forge only.",
+      "",
+      "§6Ascended relics (tier 3)§r",
+      "Fuse two similar relics + a §ethemed RPG material§r at the Relic Forge.",
+      "Catalysts include hearts, dust, herbs, silver, crystals, and shards.",
+      "Example: Plague Mask + Ashen Vessel → §eVenom Ward§r.",
+      "",
+      "§eAll 10 fusions§r",
+      "Venom Ward · Nimbus Mantle · Inferno Brand",
+      "Veinheart Gauntlets · Vital Bloom · Alchemist's Focus",
+      "Tempest Choker · Gale Aegis · Bulwark Plate · Treasure Lure",
+      "",
+      "Browse §eAscended§r in the Relic Catalog for exact effects.",
+    ].join("\n"),
+    () => openSystemsChapter(player)
+  );
+}
+
+function showMimicsPage(player) {
+  showTextPage(
+    player,
+    "Mimics",
+    [
+      "§cWhat is a Mimic?§r",
+      "A living chest — looks like loot until you get close,",
+      "then it wakes and bites (toothy chest monster).",
+      "",
+      "§6Where they spawn§r",
+      "§7•§r Mimic camps underground (§bdormant chests§r)",
+      "§7•§r Deep real chests (§bY ≤ 24§r) — §724%§r ambush (§728%§r camps)",
+      "§7•§r Biome-themed skins: forest, desert, swamp,",
+      "    snow, jungle, badlands",
+      "",
+      "§6How to fight§r",
+      "Sleeps until you approach. Jaw snaps open when it attacks.",
+      "Each biome bite carries a different status effect:",
+      "§7• Forest§r poison + slow   §7• Desert§r hunger + weak",
+      "§7• Badlands§r fire            §7• Snow§r frost + fatigue",
+      "§7• Swamp§r strong poison    §7• Jungle§r blind + poison",
+      "Test: §e/give @s relics:spawn_mimic_forest§r",
+      "Creative: §eMimics§r item group",
+      "",
+      "§6Rewards§r",
+      "Drops relic loot + §eArcane Dust§r on defeat.",
+      "",
+      "§8Craft a Reliquary (chest + book + iron) before caving.",
+    ].join("\n"),
+    () => openAdventureChapter(player)
+  );
+}
+

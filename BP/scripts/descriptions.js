@@ -3,7 +3,16 @@ import { isUpgradeRelic } from "./upgrades.js";
 import { getExternalRelicDef } from "./api.js";
 import { BoostInk, TierInk, Ink, AttuneInk } from "./theme.js";
 import { ITEM_ICON_TEXTURES } from "./relic_icons.js";
-import { FOCUS_RECIPES, GROUP_LABELS, SHARD_ID } from "./attune_pool.js";
+import { areBoostsEnabled, isAttunementEnabled } from "./settings.js";
+import {
+  FOCUS_RECIPES,
+  GROUP_LABELS,
+  SHARD_ID,
+  allowedAttuneGroups,
+  affinityClassLabel,
+  primaryAttuneGroup,
+  relicAffinity as relicAffinityKey,
+} from "./attune_pool.js";
 
 const EFFECT_LABELS = {
   night_vision: "Night Vision",
@@ -121,35 +130,9 @@ function tierLoreLine(tier) {
   return `${TierInk.common}Common`;
 }
 
-const AFFINITY_GALE = new Set([
-  "fluid_movement", "swim_boost", "liquid_sprint", "double_jump",
-  "triple_jump", "gale_glide", "no_fall_damage",
-]);
-const AFFINITY_WARD = new Set([
-  "phase_dodge", "knockback_resist", "fire_res_on_burn", "repel_creepers", "crystal_shards",
-]);
-const AFFINITY_FORTUNE = new Set([
-  "double_ore", "item_magnet", "fishing_haul", "reveal_hostiles",
-]);
-const AFFINITY_VITALITY = new Set(["second_wind", "sustaining_cap"]);
-const AFFINITY_ALCHEMY = new Set([
-  "purify_effects", "grand_alchemy", "potion_linger",
-  "toxin_filter", "wither_cleanse", "full_toxin_ward",
-]);
-
 function relicAffinity(def) {
-  const eff = def.passive?.effect;
-  if (def.onAttack?.lifesteal) return { label: "Vitality", color: BoostInk.vitality };
-  if (def.onAttack || def.custom === "execute_low_hp") return { label: "Might", color: BoostInk.might };
-  if (def.onHurt || AFFINITY_WARD.has(def.custom) || eff === "resistance" || eff === "fire_resistance")
-    return { label: "Ward", color: BoostInk.ward };
-  if (AFFINITY_GALE.has(def.custom) || ["speed", "jump_boost", "slow_falling", "dolphins_grace"].includes(eff))
-    return { label: "Gale", color: BoostInk.gale };
-  if (AFFINITY_FORTUNE.has(def.custom) || def.onKill || ["luck", "village_hero", "haste"].includes(eff))
-    return { label: "Fortune", color: BoostInk.fortune };
-  if (AFFINITY_VITALITY.has(def.custom) || ["regeneration", "health_boost", "saturation"].includes(eff))
-    return { label: "Vitality", color: BoostInk.vitality };
-  return { label: "Alchemy", color: BoostInk.alchemy };
+  const key = relicAffinityKey(def);
+  return { key, label: affinityClassLabel(key), color: BoostInk[key] ?? BoostInk.alchemy };
 }
 
 function slotLoreLine(def) {
@@ -284,10 +267,10 @@ const HELD_BLURBS = {
   "relics:storm_parasol": "Hold while airborne for Slow Falling",
   "relics:menu": "Opens the Reliquary",
   "relics:relic_guidebook": "How to find & use relics",
-  "relics:attunement_tome": "Attunement Forge — bind relics with shards and paired focuses",
+  "relics:attunement_tome": "Attunement Codex — browse skills, triggers, and tiers",
 };
 
-/** Forge material lore: which affinity groups each focus can attune. */
+/** Forge material lore: which attune paths each focus can help open. */
 const MATERIAL_LORE = (() => {
   const byMaterial = {};
   for (const [group, pair] of Object.entries(FOCUS_RECIPES)) {
@@ -297,25 +280,92 @@ const MATERIAL_LORE = (() => {
   for (const [id, groups] of Object.entries(byMaterial)) {
     out[id] = [
       "§7Attunement Forge focus",
-      groups.map((g) => `${AttuneInk[g]}${GROUP_LABELS[g]}§r`).join(" §8· "),
+      `${Ink.purple}Attunement paths:§r ${groups
+        .map((g) => `${AttuneInk[g]}${GROUP_LABELS[g]}§r`)
+        .join(" §8· ")}`,
     ];
   }
-  out[SHARD_ID] = ["§7Fuel for every Forge ritual"];
+  out[SHARD_ID] = ["§7Fuel for every Forge ritual", "§eArcane Dust"];
   return out;
 })();
 
-export function loreLinesForItem(itemId, def) {
+function attunePathsLoreLine(itemId) {
+  const groups = allowedAttuneGroups(itemId);
+  if (!groups?.length) return `${Ink.purple}Attunement paths: §8—`;
+  return `${Ink.purple}Attunement paths:§r ${groups
+    .map((g) => `${AttuneInk[g]}${GROUP_LABELS[g]}§r`)
+    .join(" §8· ")}`;
+}
+
+/**
+ * Player settings → which Class / Synergy / Attunement lore lines to stamp.
+ * Defaults (no player): show everything (world chests / unknown context).
+ * @returns {{ showAffinity: boolean, showAttunement: boolean }}
+ */
+export function loreOptsForPlayer(player) {
+  if (!player) return { showAffinity: true, showAttunement: true };
+  return {
+    showAffinity: areBoostsEnabled(player),
+    showAttunement: isAttunementEnabled(player),
+  };
+}
+
+/** Class (Affinity) and Synergy (primary forge path) — gated by settings opts. */
+function classAndSynergyLore(def, opts = {}) {
+  if (!def) return [];
+  const showAffinity = opts.showAffinity !== false;
+  const showAttunement = opts.showAttunement !== false;
+  const aff = relicAffinity(def);
+  const lines = [];
+  if (showAffinity) {
+    lines.push(`${aff.color}Class: ${aff.label}`);
+  }
+  // Synergy is Affinity↔Attunement — only when both systems are on.
+  if (showAffinity && showAttunement) {
+    const primary = primaryAttuneGroup(aff.key);
+    if (primary) {
+      lines.push(
+        `${AttuneInk[primary] ?? Ink.good}Synergy: ${GROUP_LABELS[primary]}§r §8(primary path)`
+      );
+    }
+  }
+  return lines;
+}
+
+/** Guidebook / forms: Affinity class + Forge attunement paths (not the same system). */
+export function affinityAndAttuneLines(itemId, def, opts = {}) {
+  if (!def) return [];
+  const lines = [...classAndSynergyLore(def, opts)];
+  if (opts.showAttunement !== false) {
+    lines.push(attunePathsLoreLine(itemId));
+  }
+  return lines;
+}
+
+/** @deprecated Renamed to affinityAndAttuneLines; alias kept for callers. */
+export const boostAndAttuneLines = affinityAndAttuneLines;
+
+/**
+ * @param {string} itemId
+ * @param {object|undefined} def
+ * @param {{ showAffinity?: boolean, showAttunement?: boolean }} [opts]
+ */
+export function loreLinesForItem(itemId, def, opts = {}) {
   const lines = [];
   if (def) {
     if (isUpgradeRelic(itemId)) {
       lines.push("§d✦ Ascended Relic");
     }
-    const aff = relicAffinity(def);
-    lines.push(`${tierLoreLine(getRelicTier(itemId))} §8• ${aff.color}${aff.label} Boost`);
-    lines.push(slotLoreLine(def));
+    lines.push(`${tierLoreLine(getRelicTier(itemId))} §8• ${slotLoreLine(def)}`);
+    lines.push(...classAndSynergyLore(def, opts));
     lines.push(`§7${shortBlurb(def)}`);
   } else if (MATERIAL_LORE[itemId]) {
-    lines.push(...MATERIAL_LORE[itemId]);
+    const mat = MATERIAL_LORE[itemId];
+    if (opts.showAttunement === false && itemId !== SHARD_ID) {
+      lines.push("§7Forge focus material");
+    } else {
+      lines.push(...mat);
+    }
   } else if (HELD_BLURBS[itemId]) {
     lines.push(`§7${HELD_BLURBS[itemId]}`);
   }
