@@ -98,8 +98,8 @@ pack.name=RPG Relics
 pack.description=Equipable relics, Reliquary wardrobe, and Attunement - DeepForge Studios
 
 ## Hide engine footer shown when items have lore / dynamic properties / custom_components
-## Empty value falls back to vanilla English — use ZWSP so the line renders invisible
-item.customProperties=​
+## Empty value falls back to vanilla English — a normal space hides the label without the ZWSP glyph
+item.customProperties= 
 
 item.relics:spawn_mimic_forest=Forest Mimic Spawn Egg
 item.relics:spawn_mimic_desert=Desert Mimic Spawn Egg

@@ -86,7 +86,7 @@ function Stamp-PackManifests {
     [System.IO.File]::WriteAllText($rpPath, ($rp | ConvertTo-Json -Depth 10), $utf8NoBom)
 
     if (Test-Path $langPath) {
-        # UTF-8 read/write — default Get-Content drops ZWSP used to hide item.customProperties
+        # UTF-8 read/write — preserve lang bytes used to hide item.customProperties
         $lang = [System.IO.File]::ReadAllLines($langPath, $utf8NoBom)
         $lang = $lang | ForEach-Object {
             if ($_ -match '^pack\.name=') { "pack.name=RPG Relics $label" }

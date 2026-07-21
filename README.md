@@ -49,9 +49,9 @@ Equipped relics add Affinity power by rarity (common 1 · uncommon 2 · rare/asc
 | Affinity | Effect |
 |----------|--------|
 | Might | Bonus damage on repeated attacks |
-| Ward | Chance to deflect melee hits |
+| Ward | Take less damage from hits |
 | Gale | Sprint bursts of speed |
-| Fortune | Extra ore drops |
+| Fortune | Chance for much larger ore drops |
 | Vitality | Heal on kill |
 | Alchemy | Longer potion effects |
 

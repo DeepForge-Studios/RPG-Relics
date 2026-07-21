@@ -255,7 +255,7 @@ export function openBoostCodex(player) {
 
 const ATTUNE_GROUP_INFO = {
   might: ["Monster Heart + Beast Fang", "build pressure, then burst"],
-  ward: ["Silver Fragment + Monster Heart", "counter attacks and hold ground"],
+  ward: ["Silver Fragment + Monster Heart", "soak hits and hold ground"],
   gale: ["Beast Fang + Arcane Gem", "reposition through combat"],
   fortune: ["Silver Fragment + Beast Fang", "make visible wagers"],
   vitality: ["Mystic Herb + Monster Heart", "perform healing rituals"],
@@ -419,6 +419,11 @@ function showWhatsNew(player) {
     "What's New",
     [
       `${paint(Ink.gold, `Test Build ${TEST_BUILD}`)}`,
+      "",
+      `${paint(Ink.purple, "Affinity updates")}`,
+      "Guardian — take less damage (15% / 25% / 35%), not deflect.",
+      "Trickster — each ore block can roll a big multiplier drop:",
+      "30% for 3× · 45% for 6× · 50% for 12× (no cooldown).",
       "",
       `${paint(Ink.purple, "Attunement Forge")}`,
       "Tap the placed Forge once to open its ritual menu directly.",

@@ -902,12 +902,10 @@ export function handleOreBreak(player, blockTypeId, blockLocation) {
   const dropId = ORE_BONUS[blockTypeId];
   if (!dropId) return;
   const resonance = resonanceProfile(player);
-  const resonanceChance =
-    resonance?.affinity === "fortune"
-      ? [0, 0.1, 0.16, 0.24][resonance.level]
-      : 0;
-  const chance = Math.max(def?.oreChance ?? 0, resonanceChance);
-  if (chance <= 0 || Math.random() > chance) return;
+  const fortuneLevel = resonance?.affinity === "fortune" ? resonance.level : 0;
+  // Per-block roll — no cooldown. Mult is total ore multiplier when it procs (vanilla drop + extras).
+  const fortuneChance = [0, 0.3, 0.45, 0.5][fortuneLevel];
+  const fortuneMult = [0, 3, 6, 12][fortuneLevel];
   const loc = {
     x: blockLocation.x + 0.5,
     y: blockLocation.y + 0.5,
@@ -915,15 +913,25 @@ export function handleOreBreak(player, blockTypeId, blockLocation) {
   };
   system.run(() => {
     try {
-      player.dimension.spawnItem(new ItemStack(dropId, 1), loc);
-      try {
-        player.playSound("random.orb", { volume: 0.35, pitch: 1.4 });
-        if (!def && resonanceChance > 0) {
-          showActionBar(player, 
-            `§6Trickster Affinity ${"I".repeat(resonance.level)} — bonus ore`
+      if (fortuneLevel > 0 && Math.random() < fortuneChance) {
+        const extra = Math.max(1, fortuneMult - 1);
+        player.dimension.spawnItem(new ItemStack(dropId, extra), loc);
+        try {
+          player.playSound("random.orb", { volume: 0.35, pitch: 1.4 });
+          showActionBar(
+            player,
+            `§6Trickster Affinity ${"I".repeat(fortuneLevel)} — ${fortuneMult}× ore`
           );
+        } catch {
         }
-      } catch {
+        return;
+      }
+      if (def && Math.random() < (def.oreChance ?? 0)) {
+        player.dimension.spawnItem(new ItemStack(dropId, 1), loc);
+        try {
+          player.playSound("random.orb", { volume: 0.35, pitch: 1.4 });
+        } catch {
+        }
       }
     } catch (err) {
       console.warn(`[RPG Relics] ore bonus failed: ${err}`);
@@ -1099,26 +1107,6 @@ export function handlePlayerHurtBefore(player, damageSource, incomingDamage = 0)
       });
     }
   }
-  const resonance = resonanceProfile(player);
-  if (!cancel && resonance?.affinity === "ward" && damageSource.damagingEntity) {
-    const chance = [0, 0.1, 0.16, 0.24][resonance.level];
-    const cooldown = [0, 100, 85, 70][resonance.level];
-    if (
-      Math.random() < chance &&
-      !isCooling(player, "resonance_ward", cooldown)
-    ) {
-      cancel = true;
-      system.run(() => {
-        try {
-          player.playSound("item.shield.block", { volume: 0.7, pitch: 1.2 });
-          showActionBar(player, 
-            `§9Guardian Affinity ${"I".repeat(resonance.level)} — attack deflected`
-          );
-        } catch {
-        }
-      });
-    }
-  }
   return { cancel };
 }
 
@@ -1128,6 +1116,25 @@ export function handlePlayerHurtAfter(player, damageSource, damage) {
 
   handleAttuneHurtAfter(player, damageSource, damage);
   grantWearXp(player, 1, "hurt", 60);
+
+  const wardResonance = resonanceProfile(player);
+  if (wardResonance?.affinity === "ward" && damage > 0) {
+    const reduce = [0, 0.15, 0.25, 0.35][wardResonance.level] ?? 0;
+    if (reduce > 0) {
+      healPlayer(player, damage * reduce);
+      // Always soak; only ping the action bar occasionally so combat stays readable.
+      if (!isCooling(player, "resonance_ward_fx", 40)) {
+        try {
+          player.playSound("item.shield.block", { volume: 0.35, pitch: 1.35 });
+          showActionBar(
+            player,
+            `§9Guardian Affinity ${"I".repeat(wardResonance.level)} — ${Math.round(reduce * 100)}% less damage`
+          );
+        } catch {
+        }
+      }
+    }
+  }
 
   for (const { def } of getEquippedAll(player)) {
     try {
@@ -1544,13 +1551,18 @@ export function statusLines(player) {
       resonanceEffect = `every ${[0, 5, 4, 3][resonance.level]} hits echoes for +${[0, 2, 3, 5][resonance.level]} damage`;
       break;
     case "ward":
-      resonanceEffect = `${Math.round([0, 0.1, 0.16, 0.24][resonance.level] * 100)}% chance to deflect an attack`;
+      resonanceEffect = `take ${Math.round([0, 0.15, 0.25, 0.35][resonance.level] * 100)}% less damage`;
       break;
     case "gale":
       resonanceEffect = "sprinting periodically triggers Tailwind";
       break;
     case "fortune":
-      resonanceEffect = `${Math.round([0, 0.1, 0.16, 0.24][resonance.level] * 100)}% bonus ore chance`;
+      resonanceEffect = [
+        "",
+        "30% chance for 3× ore per block",
+        "45% chance for 6× ore per block",
+        "50% chance for 12× ore per block",
+      ][resonance.level];
       break;
     case "vitality":
       resonanceEffect = `kills restore ${[0, 1, 2, 3][resonance.level]} hearts`;

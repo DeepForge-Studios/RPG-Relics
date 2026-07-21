@@ -30,11 +30,11 @@ export const BOOST_ABILITIES = {
   },
   ward: {
     color: BoostInk.ward,
-    summary: "Chance to deflect incoming attacks.",
+    summary: "Take less damage from hits.",
     tiers: [
-      "I — 10% deflect chance",
-      "II — 16% deflect chance",
-      "III — 24% deflect chance",
+      "I — Take 15% less damage",
+      "II — Take 25% less damage",
+      "III — Take 35% less damage",
     ],
   },
   gale: {
@@ -48,11 +48,11 @@ export const BOOST_ABILITIES = {
   },
   fortune: {
     color: BoostInk.fortune,
-    summary: "Chance for extra ore when mining.",
+    summary: "Each ore block can burst into a much larger drop.",
     tiers: [
-      "I — 10% bonus ore chance",
-      "II — 16% bonus ore chance",
-      "III — 24% bonus ore chance",
+      "I — 30% chance for 3× ore from that block",
+      "II — 45% chance for 6× ore from that block",
+      "III — 50% chance for 12× ore from that block",
     ],
   },
   vitality: {

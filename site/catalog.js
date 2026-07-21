@@ -7186,30 +7186,30 @@ window.RELIC_CATALOG = {
       "id": "ward",
       "name": "Guardian",
       "color": "var(--ward)",
-      "summary": "Chance to deflect incoming attacks.",
+      "summary": "Take less damage from hits.",
       "tiers": [
-        "10% deflect chance",
-        "16% deflect chance",
-        "24% deflect chance"
+        "15% less damage",
+        "25% less damage",
+        "35% less damage"
       ],
       "levels": [
         {
           "level": 1,
           "roman": "I",
-          "text": "10% deflect chance",
-          "display": "I — 10% deflect chance"
+          "text": "Take 15% less damage",
+          "display": "I — Take 15% less damage"
         },
         {
           "level": 2,
           "roman": "II",
-          "text": "16% deflect chance",
-          "display": "II — 16% deflect chance"
+          "text": "Take 25% less damage",
+          "display": "II — Take 25% less damage"
         },
         {
           "level": 3,
           "roman": "III",
-          "text": "24% deflect chance",
-          "display": "III — 24% deflect chance"
+          "text": "Take 35% less damage",
+          "display": "III — Take 35% less damage"
         }
       ]
     },
@@ -7248,30 +7248,30 @@ window.RELIC_CATALOG = {
       "id": "fortune",
       "name": "Trickster",
       "color": "var(--fortune)",
-      "summary": "Chance for extra ore when mining.",
+      "summary": "Each ore block can burst into a much larger drop.",
       "tiers": [
-        "10% bonus ore chance",
-        "16% bonus ore chance",
-        "24% bonus ore chance"
+        "30% chance for 3× ore from that block",
+        "45% chance for 6× ore from that block",
+        "50% chance for 12× ore from that block"
       ],
       "levels": [
         {
           "level": 1,
           "roman": "I",
-          "text": "10% bonus ore chance",
-          "display": "I — 10% bonus ore chance"
+          "text": "30% chance for 3× ore from that block",
+          "display": "I — 30% chance for 3× ore from that block"
         },
         {
           "level": 2,
           "roman": "II",
-          "text": "16% bonus ore chance",
-          "display": "II — 16% bonus ore chance"
+          "text": "45% chance for 6× ore from that block",
+          "display": "II — 45% chance for 6× ore from that block"
         },
         {
           "level": 3,
           "roman": "III",
-          "text": "24% bonus ore chance",
-          "display": "III — 24% bonus ore chance"
+          "text": "50% chance for 12× ore from that block",
+          "display": "III — 50% chance for 12× ore from that block"
         }
       ]
     },

@@ -91,8 +91,8 @@ const FALLBACK_BOOSTS = [
     id: "ward",
     name: "Ward",
     color: "var(--ward)",
-    summary: "Chance to deflect incoming attacks.",
-    tiers: ["8% deflect", "14% deflect", "20% deflect"],
+    summary: "Take less damage from hits.",
+    tiers: ["15% less damage", "25% less damage", "35% less damage"],
   },
   {
     id: "gale",
@@ -109,8 +109,12 @@ const FALLBACK_BOOSTS = [
     id: "fortune",
     name: "Fortune",
     color: "var(--fortune)",
-    summary: "Chance for extra ore when mining.",
-    tiers: ["6% bonus ore", "12% bonus ore", "20% bonus ore"],
+    summary: "Each ore block can burst into a much larger drop.",
+    tiers: [
+      "30% chance for 3× ore",
+      "45% chance for 6× ore",
+      "50% chance for 12× ore",
+    ],
   },
   {
     id: "vitality",
